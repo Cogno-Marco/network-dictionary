@@ -1,0 +1,3 @@
+include ':app', ':smslibrary'
+rootProject.name='NetworkProject'
+project(':smslibrary').projectDir = new File('library/smslibrary')
