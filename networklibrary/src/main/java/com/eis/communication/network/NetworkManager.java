@@ -10,13 +10,13 @@ package com.eis.communication.network;
  * @author Alberto Ursino
  * @author Alessandra Tonin
  */
-public interface NetworkManager<RK, RV, U extends NetworkUser> {
+public interface NetworkManager<RK, RV, U extends NetworkUser, FR extends FailReason> {
 
-    void setResource(RK key, RV value);
+    void setResource(RK key, RV value, SetResourceListener<RK,RV,FR> setResourceListener);
 
-    void getResource(RK key);
+    void getResource(RK key, GetResourceListener<RK,RV,FR> getResourceListener);
 
-    void invite(U user);
+    void invite(U user, InviteListener<U> inviteListener);
 
     void join(Invitation<U> invitation);
 
