@@ -5,20 +5,21 @@ package com.eis.communication.network;
  *
  * @param <RK> Type of resource key handled by the network
  * @param <RV> Type of resource value handled by the network
- *
  * @author Luca Crema
  * @author Marco Mariotto
  * @author Alberto Ursino
  * @author Alessandra Tonin
  */
-public interface NetworkManager<RK, RV, U extends NetworkUser>{
+public interface NetworkManager<RK, RV, U extends NetworkUser> {
 
-    public void setResource(RK key, RV value);
+    void setResource(RK key, RV value);
 
-    public void getResource(RK key);
+    void getResource(RK key);
 
-    public void invite(U user);
+    void invite(U user);
 
-    public void join(Invitation<U> invitation);
+    void join(Invitation<U> invitation);
+
+    void setJoinListener(JoinListener<U> joinListener);
 
 }
