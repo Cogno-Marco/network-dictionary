@@ -3,7 +3,7 @@ package com.eis.communication.network;
 import com.eis.communication.Peer;
 
 /**
- * Represents an invitation to join a network.
+ * Represents a received invitation to join a network.
  * <p>
  * Could contain network name or invitation message if needed.
  *

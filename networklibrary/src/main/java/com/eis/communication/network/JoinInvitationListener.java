@@ -12,6 +12,7 @@ public interface JoinInvitationListener<I extends Invitation> {
 
     /**
      * Callback for received invitation to join a network from another user.
+     *
      * @param invitation The received invitation.
      */
     void onJoinInvitationReceived(I invitation);

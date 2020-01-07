@@ -15,16 +15,17 @@ public interface SetResourceListener<RK, RV, FR extends FailReason> {
     /**
      * Callback for completed resource insertion.
      *
-     * @param key The inserted key.
+     * @param key   The inserted key.
      * @param value The inserted value.
      */
     void onResourceSet(RK key, RV value);
 
     /**
      * Callback for failed resource insertion.
-     * @param key The key that was to be added.
-     * @param value The value that was to be added.
-     * @param reason The reason of the failure. Possible values can be found in {@link FailReason}.
+     *
+     * @param key    The key that was to be added.
+     * @param value  The value that was to be added.
+     * @param reason The reason of the failure.
      */
     void onResourceSetFail(RK key, RV value, FR reason);
 

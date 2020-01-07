@@ -3,14 +3,15 @@ package com.eis.communication.network;
 import com.eis.communication.Peer;
 
 /**
- * Listener for sent invitations to join the network.
+ * Listener for sent invitations to join the network, often passed as parameter in {@link NetworkManager#invite(Peer, InviteListener)}.
  * <p>
- * Only used in {@link JoinableNetworkManager}
+ * If the invitation was correctly sent {@link #onInvitationSent(Peer)} will be called,
+ * {@link #onInvitationNotSent(Peer, FR)} otherwise.
  *
  * @param <P> The type of address used.
  * @author Luca Crema
  */
-public interface InviteListener<P extends Peer> {
+public interface InviteListener<P extends Peer, FR extends FailReason> {
 
     /**
      * Callback for successful sent invitation.
@@ -23,7 +24,8 @@ public interface InviteListener<P extends Peer> {
      * Callback for failed sending of invitation.
      *
      * @param notInvitedPeer Who were to be invited.
+     * @param failReason     The reason for the failed invitation send.
      */
-    void onInvitationNotSent(P notInvitedPeer);
+    void onInvitationNotSent(P notInvitedPeer, FR failReason);
 
 }
