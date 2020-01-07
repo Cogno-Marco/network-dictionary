@@ -1,17 +1,20 @@
 package com.eis.communication.network;
 
+import com.eis.communication.Peer;
+
 /**
  * Represents an invitation to join a network.
- * <p>Could contain network name or invitation message if needed.
+ * <p>
+ * Could contain network name or invitation message if needed.
  *
- * @param <U> The type of network user for the network.
+ * @param <P> The type of address used.
  * @author Luca Crema
  */
-public interface Invitation<U extends NetworkUser> {
+public interface Invitation<P extends Peer> {
 
     /**
-     * @return Who sent this invitation.
+     * @return The address of who sent this invitation.
      */
-    U getInviter();
+    P getInviterPeer();
 
 }

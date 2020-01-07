@@ -1,7 +1,9 @@
 package com.eis.communication.network;
 
-public interface InviteListener<U extends NetworkUser>{
+import com.eis.communication.Peer;
 
-    void onInvitationSent(U userInvited);
+public interface InviteListener<P extends Peer> {
+
+    void onInvitationSent(P invtedPeer);
 
 }
