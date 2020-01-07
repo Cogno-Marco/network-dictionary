@@ -6,7 +6,7 @@ package com.eis.communication.network;
  *
  * @param <RK> Resource key type.
  * @param <RV> Resource value type.
- * @param <FR> FailedReason type, could be {@link FailReason} enum too, without having to extend it.
+ * @param <FR> FailedReason type, could be {@link FailReason} class too, without having to extend it.
  * @author Luca Crema
  * @author Marco Mariotto
  */
@@ -24,7 +24,7 @@ public interface SetResourceListener<RK, RV, FR extends FailReason> {
      * Callback for failed resource insertion.
      * @param key The key that was to be added.
      * @param value The value that was to be added.
-     * @param reason The reason of the failure.
+     * @param reason The reason of the failure. Possible values can be found in {@link FailReason}.
      */
     void onResourceSetFail(RK key, RV value, FR reason);
 

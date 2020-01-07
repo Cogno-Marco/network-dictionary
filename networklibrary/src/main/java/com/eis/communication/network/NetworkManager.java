@@ -12,9 +12,9 @@ package com.eis.communication.network;
  */
 public interface NetworkManager<RK, RV, U extends NetworkUser, FR extends FailReason> {
 
-    void setResource(RK key, RV value, SetResourceListener<RK,RV,FR> setResourceListener);
+    void setResource(RK key, RV value, SetResourceListener<RK, RV, FR> setResourceListener);
 
-    void getResource(RK key, GetResourceListener<RK,RV,FR> getResourceListener);
+    void getResource(RK key, GetResourceListener<RK, RV, FR> getResourceListener);
 
     void invite(U user, InviteListener<U> inviteListener);
 
