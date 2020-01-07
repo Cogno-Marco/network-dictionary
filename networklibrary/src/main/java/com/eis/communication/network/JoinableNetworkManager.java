@@ -3,15 +3,25 @@ package com.eis.communication.network;
 import com.eis.communication.Peer;
 
 /**
- * Manager for networks where the join has to be done manually and not automatically.
+ * Manager for networks where the join has to be done manually and is not performed automatically.
  *
+ * @param <I> The type of invitation used by the network.
  * @author Luca Crema, suggested by Enrico Cestaro
- * @since 07/01/2020
  */
-public interface JoinableNetworkManager<RK, RV, P extends Peer, FR extends FailReason> extends NetworkManager<RK, RV, P, FR> {
+public interface JoinableNetworkManager<RK, RV, P extends Peer, FR extends FailReason, I extends Invitation<P>> extends NetworkManager<RK, RV, P, FR> {
 
-    void join(Invitation<P> invitation);
+    /**
+     * Method used to join the network after an invitation in received.
+     *
+     * @param invitation The invitation previously received.
+     */
+    void acceptJoinInvitation(I invitation);
 
-    void setJoinListener(JoinListener<P> joinListener);
+    /**
+     * Sets the listener used to wait for invitations to join the network.
+     *
+     * @param joinInvitationListener Listener called upon invitation received.
+     */
+    void setJoinInvitationListener(JoinInvitationListener<I> joinInvitationListener);
 
 }

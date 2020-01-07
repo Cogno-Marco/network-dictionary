@@ -7,6 +7,8 @@ import com.eis.communication.Peer;
  *
  * @param <RK> Type of resource key handled by the network
  * @param <RV> Type of resource value handled by the network
+ * @param <P>  Type of peer/address handled by the network
+ * @param <FR> The enumeration used to define fail reasons for the network.
  * @author Luca Crema
  * @author Marco Mariotto
  * @author Alberto Ursino

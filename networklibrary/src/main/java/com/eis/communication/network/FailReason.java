@@ -15,7 +15,7 @@ public class FailReason {
     public static final FailReason NO_NETWORK = new FailReason("NoNetwork");
     public static final FailReason GENERIC_FAIL = new FailReason("GenericFail");
 
-    protected String name;
+    private String name;
 
     /**
      * Private constructor as suggested in the TypeSafe enum pattern.
