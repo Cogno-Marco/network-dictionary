@@ -5,7 +5,6 @@ package com.eis.communication.network;
  * <p>If the resource has been correctly removed {@link #onResourceRemoved(Object)} is called, {@link #onResourceRemoveFail(Object, FailReason)} is called otherwise.
  *
  * @param <RK> Resource key type.
- * @param <RV> Resource value type.
  * @param <FR> FailedReason type, could be {@link FailReason} class too, without having to extend it.
  * @author Luca Crema
  */
