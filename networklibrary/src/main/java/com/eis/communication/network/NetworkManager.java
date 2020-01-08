@@ -17,8 +17,8 @@ import com.eis.communication.Peer;
 public interface NetworkManager<RK, RV, P extends Peer, FR extends FailReason> {
 
     /**
-     * Saves a resource value in the network for the specified key. If the save was successful
-     * {@link SetResourceListener#onResourceSet(Object, Object)} will be called.
+     * Saves a resource value in the network for the specified key. If the save is successful
+     * {@link SetResourceListener#onResourceSet(Object, Object)} is be called.
      *
      * @param key                 The key identifier for the resource.
      * @param value               The identified value of the resource.
@@ -34,6 +34,15 @@ public interface NetworkManager<RK, RV, P extends Peer, FR extends FailReason> {
      * @param getResourceListener Listener called on resource successfully retrieved or on fail.
      */
     void getResource(RK key, GetResourceListener<RK, RV, FR> getResourceListener);
+
+    /**
+     * Removes a resource value from the network for the specified key. If the removal is successful
+     * {@link RemoveResourceListener#onResourceRemoved(Object)} is called
+     *
+     * @param key                    The key identifier for the resource.
+     * @param removeResourceListener Listener called on resource successfully removed or on fail.
+     */
+    void removeResource(RK key, RemoveResourceListener<RK, FR> removeResourceListener);
 
     /**
      * Invites another user to join the network. If the invitation is sent correctly
