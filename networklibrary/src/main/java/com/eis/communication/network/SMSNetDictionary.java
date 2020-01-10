@@ -1,11 +1,20 @@
 package com.eis.communication.network;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Concrete implementation of a INetworkDictionary
  *
  * @author Marco Cognolato
  */
 public class SMSNetDictionary implements INetworkDictionary<String, String> {
+
+    Map<String, String> dict;
+
+    public SMSNetDictionary(){
+        dict = new HashMap<>();
+    }
 
     /**
      * Adds a resource to the network dictionary
@@ -15,7 +24,8 @@ public class SMSNetDictionary implements INetworkDictionary<String, String> {
      * A key is said to be valid only if it's composed of a single word
      */
     public void addResource(String key, String resource){
-
+        checkKeyValidity(key);
+        dict.put(key, resource);
     }
 
     /**
@@ -25,7 +35,8 @@ public class SMSNetDictionary implements INetworkDictionary<String, String> {
      * A key is said to be valid only if it's composed of a single word
      */
     public void removeResource(String key){
-
+        checkKeyValidity(key);
+        dict.remove(key);
     }
 
     /**
@@ -37,6 +48,12 @@ public class SMSNetDictionary implements INetworkDictionary<String, String> {
      * A key is said to be valid only if it's composed of a single word
      */
     public String getResource(String key){
-        return null;
+        checkKeyValidity(key);
+        return dict.get(key);
+    }
+
+    private void checkKeyValidity(String key){
+        if(key == null || !key.matches("^\\w+$"))
+            throw new IllegalArgumentException("The given key is not valid! Given key was: " + key);
     }
 }
