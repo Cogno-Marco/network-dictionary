@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.communication.network.Commands;
 
 /**
  * This interface has to be implemented by any classes
