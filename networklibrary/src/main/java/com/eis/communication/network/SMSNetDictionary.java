@@ -10,11 +10,7 @@ import java.util.Map;
  */
 public class SMSNetDictionary implements INetworkDictionary<String, String> {
 
-    Map<String, String> dict;
-
-    public SMSNetDictionary(){
-        dict = new HashMap<>();
-    }
+    Map<String, String> dict = new HashMap<>();
 
     /**
      * Adds a resource to the network dictionary
