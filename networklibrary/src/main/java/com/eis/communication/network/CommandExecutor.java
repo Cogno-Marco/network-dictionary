@@ -1,5 +1,7 @@
 package com.eis.communication.network;
 
+import com.eis.communication.network.Commands.Command;
+
 /**
  * Class that manage all the sent commands.
  * It just let them executing.
@@ -8,7 +10,7 @@ package com.eis.communication.network;
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico cestaro
  */
-public class CommandExecutor<C extends Command>{
+public class CommandExecutor <C extends Command>{
 
     /**
      * @param command to be performed
