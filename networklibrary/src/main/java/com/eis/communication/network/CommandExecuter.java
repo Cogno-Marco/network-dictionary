@@ -9,7 +9,7 @@ package com.eis.communication.network;
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico Cestaro
  */
-public interface Command {
+public interface CommandExecuter {
 
     /**
      * Execute the specific class command
