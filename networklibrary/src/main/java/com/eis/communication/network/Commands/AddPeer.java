@@ -21,7 +21,7 @@ public class AddPeer implements Command {
      * Add the peer to subscribers
      */
     public void execute(){
-        
+        networkManager.getNetSubscribers().addSubscriber(peer);
         //TODO broadcast
     }
 }
