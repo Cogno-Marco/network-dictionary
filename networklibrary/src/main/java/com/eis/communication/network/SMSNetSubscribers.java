@@ -11,10 +11,11 @@ import java.util.ArrayList;
  */
 public class SMSNetSubscribers implements INetSubscribers<SMSPeer>  {
 
-    
+
     /**
      * Adds a subscriber to this network
      * @param subscriber The subscriber to add to the net
+     * @throws IllegalArgumentException If subscriber is null
      */
     public void addSubscriber(SMSPeer subscriber){
 
@@ -30,6 +31,7 @@ public class SMSNetSubscribers implements INetSubscribers<SMSPeer>  {
     /**
      * Removes a given subscriber from the subscribers
      * @param subscriber The subscriber to remove
+     * @throws IllegalArgumentException If a non present subscriber is removed
      */
     public void removeSubcriber(SMSPeer subscriber){
 
