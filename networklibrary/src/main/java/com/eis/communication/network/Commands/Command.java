@@ -1,10 +1,9 @@
 package com.eis.communication.network.Commands;
 
 /**
- * This interface has to be implemented by any classes
- * that want to be a command
+ * This interface has to be implemented by any class that needs to be a command
  *
- * Created following command design pattern
+ * Created following the Command design pattern
  * @link https://refactoring.guru/design-patterns/command
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico Cestaro

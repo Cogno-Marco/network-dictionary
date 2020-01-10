@@ -11,7 +11,7 @@ import com.eis.communication.network.Commands.Command;
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico cestaro
  */
-public class CommandExecutor<C extends Command>{
+public class CommandExecutor <C extends Command>{
 
     /**
      * @param command to be performed
