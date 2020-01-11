@@ -18,9 +18,9 @@ import static org.junit.Assert.assertNull;
  */
 public class SMSNetSubscribersTest {
 
-    public final SMSPeer PEER1 = new SMSPeer("+393423541601");
-    public final SMSPeer PEER2 = new SMSPeer("+393423541601");
-    public final SMSPeer PEER3 = new SMSPeer("+393423541601");
+    public static final SMSPeer PEER1 = new SMSPeer("+393423541601");
+    public static final SMSPeer PEER2 = new SMSPeer("+393423541601");
+    public static final SMSPeer PEER3 = new SMSPeer("+393423541601");
 
     public ArrayList<SMSPeer> totalPeers = new ArrayList<>();
 
