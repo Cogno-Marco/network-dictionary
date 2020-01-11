@@ -1,5 +1,6 @@
 package com.eis.communication.network;
 
+import com.eis.communication.network.ListenersInterfaces.JoinInvitationListener;
 import com.eis.smslibrary.SMSPeer;
 
 /**

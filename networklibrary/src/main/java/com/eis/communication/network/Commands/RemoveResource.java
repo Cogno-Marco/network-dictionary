@@ -1,6 +1,6 @@
 package com.eis.communication.network.Commands;
 
-import com.eis.communication.network.SMSNetworkManager;
+import com.eis.communication.network.SMSNetDictionary;
 
 /**
  * Command to remove a resource from the network dictionary
@@ -9,15 +9,16 @@ import com.eis.communication.network.SMSNetworkManager;
  */
 public class RemoveResource implements Command {
 
-    private SMSNetworkManager networkManager;
+    private SMSNetDictionary netDictionary;
     private String key;
 
-    public RemoveResource(String key, SMSNetworkManager networkManager){
+    public RemoveResource(String key, SMSNetDictionary netDictionary){
         this.key = key;
-        this.networkManager = networkManager;
+        this.netDictionary = netDictionary;
     }
 
     public void execute() {
-        networkManager.getNetDictionary().removeResource(key);
+        netDictionary.removeResource(key);
+        //TODO broadcast
     }
 }

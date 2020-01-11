@@ -27,5 +27,5 @@ public interface INetSubscribers<T extends Peer> {
      * Removes a given subscriber from the subscribers
      * @param subscriber The subscriber to remove
      */
-    void removeSubcriber(T subscriber);
+    void removeSubscriber(T subscriber);
 }

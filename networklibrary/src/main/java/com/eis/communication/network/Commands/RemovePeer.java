@@ -1,6 +1,6 @@
 package com.eis.communication.network.Commands;
 
-import com.eis.communication.network.SMSNetworkManager;
+import com.eis.communication.network.SMSNetSubscribers;
 import com.eis.smslibrary.SMSPeer;
 
 /**
@@ -11,15 +11,15 @@ import com.eis.smslibrary.SMSPeer;
 public class RemovePeer implements Command {
 
     private SMSPeer peer;
-    private SMSNetworkManager networkManager;
+    private SMSNetSubscribers netSubscribers;
 
-    public RemovePeer(SMSPeer peer, SMSNetworkManager networkManager){
+    public RemovePeer(SMSPeer peer, SMSNetSubscribers netSubscribers){
         this.peer = peer;
-        this.networkManager = networkManager;
+        this.netSubscribers = netSubscribers;
     }
 
     public void execute() {
-        networkManager.getNetSubscribers().removeSubcriber(peer);
+        netSubscribers.removeSubscriber(peer);
         //TODO broadcast
     }
 

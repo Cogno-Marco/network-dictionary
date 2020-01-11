@@ -13,7 +13,7 @@ public class AddResourceTest {
     private String key = "key";
     private String value = "value";
 
-    private AddResource addResource = new AddResource(key, value, networkManager);
+    private AddResource addResource = new AddResource(key, value, networkManager.getNetDictionary());
 
     @Test
     public void execute() {

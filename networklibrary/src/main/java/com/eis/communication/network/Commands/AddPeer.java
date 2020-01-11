@@ -1,7 +1,6 @@
 package com.eis.communication.network.Commands;
 
 import com.eis.communication.network.SMSNetSubscribers;
-import com.eis.communication.network.SMSNetworkManager;
 import com.eis.smslibrary.SMSPeer;
 
 /**
@@ -10,18 +9,18 @@ import com.eis.smslibrary.SMSPeer;
 public class AddPeer implements Command {
 
     private SMSPeer peer;
-    private SMSNetworkManager networkManager;
+    private SMSNetSubscribers netSubscribers;
 
-    public AddPeer(SMSPeer peer, SMSNetworkManager networkManager){
+    public AddPeer(SMSPeer peer, SMSNetSubscribers netSubscribers){
         this.peer = peer;
-        this.networkManager = networkManager;
+        this.netSubscribers = netSubscribers;
     }
 
     /**
      * Add the peer to subscribers
      */
     public void execute(){
-        networkManager.getNetSubscribers().addSubscriber(peer);
+        netSubscribers.addSubscriber(peer);
         //TODO broadcast
     }
 }

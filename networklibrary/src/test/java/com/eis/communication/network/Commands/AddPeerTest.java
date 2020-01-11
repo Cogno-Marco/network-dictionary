@@ -10,9 +10,9 @@ import static org.junit.Assert.*;
 
 public class AddPeerTest {
 
-    private SMSPeer peer = new SMSPeer("3408140326");
+    private SMSPeer peer = new SMSPeer("+393408140326");
     private SMSNetworkManager networkManager = new SMSNetworkManager();
-    private AddPeer addPeer = new AddPeer(peer, networkManager);
+    private AddPeer addPeer = new AddPeer(peer, networkManager.getNetSubscribers());
 
     @Test
     public void execute() {
