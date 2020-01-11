@@ -22,5 +22,6 @@ public class AddResource implements Command {
 
     public void execute() {
         networkManager.getNetDictionary().addResource(key, value);
+        //TODO broadcast
     }
 }

@@ -19,5 +19,6 @@ public class RemoveResource implements Command {
 
     public void execute() {
         networkManager.getNetDictionary().removeResource(key);
+        //TODO broadcast
     }
 }
