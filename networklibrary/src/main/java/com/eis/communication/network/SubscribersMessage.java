@@ -9,28 +9,46 @@ import com.eis.smslibrary.SMSPeer;
  * <a href="https://refactoring.guru/design-patterns/builder">Builder Design Pattern</a>,
  * which also works as a Builder for the same pattern.
  *
- * @author Edoardo Raimondi
+ * @author Edoardo Raimondi, Marco Cognolato
  */
-public class SubscribersMessage {
+public class SubscribersMessage extends MessageBuilder {
 
-    private MessageBuilder builder = new MessageBuilder();
+    private String commandMessage = null;
+    private String[] messageText = null;
+    private SMSPeer peerToAdd = null;
 
-    /**
-     *
-     * @param peer destination of the message
-     * @param peerToAdd peer to be added/removed to the subscribes
-     * @param command information (to add or remove it)
-     */
-    public SubscribersMessage(SMSPeer peer, SMSPeer peerToAdd, RequestType command){
-        String subscriber = peerToAdd.toString();
-        builder.setPeer(peer);
-        builder.addArguments(command.ordinal()+"", subscriber);
+    public SubscribersMessage(){ }
+
+    @Override
+    public SubscribersMessage setPeer(SMSPeer peer){
+        super.setPeer(peer);
+        return this;
+    }
+
+    public SubscribersMessage setRequest(RequestType command){
+        commandMessage = command.asString();
+        return this;
+    }
+
+    public SubscribersMessage setPeerToAdd(SMSPeer peerToAdd){
+        this.peerToAdd = peerToAdd;
+        return this;
+    }
+
+    @Override
+    public SubscribersMessage addArguments(String... message){
+        messageText = message;
+        return this;
     }
 
     /**
      * @return the message ready to be sent
      */
-    public SMSMessage build(){
-        return builder.buildMessage();
+    @Override
+    public SMSMessage buildMessage(){
+        super.addArguments(commandMessage, peerToAdd.toString());
+        for(String command : messageText)
+            super.addArguments(command);
+        return super.buildMessage();
     }
 }

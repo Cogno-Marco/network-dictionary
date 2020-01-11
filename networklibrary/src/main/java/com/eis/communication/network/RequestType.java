@@ -6,14 +6,23 @@ package com.eis.communication.network;
  * the RequestType received, different actions are performed.
  * It is identifies by the listener receiver.
  *
- * @author Edoardo Raimondi
+ * @author Edoardo Raimondi, Marco Cognolato
  */
 public enum RequestType {
     //Request to manage the subscribers
-    AddPeer,
-    RemovePeer,
+    AddPeer("AP"),
+    RemovePeer("RP"),
 
     //Request to manage the dictionary
-    AddResource,
-    RemoveResource
+    AddResource("AR"),
+    RemoveResource("RR");
+
+    private String command;
+    RequestType(String command) {
+        this.command = command;
+    }
+
+    public String asString(){
+        return command;
+    }
 }
