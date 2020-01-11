@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.communication.network.ListenersInterfaces;
 
 /**
  * Listener for invitations to join a network.

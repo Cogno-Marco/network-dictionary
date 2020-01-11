@@ -1,4 +1,6 @@
-package com.eis.communication.network;
+package com.eis.communication.network.ListenersInterfaces;
+
+import com.eis.communication.network.FailReason;
 
 /**
  * Listener for resource retrieval requests, often passed as parameter when making a get resource request.

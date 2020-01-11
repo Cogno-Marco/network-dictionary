@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.communication.network.ListenersInterfaces;
 
 /**
  * Listener for resource removing requests, often passed as parameter when making a remove resource request.
