@@ -1,5 +1,7 @@
 package com.eis.communication.network.ListenersInterfaces;
 
+import com.eis.communication.network.FailReason;
+
 /**
  * Listener for resource saving requests, often passed as parameter when making a set resource request.
  * <p>If the resource has been correctly set {@link #onResourceSet(Object, Object)} is called, {@link #onResourceSetFail(Object, Object, FailReason)} is called otherwise.

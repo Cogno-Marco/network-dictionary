@@ -1,5 +1,7 @@
 package com.eis.communication.network.ListenersInterfaces;
 
+import com.eis.communication.network.Invitation;
+
 /**
  * Listener for invitations to join a network.
  *
