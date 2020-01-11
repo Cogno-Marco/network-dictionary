@@ -8,12 +8,12 @@ import static org.junit.Assert.*;
 
 public class AddResourceTest {
 
-    private SMSNetworkManager networkManager = new SMSNetworkManager();
+    private final SMSNetworkManager networkManager = new SMSNetworkManager();
 
-    private String key = "key";
-    private String value = "value";
+    private final String key = "key";
+    private final String value = "value";
 
-    private AddResource addResource = new AddResource(key, value, networkManager.getNetDictionary());
+    private final AddResource addResource = new AddResource(key, value, networkManager.getNetDictionary());
 
     @Test
     public void execute() {

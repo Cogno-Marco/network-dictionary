@@ -9,10 +9,10 @@ import com.eis.communication.network.SMSNetDictionary;
  */
 public class RemoveResource implements Command {
 
-    private SMSNetDictionary netDictionary;
-    private String key;
+    private final SMSNetDictionary netDictionary;
+    private final String key;
 
-    public RemoveResource(String key, SMSNetDictionary netDictionary){
+    public RemoveResource(String key, SMSNetDictionary netDictionary) {
         this.key = key;
         this.netDictionary = netDictionary;
     }

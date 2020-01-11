@@ -10,10 +10,10 @@ import com.eis.smslibrary.SMSPeer;
  */
 public class RemovePeer implements Command {
 
-    private SMSPeer peer;
-    private SMSNetSubscribers netSubscribers;
+    private final SMSPeer peer;
+    private final SMSNetSubscribers netSubscribers;
 
-    public RemovePeer(SMSPeer peer, SMSNetSubscribers netSubscribers){
+    public RemovePeer(SMSPeer peer, SMSNetSubscribers netSubscribers) {
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }

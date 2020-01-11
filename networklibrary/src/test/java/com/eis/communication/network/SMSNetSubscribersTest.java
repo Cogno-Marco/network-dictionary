@@ -8,8 +8,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Unit tests for the SMSNetSubscribers class
@@ -22,12 +20,13 @@ public class SMSNetSubscribersTest {
     public static final SMSPeer PEER2 = new SMSPeer("+393423541601");
     public static final SMSPeer PEER3 = new SMSPeer("+393423541601");
 
-    public ArrayList<SMSPeer> totalPeers = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final ArrayList<SMSPeer> totalPeers = new ArrayList<>();
 
     private SMSNetSubscribers netSubscribers;
 
     @Before
-    public void setup(){
+    public void setup() {
         totalPeers.add(PEER1);
         totalPeers.add(PEER2);
         totalPeers.add(PEER3);
@@ -39,7 +38,7 @@ public class SMSNetSubscribersTest {
     public void addOnePeer_getsAdded() {
         netSubscribers.addSubscriber(PEER1);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
-                new SMSPeer[] {PEER1});
+                new SMSPeer[]{PEER1});
     }
 
     @Test
@@ -47,7 +46,7 @@ public class SMSNetSubscribersTest {
         netSubscribers.addSubscriber(PEER1);
         netSubscribers.addSubscriber(PEER2);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
-                new SMSPeer[] {PEER1, PEER2});
+                new SMSPeer[]{PEER1, PEER2});
     }
 
     @Test
@@ -56,7 +55,7 @@ public class SMSNetSubscribersTest {
         netSubscribers.addSubscriber(PEER2);
         netSubscribers.addSubscriber(PEER3);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
-                new SMSPeer[] {PEER1, PEER2, PEER3});
+                new SMSPeer[]{PEER1, PEER2, PEER3});
     }
 
     @Test
@@ -64,7 +63,7 @@ public class SMSNetSubscribersTest {
         netSubscribers.addSubscriber(PEER1);
         netSubscribers.removeSubscriber(PEER1);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
-                new SMSPeer[] {});
+                new SMSPeer[]{});
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -73,7 +72,7 @@ public class SMSNetSubscribersTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addNullPeer_throws(){
+    public void addNullPeer_throws() {
         netSubscribers.addSubscriber(null);
     }
 }

@@ -17,12 +17,13 @@ public enum RequestType {
     AddResource("AR"),
     RemoveResource("RR");
 
-    private String command;
+    private final String command;
+
     RequestType(String command) {
         this.command = command;
     }
 
-    public String asString(){
+    public String asString() {
         return command;
     }
 }

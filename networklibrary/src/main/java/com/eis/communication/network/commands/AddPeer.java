@@ -8,10 +8,10 @@ import com.eis.smslibrary.SMSPeer;
  */
 public class AddPeer implements Command {
 
-    private SMSPeer peer;
-    private SMSNetSubscribers netSubscribers;
+    private final SMSPeer peer;
+    private final SMSNetSubscribers netSubscribers;
 
-    public AddPeer(SMSPeer peer, SMSNetSubscribers netSubscribers){
+    public AddPeer(SMSPeer peer, SMSNetSubscribers netSubscribers) {
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }
@@ -19,7 +19,7 @@ public class AddPeer implements Command {
     /**
      * Add the peer to subscribers
      */
-    public void execute(){
+    public void execute() {
         netSubscribers.addSubscriber(peer);
         //TODO broadcast
     }

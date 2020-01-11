@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class SMSNetworkManagerTest {
 
-    private SMSNetworkManager networkManager = new SMSNetworkManager();
+    private final SMSNetworkManager networkManager = new SMSNetworkManager();
 
     @Test
     public void getNetSubscribers() {

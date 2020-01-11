@@ -11,13 +11,14 @@ import com.eis.smslibrary.SMSPeer;
 public class BroadcastSender {
 
     /**
-     * Broadcasts a message to every subscriber on the net.
-     * @param message
-     * @param subscribers
+     * Broadcasts a message to the specified subscribers.
+     *
+     * @param message     The {@link SMSMessage} to broadcast.
+     * @param subscribers The {@link SMSNetSubscribers} to which to send the message.
      */
-    public static void broadcastMessage(SMSMessage message, SMSNetSubscribers subscribers){
+    public static void broadcastMessage(SMSMessage message, SMSNetSubscribers subscribers) {
         //Naive implementation of a broadcast: this node sends a message to each subscriber
-        for(SMSPeer peer : subscribers.getSubscribers()){
+        for (SMSPeer peer : subscribers.getSubscribers()) {
             SMSHandler.getInstance().sendMessage(message);
         }
     }

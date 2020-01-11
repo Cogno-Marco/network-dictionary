@@ -10,18 +10,18 @@ import static org.junit.Assert.*;
 
 public class RemovePeerTest {
 
-    private SMSPeer peer1 = new SMSPeer("+393408140326");
-    private SMSPeer peer2 = new SMSPeer("+393408140366");
+    private final SMSPeer peer1 = new SMSPeer("+393408140326");
+    private final SMSPeer peer2 = new SMSPeer("+393408140366");
 
-    private SMSNetworkManager networkManager = new SMSNetworkManager();
+    private final SMSNetworkManager networkManager = new SMSNetworkManager();
 
-    private AddPeer addPeer1 = new AddPeer(peer1, networkManager.getNetSubscribers());
-    private AddPeer addPeer2 = new AddPeer(peer2, networkManager.getNetSubscribers());
+    private final AddPeer addPeer1 = new AddPeer(peer1, networkManager.getNetSubscribers());
+    private final AddPeer addPeer2 = new AddPeer(peer2, networkManager.getNetSubscribers());
 
-    private RemovePeer removePeer1 = new RemovePeer(peer1, networkManager.getNetSubscribers());
+    private final RemovePeer removePeer1 = new RemovePeer(peer1, networkManager.getNetSubscribers());
 
     @Before
-    public void setUp(){
+    public void setUp() {
         addPeer1.execute();
         addPeer2.execute();
     }
