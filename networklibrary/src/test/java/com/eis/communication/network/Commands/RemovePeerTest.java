@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
 
 public class RemovePeerTest {
 
-    private SMSPeer peer1 = new SMSPeer("3408140326");
-    private SMSPeer peer2 = new SMSPeer("3408140366");
+    private SMSPeer peer1 = new SMSPeer("+393408140326");
+    private SMSPeer peer2 = new SMSPeer("+393408140366");
 
     private SMSNetworkManager networkManager = new SMSNetworkManager();
 
