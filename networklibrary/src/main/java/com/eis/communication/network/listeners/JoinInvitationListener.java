@@ -1,4 +1,4 @@
-package com.eis.communication.network.ListenersInterfaces;
+package com.eis.communication.network.listeners;
 
 import com.eis.communication.network.Invitation;
 

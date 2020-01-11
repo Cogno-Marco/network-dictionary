@@ -1,9 +1,9 @@
 package com.eis.communication.network;
 
-import com.eis.communication.network.ListenersInterfaces.GetResourceListener;
-import com.eis.communication.network.ListenersInterfaces.InviteListener;
-import com.eis.communication.network.ListenersInterfaces.RemoveResourceListener;
-import com.eis.communication.network.ListenersInterfaces.SetResourceListener;
+import com.eis.communication.network.listeners.GetResourceListener;
+import com.eis.communication.network.listeners.InviteListener;
+import com.eis.communication.network.listeners.RemoveResourceListener;
+import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSPeer;
 
 /**
