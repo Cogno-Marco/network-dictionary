@@ -1,4 +1,6 @@
-package com.eis.communication.network;
+package com.eis.communication.network.Listeners;
+
+import com.eis.communication.network.FailReason;
 
 /**
  * Listener for resource removing requests, often passed as parameter when making a remove resource request.
