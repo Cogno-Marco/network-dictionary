@@ -9,11 +9,14 @@ package com.eis.communication.network;
  * @author Edoardo Raimondi, Marco Cognolato
  */
 public enum RequestType {
-    //Request to manage the subscribers
+
+    // Requests to manage subscribers
+    Invite("IN"),
+    AcceptInvitation("AI"),
     AddPeer("AP"),
     RemovePeer("RP"),
 
-    //Request to manage the dictionary
+    // Requests to manage the dictionary
     AddResource("AR"),
     RemoveResource("RR");
 
