@@ -1,6 +1,6 @@
 package com.eis.communication.network.Commands;
 
-import com.eis.communication.network.SMSNetworkManager;
+import com.eis.communication.network.SMSNetDictionary;
 
 /**
  * Command to add a resource
@@ -12,16 +12,16 @@ public class AddResource implements Command {
     /*Using strings to be coherent to SMSNetDictionary class*/
     private String key;
     private String value;
-    private SMSNetworkManager networkManager;
+    private SMSNetDictionary netDictionary;
 
-    public AddResource(String key, String value, SMSNetworkManager networkManager){
+    public AddResource(String key, String value, SMSNetDictionary netDictionary){
         this.key = key;
         this.value = value;
-        this.networkManager = networkManager;
+        this.netDictionary = netDictionary;
     }
 
     public void execute() {
-        networkManager.getNetDictionary().addResource(key, value);
+        netDictionary.addResource(key, value);
         //TODO broadcast
     }
 }

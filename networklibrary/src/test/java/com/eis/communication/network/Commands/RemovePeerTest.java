@@ -15,10 +15,10 @@ public class RemovePeerTest {
 
     private SMSNetworkManager networkManager = new SMSNetworkManager();
 
-    private AddPeer addPeer1 = new AddPeer(peer1, networkManager);
-    private AddPeer addPeer2 = new AddPeer(peer2, networkManager);
+    private AddPeer addPeer1 = new AddPeer(peer1, networkManager.getNetSubscribers());
+    private AddPeer addPeer2 = new AddPeer(peer2, networkManager.getNetSubscribers());
 
-    private RemovePeer removePeer1 = new RemovePeer(peer1, networkManager);
+    private RemovePeer removePeer1 = new RemovePeer(peer1, networkManager.getNetSubscribers());
 
     @Before
     public void setUp(){

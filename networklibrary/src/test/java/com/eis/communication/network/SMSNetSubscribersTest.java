@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -63,14 +62,14 @@ public class SMSNetSubscribersTest {
     @Test
     public void removePeer_getsRemoved() {
         netSubscribers.addSubscriber(PEER1);
-        netSubscribers.removeSubcriber(PEER1);
+        netSubscribers.removeSubscriber(PEER1);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
                 new SMSPeer[] {});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void removeNonPresentPeer_throws() {
-        netSubscribers.removeSubcriber(PEER1);
+        netSubscribers.removeSubscriber(PEER1);
     }
 
     @Test(expected = IllegalArgumentException.class)

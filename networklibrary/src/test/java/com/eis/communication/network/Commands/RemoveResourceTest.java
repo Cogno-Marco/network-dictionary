@@ -17,9 +17,9 @@ public class RemoveResourceTest {
     private String key2 = "lmao";
     private String value2 = "fuck";
 
-    private AddResource addResource1 = new AddResource(key1, value1, networkManager);
-    private AddResource addResource2 = new AddResource(key2, value2, networkManager);
-    private RemoveResource removeResource = new RemoveResource(key1, networkManager);
+    private AddResource addResource1 = new AddResource(key1, value1, networkManager.getNetDictionary());
+    private AddResource addResource2 = new AddResource(key2, value2, networkManager.getNetDictionary());
+    private RemoveResource removeResource = new RemoveResource(key1, networkManager.getNetDictionary());
     @Before
     public void setUp(){
         addResource1.execute();

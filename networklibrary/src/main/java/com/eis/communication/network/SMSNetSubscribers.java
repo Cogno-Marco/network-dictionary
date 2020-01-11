@@ -35,7 +35,7 @@ public class SMSNetSubscribers implements INetSubscribers<SMSPeer>  {
      * @param subscriber The subscriber to remove
      * @throws IllegalArgumentException If a non present subscriber is removed
      */
-    public void removeSubcriber(SMSPeer subscriber){
+    public void removeSubscriber(SMSPeer subscriber){
         if(!subscribers.contains(subscriber))
             throw new IllegalArgumentException("The subscriber you're trying to remove is not present!");
         subscribers.remove(subscriber);

@@ -48,6 +48,11 @@ public class SMSNetDictionary implements INetworkDictionary<String, String> {
         return dict.get(key);
     }
 
+    /**
+     * Checks if a given key is valid, else throws IllegalArgumentException.
+     * A key is said to be valid only if it's composed of one word
+     * @param key The key to check
+     */
     private void checkKeyValidity(String key){
         if(key == null || !key.matches("^\\w+$"))
             throw new IllegalArgumentException("The given key is not valid! Given key was: " + key);
