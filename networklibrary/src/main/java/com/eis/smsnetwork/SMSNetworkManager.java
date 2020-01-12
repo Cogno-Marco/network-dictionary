@@ -16,6 +16,7 @@ import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.smsnetcommands.AcceptJoin;
 import com.eis.smsnetwork.smsnetcommands.InvitePeer;
 
 /**
@@ -101,7 +102,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         // N.B. this function provides an implementation for automatically joining a network.
         // while SMSJoinableNetManager uses this function by sending the request to the user
         // using a listener set by the user.
-        CommandExecutor.execute(new AddPeer(invitation.getInviterPeer(), netSubscribers));
+        CommandExecutor.execute(new AcceptJoin((SMSPeer)invitation.getInviterPeer(), netSubscribers));
     }
 
     /**
