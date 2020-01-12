@@ -16,6 +16,7 @@ import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.smsnetcommands.InvitePeer;
 
 /**
  * The manager class of the network.
@@ -88,7 +89,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void invite(SMSPeer peer, InviteListener<SMSPeer, FailReason> inviteListener) {
-
+        CommandExecutor.execute(new InvitePeer(peer));
     }
 
     /**
