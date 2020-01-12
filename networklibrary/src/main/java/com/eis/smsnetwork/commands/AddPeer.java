@@ -9,7 +9,8 @@ import com.eis.smsnetwork.SMSNetSubscriberList;
 /**
  * Command to add a peer to the Subscribers list
  *
- * @author Edoardo Raimondi, Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class AddPeer implements Command {
 
