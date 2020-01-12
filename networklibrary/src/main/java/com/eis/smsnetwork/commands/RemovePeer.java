@@ -9,7 +9,8 @@ import com.eis.smsnetwork.SMSNetSubscriberList;
 /**
  * Command to remove a peer from the subscribers
  *
- * @author Edoardo Raimondi, Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class RemovePeer implements Command {
 
@@ -18,10 +19,11 @@ public class RemovePeer implements Command {
 
     /**
      * Constructor for the RemovePeer command, needs the data to operate
-     * @param peer The peer to remove from the network
+     *
+     * @param peer           The peer to remove from the network
      * @param netSubscribers The subscribers currently in the network
      */
-    public RemovePeer(@NonNull SMSPeer peer,@NonNull SMSNetSubscriberList netSubscribers){
+    public RemovePeer(@NonNull SMSPeer peer, @NonNull SMSNetSubscriberList netSubscribers) {
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }

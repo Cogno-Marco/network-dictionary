@@ -19,10 +19,11 @@ public class AddPeer implements Command {
 
     /**
      * AddPeer command constructor, receives the data it needs to operate
-     * @param peer The Peer to add to the network
+     *
+     * @param peer           The Peer to add to the network
      * @param netSubscribers The subscribers list to add the peer to
      */
-    public AddPeer(@NonNull SMSPeer peer,@NonNull SMSNetSubscriberList netSubscribers){
+    public AddPeer(@NonNull SMSPeer peer, @NonNull SMSNetSubscriberList netSubscribers) {
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }
@@ -30,7 +31,7 @@ public class AddPeer implements Command {
     /**
      * Add the peer to the subscribers list and broadcasts it to the net
      */
-    public void execute(){
+    public void execute() {
         netSubscribers.addSubscriber(peer);
         //TODO broadcast
     }

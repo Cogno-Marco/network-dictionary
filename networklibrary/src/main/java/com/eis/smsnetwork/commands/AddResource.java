@@ -8,7 +8,8 @@ import com.eis.smsnetwork.SMSNetDictionary;
 /**
  * Command to add a resource to the net dictionary
  *
- * @author Edoardo Raimondi, Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class AddResource implements Command {
 
@@ -19,11 +20,12 @@ public class AddResource implements Command {
 
     /**
      * Constructor for the AddResource command, needs the data to operate
-     * @param key The key of the resource to add
-     * @param value The value of the resource to add
+     *
+     * @param key           The key of the resource to add
+     * @param value         The value of the resource to add
      * @param netDictionary The dictionary to add the resource in
      */
-    public AddResource(@NonNull String key,@NonNull String value,@NonNull SMSNetDictionary netDictionary){
+    public AddResource(@NonNull String key, @NonNull String value, @NonNull SMSNetDictionary netDictionary) {
         this.key = key;
         this.value = value;
         this.netDictionary = netDictionary;

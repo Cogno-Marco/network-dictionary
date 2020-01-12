@@ -9,7 +9,8 @@ import com.eis.smsnetwork.SMSNetDictionary;
 /**
  * Command to remove a resource from the network dictionary
  *
- * @author Edoardo Raimondi, Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class RemoveResource implements Command {
 
@@ -18,10 +19,11 @@ public class RemoveResource implements Command {
 
     /**
      * Constructor for the RemoveResource command, needs the data to operate
-     * @param key The key identifier of the resource to remove
+     *
+     * @param key           The key identifier of the resource to remove
      * @param netDictionary The dictionary to remove the resource from
      */
-    public RemoveResource(@NonNull String key,@NonNull SMSNetDictionary netDictionary){
+    public RemoveResource(@NonNull String key, @NonNull SMSNetDictionary netDictionary) {
         this.key = key;
         this.netDictionary = netDictionary;
     }
