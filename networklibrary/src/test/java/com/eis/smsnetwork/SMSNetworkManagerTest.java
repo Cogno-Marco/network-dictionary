@@ -11,7 +11,7 @@ public class SMSNetworkManagerTest {
 
     @Test
     public void getNetSubscribers() {
-        assertEquals(networkManager.getNetSubscribers(), networkManager.getNetSubscribers());
+        assertEquals(networkManager.getNetSubscriberList(), networkManager.getNetSubscriberList());
     }
 
     @Test
