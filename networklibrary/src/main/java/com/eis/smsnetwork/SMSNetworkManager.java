@@ -22,7 +22,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     /**
      * @return netSubscribers
      */
-    public SMSNetSubscriberList getNetSubscribers(){ return netSubscribers; }
+    public SMSNetSubscriberList getNetSubscriberList(){ return netSubscribers; }
 
     /**
      * @return netDictionary
