@@ -2,13 +2,13 @@ package com.eis.communication.network;
 
 import com.eis.communication.Peer;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Interface which defines common operations for Subscribers of a network
  * @param <T> The type of subscribers, must implement the {@link Peer} interface
  *
- * @author Marco Cognolato
+ * @author Marco Cognolato, Giovanni Velludo
  */
 public interface INetSubscribers<T extends Peer> {
 
@@ -21,7 +21,7 @@ public interface INetSubscribers<T extends Peer> {
     /**
      * @return Returns the list of all the current subscribers to the net
      */
-    ArrayList<T> getSubscribers();
+    Set<T> getSubscribers();
 
     /**
      * Removes a given subscriber from the subscribers

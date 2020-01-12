@@ -6,16 +6,34 @@ import com.eis.smslibrary.SMSPeer;
 /**
  * Concrete JoinableNetwork for SMS Messages
  *
- * @author Marco Cognolato
+ * @author Marco Cognolato, Giovanni Velludo
  */
 public class SMSJoinableNetManager extends SMSNetworkManager
         implements JoinableNetworkManager<String, String, SMSPeer, FailReason, Invitation<SMSPeer>> {
+
+    private static SMSJoinableNetManager instance;
+
+    /**
+     * Private constructor of the singleton.
+     */
+    private SMSJoinableNetManager() {
+    }
+
+    /**
+     * Gets the only instance of this class.
+     *
+     * @return the only instance of SMSNetworkManager.
+     */
+    public static SMSJoinableNetManager getInstance() {
+        return instance;
+    }
 
     /**
      * Accepts a given join invitation.
      * If a listener is NOT set (using {@link #setJoinInvitationListener(JoinInvitationListener)})
      * this method will be called automatically, else you should call this from the listener
      * if you want to accept an invitation
+     *
      * @param invitation The invitation previously received.
      */
     @Override
@@ -26,6 +44,7 @@ public class SMSJoinableNetManager extends SMSNetworkManager
 
     /**
      * Sets a listener waiting for network invitations
+     *
      * @param joinInvitationListener Listener called upon invitation received.
      */
     @Override

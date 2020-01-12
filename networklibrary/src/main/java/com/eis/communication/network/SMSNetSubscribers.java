@@ -2,16 +2,17 @@ package com.eis.communication.network;
 
 import com.eis.smslibrary.SMSPeer;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Concrete implementation of a {@link INetSubscribers} interface
  *
- * @author Marco Cognolato
+ * @author Marco Cognolato, Giovanni Velludo
  */
 public class SMSNetSubscribers implements INetSubscribers<SMSPeer> {
 
-    private final ArrayList<SMSPeer> subscribers = new ArrayList<>();
+    private final Set<SMSPeer> subscribers = new HashSet<>();
 
     /**
      * Adds a subscriber to this network
@@ -27,7 +28,7 @@ public class SMSNetSubscribers implements INetSubscribers<SMSPeer> {
     /**
      * @return Returns the list of all the current subscribers to the net
      */
-    public ArrayList<SMSPeer> getSubscribers() {
+    public Set<SMSPeer> getSubscribers() {
         return subscribers;
     }
 

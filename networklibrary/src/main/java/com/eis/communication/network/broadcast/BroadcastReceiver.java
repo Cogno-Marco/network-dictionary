@@ -1,7 +1,15 @@
 package com.eis.communication.network.broadcast;
 
 import com.eis.communication.network.RequestType;
+import com.eis.communication.network.SMSJoinableNetManager;
+import com.eis.communication.network.SMSNetDictionary;
+import com.eis.communication.network.SMSNetSubscribers;
+import com.eis.communication.network.commands.AddPeer;
+import com.eis.communication.network.commands.AddResource;
+import com.eis.communication.network.commands.RemovePeer;
+import com.eis.communication.network.commands.RemoveResource;
 import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 
 /**
@@ -17,13 +25,57 @@ import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
  * <li>RemovePeer: there are no other fields, because this request can only be sent by the
  * {@link com.eis.smslibrary.SMSPeer} who wants to be removed</li>
  * <li>AddResource: field 1 contains the key, field 2 contains the value</li>
- * <li>RemoveResource: field 1 contains the key, field 2 contains the value</li>
+ * <li>RemoveResource: field 1 contains the key</li>
  * </ul>
+ *
+ * @author Marco Cognolato, Giovanni Velludo
  */
 public class BroadcastReceiver extends SMSReceivedServiceListener {
+    //TODO: write tests
 
     @Override
     public void onMessageReceived(SMSMessage message) {
-
+        String[] fields = message.getData().split(" ");
+        // TODO: add sanity checks on fields
+        RequestType request = RequestType.values()[Integer.parseInt(fields[0])];
+        SMSPeer sender = message.getPeer();
+        SMSNetSubscribers subscribers = SMSJoinableNetManager.getInstance().getNetSubscribers();
+        SMSNetDictionary dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
+        boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
+        switch (RequestType.values()[Integer.parseInt(fields[0])]) {
+            case Invite:
+                if (subscribers.getSubscribers().isEmpty()) {
+                    // if there's nobody in my network, which means that I'm not in a network
+                    // TODO: ask user if they want to join the network, then act accordingly
+                } else {
+                    // TODO: ask the user if they want to leave the current network and join the new
+                    //  one
+                }
+                break;
+            case AcceptInvitation:
+                // TODO: check if we invited the peer, if yes then accept the invitation
+                SMSJoinableNetManager.getInstance().acceptJoinInvitation(() -> sender);
+                // TODO: broadcast AddPeer for the new peer, we should probably add a Command for
+                //  the whole AcceptInvitation process
+                break;
+            case AddPeer:
+                if (senderIsNotSubscriber) return;
+                SMSPeer peerToAdd = new SMSPeer(fields[1]);
+                new AddPeer(peerToAdd, subscribers).execute();
+                break;
+            case RemovePeer:
+                new RemovePeer(sender, subscribers).execute();
+                break;
+            case AddResource:
+                if (senderIsNotSubscriber) return;
+                String key = fields[1];
+                String value = fields[2];
+                new AddResource(key, value, dictionary).execute();
+                break;
+            case RemoveResource:
+                if (senderIsNotSubscriber) return;
+                key = fields[1];
+                new RemoveResource(key, dictionary).execute();
+        }
     }
 }
