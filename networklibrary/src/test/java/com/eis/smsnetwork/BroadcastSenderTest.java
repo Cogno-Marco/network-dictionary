@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.smsnetwork;
 
 import com.eis.smslibrary.SMSPeer;
 
@@ -6,11 +6,11 @@ import org.junit.Before;
 
 public class BroadcastSenderTest {
 
-    private static final SMSPeer PEER1 = SMSNetSubscribersTest.PEER1;
-    private static final SMSPeer PEER2 = SMSNetSubscribersTest.PEER2;
-    private static final SMSPeer PEER3 = SMSNetSubscribersTest.PEER3;
+    private static final SMSPeer PEER1 = SMSNetSubscriberListTest.PEER1;
+    private static final SMSPeer PEER2 = SMSNetSubscriberListTest.PEER2;
+    private static final SMSPeer PEER3 = SMSNetSubscriberListTest.PEER3;
 
-    private final SMSNetSubscribers subscribers = new SMSNetSubscribers();
+    private final SMSNetSubscriberList subscribers = new SMSNetSubscriberList();
 
     @Before
     public void setup() {

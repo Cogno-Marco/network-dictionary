@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.smsnetwork;
 
 import com.eis.smsnetwork.SMSNetDictionary;
 
