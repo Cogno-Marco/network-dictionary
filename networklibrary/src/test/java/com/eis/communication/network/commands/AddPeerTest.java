@@ -2,7 +2,7 @@ package com.eis.smsnetwork.commands;
 
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.SMSNetworkManager;
-import com.eis.smsnetwork.commands.AddPeer;
+import com.eis.communication.network.commands.AddPeer;
 
 import org.junit.Test;
 

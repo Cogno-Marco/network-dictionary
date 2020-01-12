@@ -1,5 +1,7 @@
 package com.eis.smsnetwork.commands;
 
+import com.eis.communication.network.commands.AddResource;
+import com.eis.communication.network.commands.RemoveResource;
 import com.eis.smsnetwork.SMSNetworkManager;
 
 import org.junit.Before;
