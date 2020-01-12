@@ -1,10 +1,10 @@
-package com.eis.smsnetwork.commands;
+package com.eis.communication.network.commands;
 
 import androidx.annotation.NonNull;
 
+import com.eis.communication.Peer;
 import com.eis.communication.network.Command;
-import com.eis.smslibrary.SMSPeer;
-import com.eis.smsnetwork.SMSNetSubscriberList;
+import com.eis.communication.network.NetSubscriberList;
 
 /**
  * Command to remove a peer from the subscribers
@@ -14,8 +14,8 @@ import com.eis.smsnetwork.SMSNetSubscriberList;
  */
 public class RemovePeer implements Command {
 
-    private SMSPeer peer;
-    private SMSNetSubscriberList netSubscribers;
+    private Peer peer;
+    private NetSubscriberList netSubscribers;
 
     /**
      * Constructor for the RemovePeer command, needs the data to operate
@@ -23,7 +23,7 @@ public class RemovePeer implements Command {
      * @param peer           The peer to remove from the network
      * @param netSubscribers The subscribers currently in the network
      */
-    public RemovePeer(@NonNull SMSPeer peer, @NonNull SMSNetSubscriberList netSubscribers) {
+    public RemovePeer(@NonNull Peer peer, @NonNull NetSubscriberList netSubscribers) {
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }

@@ -1,5 +1,6 @@
 package com.eis.smsnetwork.commands;
 
+import com.eis.communication.network.commands.AddResource;
 import com.eis.smsnetwork.SMSNetworkManager;
 
 

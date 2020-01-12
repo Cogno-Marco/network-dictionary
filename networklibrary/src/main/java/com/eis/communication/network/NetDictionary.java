@@ -7,7 +7,7 @@ package com.eis.communication.network;
  *
  * @author Marco Cognolato
  */
-public interface NetworkDictionary<K,R>{
+public interface NetDictionary<K,R>{
 
     /**
      * Adds a resource to the network dictionary

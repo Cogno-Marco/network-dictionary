@@ -1,5 +1,7 @@
 package com.eis.smsnetwork.commands;
 
+import com.eis.communication.network.commands.AddPeer;
+import com.eis.communication.network.commands.RemovePeer;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.SMSNetworkManager;
 

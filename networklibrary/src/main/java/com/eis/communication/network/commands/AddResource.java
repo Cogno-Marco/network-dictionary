@@ -1,9 +1,9 @@
-package com.eis.smsnetwork.commands;
+package com.eis.communication.network.commands;
 
 import androidx.annotation.NonNull;
 
 import com.eis.communication.network.Command;
-import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.communication.network.NetDictionary;
 
 /**
  * Command to add a resource to the net dictionary
@@ -16,7 +16,7 @@ public class AddResource implements Command {
     /*Using strings to be coherent to SMSNetDictionary class*/
     private String key;
     private String value;
-    private SMSNetDictionary netDictionary;
+    private NetDictionary netDictionary;
 
     /**
      * Constructor for the AddResource command, needs the data to operate
@@ -25,7 +25,7 @@ public class AddResource implements Command {
      * @param value         The value of the resource to add
      * @param netDictionary The dictionary to add the resource in
      */
-    public AddResource(@NonNull String key, @NonNull String value, @NonNull SMSNetDictionary netDictionary) {
+    public AddResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary netDictionary) {
         this.key = key;
         this.value = value;
         this.netDictionary = netDictionary;

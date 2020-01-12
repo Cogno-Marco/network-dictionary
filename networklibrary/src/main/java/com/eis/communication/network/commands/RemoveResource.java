@@ -1,9 +1,9 @@
-package com.eis.smsnetwork.commands;
+package com.eis.communication.network.commands;
 
 import androidx.annotation.NonNull;
 
 import com.eis.communication.network.Command;
-import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.communication.network.NetDictionary;
 
 
 /**
@@ -14,7 +14,7 @@ import com.eis.smsnetwork.SMSNetDictionary;
  */
 public class RemoveResource implements Command {
 
-    private SMSNetDictionary netDictionary;
+    private NetDictionary netDictionary;
     private String key;
 
     /**
@@ -23,7 +23,7 @@ public class RemoveResource implements Command {
      * @param key           The key identifier of the resource to remove
      * @param netDictionary The dictionary to remove the resource from
      */
-    public RemoveResource(@NonNull String key, @NonNull SMSNetDictionary netDictionary) {
+    public RemoveResource(@NonNull String key, @NonNull NetDictionary netDictionary) {
         this.key = key;
         this.netDictionary = netDictionary;
     }

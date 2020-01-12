@@ -1,17 +1,17 @@
 package com.eis.smsnetwork;
 
 
-import com.eis.communication.network.NetworkDictionary;
+import com.eis.communication.network.NetDictionary;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Concrete implementation of a NetworkDictionary
+ * Concrete implementation of a NetDictionary
  *
  * @author Marco Cognolato
  */
-public class SMSNetDictionary implements NetworkDictionary<String, String> {
+public class SMSNetDictionary implements NetDictionary<String, String> {
 
     Map<String, String> dict = new HashMap<>();
 
