@@ -12,7 +12,8 @@ import com.eis.smslibrary.SMSPeer;
 /**
  * The manager class of the network.
  *
- * @author Edoardo Raimondi, Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, FailReason> {
 
