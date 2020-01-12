@@ -10,6 +10,7 @@ import com.eis.communication.network.commands.RemovePeer;
 import com.eis.communication.network.commands.RemoveResource;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 
 /**
@@ -36,13 +37,19 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     @Override
     public void onMessageReceived(SMSMessage message) {
         String[] fields = message.getData().split(" ");
-        // TODO: add sanity checks on fields
         RequestType request = RequestType.values()[Integer.parseInt(fields[0])];
-        SMSPeer sender = message.getPeer();
+        SMSPeer sender;
+        // TODO: reminder that the exception is not thrown in the latest version of the
+        //  library, there's a method for checking the validity of the SMSPeer instead
+        try {
+            sender = message.getPeer();
+        } catch (InvalidTelephoneNumberException e) {
+            return;
+        }
         SMSNetSubscribers subscribers = SMSJoinableNetManager.getInstance().getNetSubscribers();
         SMSNetDictionary dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
-        switch (RequestType.values()[Integer.parseInt(fields[0])]) {
+        switch (request) {
             case Invite:
                 if (subscribers.getSubscribers().isEmpty()) {
                     // if there's nobody in my network, which means that I'm not in a network
@@ -60,7 +67,14 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             case AddPeer:
                 if (senderIsNotSubscriber) return;
-                SMSPeer peerToAdd = new SMSPeer(fields[1]);
+                SMSPeer peerToAdd;
+                // TODO: reminder that the exception is not thrown in the latest version of the
+                //  library, there's a method for checking the validity of the SMSPeer instead
+                try {
+                    peerToAdd = new SMSPeer(fields[1]);
+                } catch (InvalidTelephoneNumberException e) {
+                    return;
+                }
                 new AddPeer(peerToAdd, subscribers).execute();
                 break;
             case RemovePeer:
