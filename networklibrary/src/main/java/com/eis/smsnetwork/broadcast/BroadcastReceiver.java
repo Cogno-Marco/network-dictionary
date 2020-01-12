@@ -13,6 +13,7 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.smsnetwork.SMSNetInvitation;
 import com.eis.smsnetwork.SMSNetSubscriberList;
 
 /**
@@ -70,7 +71,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             case AcceptInvitation:
                 // TODO: check if we invited the peer, if yes then accept the invitation
-                SMSJoinableNetManager.getInstance().acceptJoinInvitation(() -> sender);
+                SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
+                SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
                 // TODO: broadcast AddPeer for the new peer, we should probably add a Command for
                 //  the whole AcceptInvitation process
                 break;

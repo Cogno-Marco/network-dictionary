@@ -20,6 +20,8 @@ public class SMSJoinableNetManager extends SMSNetworkManager
 
     private static SMSJoinableNetManager instance;
 
+    private JoinInvitationListener<Invitation<SMSPeer>> invitationListener = null;
+
     /**
      * Private constructor of the singleton.
      */
@@ -32,6 +34,7 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      * @return the only instance of SMSNetworkManager.
      */
     public static SMSJoinableNetManager getInstance() {
+        if(instance == null) instance = new SMSJoinableNetManager();
         return instance;
     }
 
@@ -56,6 +59,16 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      */
     @Override
     public void setJoinInvitationListener(JoinInvitationListener<Invitation<SMSPeer>> joinInvitationListener) {
+        invitationListener = joinInvitationListener;
+    }
 
+    /**
+     * When an invitation in received separates between auto accepting and forwarding it to the
+     * user depending if a listener was set by the user
+     * @param invitation The invitation received
+     */
+    public void checkInvitation(Invitation<SMSPeer> invitation){
+        if(invitationListener == null) acceptJoinInvitation(invitation);
+        invitationListener.onJoinInvitationReceived(invitation);
     }
 }
