@@ -5,14 +5,13 @@ package com.eis.communication.network;
  * It just lets them executing.
  *
  * @link https://refactoring.guru/design-patterns/command
- * @param <C> command type
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico cestaro
  */
-public class CommandExecutor <C extends Command>{
+public class CommandExecutor{
 
     /**
      * @param command to be performed
      */
-    public void execute(C command){ command.execute(); }
+    public void execute(Command command){ command.execute(); }
 }
