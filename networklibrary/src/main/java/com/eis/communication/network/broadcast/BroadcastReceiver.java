@@ -37,7 +37,12 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     @Override
     public void onMessageReceived(SMSMessage message) {
         String[] fields = message.getData().split(" ");
-        RequestType request = RequestType.values()[Integer.parseInt(fields[0])];
+        RequestType request;
+        try {
+            request = RequestType.values()[Integer.parseInt(fields[0])];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return;
+        }
         SMSPeer sender;
         // TODO: reminder that the exception is not thrown in the latest version of the
         //  library, there's a method for checking the validity of the SMSPeer instead
@@ -82,13 +87,22 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             case AddResource:
                 if (senderIsNotSubscriber) return;
-                String key = fields[1];
-                String value = fields[2];
+                String key, value;
+                try {
+                    key = fields[1];
+                    value = fields[2];
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    return;
+                }
                 new AddResource(key, value, dictionary).execute();
                 break;
             case RemoveResource:
                 if (senderIsNotSubscriber) return;
-                key = fields[1];
+                try {
+                    key = fields[1];
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    return;
+                }
                 new RemoveResource(key, dictionary).execute();
         }
     }
