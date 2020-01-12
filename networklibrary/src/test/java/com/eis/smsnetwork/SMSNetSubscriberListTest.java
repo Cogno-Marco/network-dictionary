@@ -1,7 +1,7 @@
-package com.eis.communication.network;
+package com.eis.smsnetwork;
 
-import smsnetwork.SMSNetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.SMSNetSubscriberList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,8 +9,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Unit tests for the SMSNetSubscriberList class
