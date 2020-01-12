@@ -4,14 +4,17 @@ package com.eis.communication.network;
  * Class that manage all the sent commands.
  * It just lets them executing.
  *
- * @link https://refactoring.guru/design-patterns/command
- *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico cestaro
+ * @link https://refactoring.guru/design-patterns/command
  */
-public class CommandExecutor{
+public class CommandExecutor {
 
     /**
+     * Calls the given command {@link Command#execute()} method
+     *
      * @param command to be performed
      */
-    public void execute(Command command){ command.execute(); }
+    public void execute(Command command) {
+        command.execute();
+    }
 }
