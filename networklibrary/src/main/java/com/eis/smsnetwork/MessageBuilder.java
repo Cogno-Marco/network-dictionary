@@ -40,12 +40,17 @@ public class MessageBuilder {
      */
     public MessageBuilder addArguments(String... arguments){
         StringBuilder builder = new StringBuilder(messageText == null? "" : messageText);
-        for(String arg : arguments){
-            builder.append(" ");
-            if(arg == null || arg .equals(""))
-                builder.append("/");
-            else
-                builder.append(arg);
+        if(arguments == null){
+            builder.append(" /");
+        }
+        else{
+            for(String arg : arguments){
+                builder.append(" ");
+                if(arg == null || arg .equals(""))
+                    builder.append("/");
+                else
+                    builder.append(arg);
+            }
         }
         //if I don't have an older message, I have to remove the empty space at the start
         if(messageText == null) builder.deleteCharAt(0);
