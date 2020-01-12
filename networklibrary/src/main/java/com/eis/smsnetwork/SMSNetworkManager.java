@@ -1,7 +1,11 @@
 package com.eis.smsnetwork;
 
+import androidx.annotation.NonNull;
+
 import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
+import com.eis.communication.network.NetDictionary;
+import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.NetworkManager;
 import com.eis.communication.network.listeners.GetResourceListener;
 import com.eis.communication.network.listeners.InviteListener;
@@ -17,20 +21,20 @@ import com.eis.smslibrary.SMSPeer;
  */
 public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, FailReason> {
 
-    private SMSNetSubscriberList netSubscribers = new SMSNetSubscriberList();
-    private SMSNetDictionary netDictionary = new SMSNetDictionary();
+    private NetSubscriberList<SMSPeer> netSubscribers = new SMSNetSubscriberList();
+    private NetDictionary<String, String> netDictionary = new SMSNetDictionary();
 
     /**
      * @return netSubscribers
      */
-    public SMSNetSubscriberList getNetSubscriberList() {
+    public NetSubscriberList<SMSPeer> getNetSubscriberList() {
         return netSubscribers;
     }
 
     /**
      * @return netDictionary
      */
-    public SMSNetDictionary getNetDictionary() {
+    public NetDictionary<String, String> getNetDictionary() {
         return netDictionary;
     }
 
@@ -92,5 +96,25 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         // N.B. this function provides an implementation for automatically joining a network.
         // while SMSJoinableNetManager uses this function by sending the request to the user
         // using a listener set by the user.
+    }
+
+    /**
+     * Sets a given list of subscribers, to provide the network
+     * with your own implementation
+     *
+     * @param list A NetSubscriberList of type <SMSPeer> to provide
+     */
+    public void setNetSubscriberList(@NonNull NetSubscriberList<SMSPeer> list) {
+
+    }
+
+    /**
+     * Sets a given dictionary of resources, to provide the network
+     * with your own implementation
+     *
+     * @param dictionary A NetDictionary of type <String,String> to provide
+     */
+    public void setNetDictionary(@NonNull NetDictionary<String, String> dictionary) {
+
     }
 }
