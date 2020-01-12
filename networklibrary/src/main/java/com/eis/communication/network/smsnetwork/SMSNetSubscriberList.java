@@ -1,15 +1,16 @@
-package com.eis.communication.network;
+package com.eis.communication.network.smsnetwork;
 
+import com.eis.communication.network.NetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
 
 import java.util.ArrayList;
 
 /**
- * Concrete implementation of a {@link INetSubscribers} interface
+ * Concrete implementation of a {@link NetSubscriberList} interface
  *
  * @author Marco Cognolato
  */
-public class SMSNetSubscribers implements INetSubscribers<SMSPeer>  {
+public class SMSNetSubscriberList implements NetSubscriberList<SMSPeer> {
 
     private ArrayList<SMSPeer> subscribers = new ArrayList<>();
 

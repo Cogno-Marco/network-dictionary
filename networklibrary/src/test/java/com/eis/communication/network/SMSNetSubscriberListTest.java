@@ -1,5 +1,6 @@
 package com.eis.communication.network;
 
+import com.eis.communication.network.smsnetwork.SMSNetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Before;
@@ -12,11 +13,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Unit tests for the SMSNetSubscribers class
+ * Unit tests for the SMSNetSubscriberList class
  *
  * @author Marco Cognolato
  */
-public class SMSNetSubscribersTest {
+public class SMSNetSubscriberListTest {
 
     public final SMSPeer PEER1 = new SMSPeer("+393423541601");
     public final SMSPeer PEER2 = new SMSPeer("+393423541601");
@@ -24,7 +25,7 @@ public class SMSNetSubscribersTest {
 
     public ArrayList<SMSPeer> totalPeers = new ArrayList<>();
 
-    private SMSNetSubscribers netSubscribers;
+    private SMSNetSubscriberList netSubscribers;
 
     @Before
     public void setup(){
@@ -32,7 +33,7 @@ public class SMSNetSubscribersTest {
         totalPeers.add(PEER2);
         totalPeers.add(PEER3);
 
-        netSubscribers = new SMSNetSubscribers();
+        netSubscribers = new SMSNetSubscriberList();
     }
 
     @Test

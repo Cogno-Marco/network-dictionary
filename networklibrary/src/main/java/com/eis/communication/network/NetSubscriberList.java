@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Marco Cognolato
  */
-public interface INetSubscribers<T extends Peer> {
+public interface NetSubscriberList<T extends Peer> {
 
     /**
      * Adds a subscriber to this network

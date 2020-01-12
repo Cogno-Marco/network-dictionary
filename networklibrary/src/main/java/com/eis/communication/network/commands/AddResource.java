@@ -1,6 +1,6 @@
-package com.eis.communication.network.Commands;
+package com.eis.communication.network.commands;
 
-import com.eis.communication.network.SMSNetDictionary;
+import com.eis.communication.network.smsnetwork.SMSNetDictionary;
 
 /**
  * Command to add a resource

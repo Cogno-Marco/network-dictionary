@@ -1,5 +1,7 @@
 package com.eis.communication.network;
 
+import com.eis.communication.network.smsnetwork.SMSNetworkManager;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;

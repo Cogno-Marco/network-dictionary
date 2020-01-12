@@ -1,6 +1,6 @@
-package com.eis.communication.network.Commands;
+package com.eis.communication.network.commands;
 
-import com.eis.communication.network.SMSNetSubscribers;
+import com.eis.communication.network.smsnetwork.SMSNetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
 
 /**
@@ -11,9 +11,9 @@ import com.eis.smslibrary.SMSPeer;
 public class RemovePeer implements Command {
 
     private SMSPeer peer;
-    private SMSNetSubscribers netSubscribers;
+    private SMSNetSubscriberList netSubscribers;
 
-    public RemovePeer(SMSPeer peer, SMSNetSubscribers netSubscribers){
+    public RemovePeer(SMSPeer peer, SMSNetSubscriberList netSubscribers){
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }

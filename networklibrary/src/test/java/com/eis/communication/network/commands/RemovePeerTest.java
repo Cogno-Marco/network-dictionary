@@ -1,6 +1,6 @@
-package com.eis.communication.network.Commands;
+package com.eis.communication.network.commands;
 
-import com.eis.communication.network.SMSNetworkManager;
+import com.eis.communication.network.smsnetwork.SMSNetworkManager;
 import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Before;

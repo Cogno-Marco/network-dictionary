@@ -1,6 +1,9 @@
-package com.eis.communication.network;
+package com.eis.communication.network.smsnetwork;
 
-import com.eis.communication.network.ListenersInterfaces.JoinInvitationListener;
+import com.eis.communication.network.FailReason;
+import com.eis.communication.network.Invitation;
+import com.eis.communication.network.JoinableNetworkManager;
+import com.eis.communication.network.listeners.JoinInvitationListener;
 import com.eis.smslibrary.SMSPeer;
 
 /**

@@ -1,9 +1,12 @@
-package com.eis.communication.network;
+package com.eis.communication.network.smsnetwork;
 
-import com.eis.communication.network.ListenersInterfaces.GetResourceListener;
-import com.eis.communication.network.ListenersInterfaces.InviteListener;
-import com.eis.communication.network.ListenersInterfaces.RemoveResourceListener;
-import com.eis.communication.network.ListenersInterfaces.SetResourceListener;
+import com.eis.communication.network.FailReason;
+import com.eis.communication.network.Invitation;
+import com.eis.communication.network.listeners.GetResourceListener;
+import com.eis.communication.network.listeners.InviteListener;
+import com.eis.communication.network.listeners.RemoveResourceListener;
+import com.eis.communication.network.listeners.SetResourceListener;
+import com.eis.communication.network.NetworkManager;
 import com.eis.smslibrary.SMSPeer;
 
 /**
@@ -13,13 +16,13 @@ import com.eis.smslibrary.SMSPeer;
  */
 public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, FailReason> {
 
-    private SMSNetSubscribers netSubscribers = new SMSNetSubscribers();
+    private SMSNetSubscriberList netSubscribers = new SMSNetSubscriberList();
     private SMSNetDictionary netDictionary = new SMSNetDictionary();
 
     /**
      * @return netSubscribers
      */
-    public SMSNetSubscribers getNetSubscribers(){ return netSubscribers; }
+    public SMSNetSubscriberList getNetSubscribers(){ return netSubscribers; }
 
     /**
      * @return netDictionary

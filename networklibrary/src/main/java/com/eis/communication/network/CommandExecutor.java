@@ -1,6 +1,6 @@
 package com.eis.communication.network;
 
-import com.eis.communication.network.Commands.Command;
+import com.eis.communication.network.commands.Command;
 
 /**
  * Class that manage all the sent commands.

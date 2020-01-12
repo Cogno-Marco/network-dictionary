@@ -1,5 +1,7 @@
 package com.eis.communication.network;
 
+import com.eis.communication.network.smsnetwork.SMSNetDictionary;
+
 import org.junit.Before;
 import org.junit.Test;
 
