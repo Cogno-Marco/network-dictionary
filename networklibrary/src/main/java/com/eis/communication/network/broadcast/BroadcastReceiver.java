@@ -40,7 +40,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         RequestType request;
         try {
             request = RequestType.values()[Integer.parseInt(fields[0])];
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (NumberFormatException|ArrayIndexOutOfBoundsException e) {
             return;
         }
         SMSPeer sender;
