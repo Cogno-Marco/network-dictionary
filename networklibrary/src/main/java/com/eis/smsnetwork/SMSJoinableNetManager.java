@@ -12,7 +12,8 @@ import com.eis.smslibrary.SMSPeer;
  * the method {@link #acceptJoinInvitation(Invitation)} will be called automatically,
  * else you should call that from the listener if you want to accept an invitation
  *
- * @author Marco Cognolato, Giovanni Velludo
+ * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSJoinableNetManager extends SMSNetworkManager
         implements JoinableNetworkManager<String, String, SMSPeer, FailReason, Invitation<SMSPeer>> {

@@ -1,7 +1,5 @@
 package com.eis.smsnetwork;
 
-import android.os.Environment;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +9,8 @@ import java.util.Map;
  * the RequestType received, different actions are performed.
  * It is identifies by the listener receiver.
  *
- * @author Edoardo Raimondi, Marco Cognolato
+ * @author Edoardo Raimondi
+ * @author Marco Cognolato
  */
 public enum RequestType {
 
@@ -39,27 +38,26 @@ public enum RequestType {
 
     /*
      * Populate the lookup table on loading time
-     * Trick learned online
+     * The lookup table is used to change a command string into a RequestType
+     * Trick learned online. Since that block is static it will get executed really early,
+     * even before the constructor.
      *
      * @author Marco Cognolato
      */
-    static
-    {
-        for(RequestType command : RequestType.values())
-        {
+    static {
+        for (RequestType command : RequestType.values()) {
             lookup.put(command.asString(), command);
         }
     }
 
     /**
      * Returns the RequestType given the string identifier
+     *
      * @param command The String command of this
      * @return Returns the corresponding RequestType if it exists, null otherwise
-     *
      * @author Marco Cognolato
      */
-    public static RequestType get(String command)
-    {
+    public static RequestType get(String command) {
         return lookup.get(command);
     }
 }

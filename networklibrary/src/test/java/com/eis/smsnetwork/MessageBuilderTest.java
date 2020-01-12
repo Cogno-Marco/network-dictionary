@@ -1,6 +1,5 @@
 package com.eis.smsnetwork;
 
-import com.eis.communication.network.commands.AddResource;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 

@@ -53,8 +53,7 @@ public class MessageBuilder {
             }
         }
         //if I don't have an older message, I have to remove the empty space at the start
-        if(messageText == null) builder.deleteCharAt(0);
-        messageText = builder.toString();
+        messageText = builder.toString().trim();
         return this;
     }
 
