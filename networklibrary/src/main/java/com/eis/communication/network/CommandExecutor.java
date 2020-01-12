@@ -14,7 +14,7 @@ public class CommandExecutor {
      *
      * @param command to be performed
      */
-    public void execute(Command command) {
+    public static void execute(Command command) {
         command.execute();
     }
 }
