@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.communication.network.commands;
 
 /**
  * Class that manage all the sent commands.

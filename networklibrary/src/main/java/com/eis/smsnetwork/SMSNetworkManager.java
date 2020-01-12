@@ -2,22 +2,21 @@ package com.eis.smsnetwork;
 
 import androidx.annotation.NonNull;
 
-import com.eis.communication.network.CommandExecutor;
+import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.NetworkManager;
-import com.eis.communication.network.commands.AddPeer;
-import com.eis.communication.network.commands.AddResource;
-import com.eis.communication.network.commands.RemoveResource;
 import com.eis.communication.network.listeners.GetResourceListener;
 import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSPeer;
-import com.eis.smsnetwork.smsnetcommands.AcceptJoin;
+import com.eis.smsnetwork.smsnetcommands.AcceptInvite;
+import com.eis.smsnetwork.smsnetcommands.AddResource;
 import com.eis.smsnetwork.smsnetcommands.InvitePeer;
+import com.eis.smsnetwork.smsnetcommands.RemoveResource;
 
 /**
  * The manager class of the network.
@@ -106,7 +105,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         // N.B. this function provides an implementation for automatically joining a network.
         // while SMSJoinableNetManager uses this function by sending the request to the user
         // using a listener set by the user.
-        CommandExecutor.execute(new AcceptJoin((SMSPeer)invitation.getInviterPeer(), netSubscribers));
+        CommandExecutor.execute(new AcceptInvite((SMSPeer)invitation.getInviterPeer(), netSubscribers));
     }
 
     /**

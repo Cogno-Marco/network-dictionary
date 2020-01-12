@@ -1,4 +1,4 @@
-package com.eis.communication.network.commands;
+package com.eis.smsnetwork.smsnetcommands;
 
 import androidx.annotation.NonNull;
 
@@ -11,11 +11,7 @@ import com.eis.communication.network.NetDictionary;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public abstract class AddResource<K, R> extends Command {
-
-    protected final K key;
-    protected final R value;
-    protected final NetDictionary<K, R> netDictionary;
+public class AddResource extends com.eis.communication.network.commands.AddResource<String, String> {
 
     /**
      * Constructor for the AddResource command, needs the data to operate
@@ -24,14 +20,15 @@ public abstract class AddResource<K, R> extends Command {
      * @param value         The value of the resource to add
      * @param netDictionary The dictionary to add the resource in
      */
-    public AddResource(@NonNull K key, @NonNull R value, @NonNull NetDictionary<K, R> netDictionary) {
-        this.key = key;
-        this.value = value;
-        this.netDictionary = netDictionary;
+    public AddResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary<String, String> netDictionary) {
+        super(key, value, netDictionary);
     }
 
     /**
      * Adds the key-resource pair to the dictionary, then broadcasts the message
      */
-    protected abstract void execute();
+    protected void execute() {
+        netDictionary.addResource(key, value);
+        //TODO broadcast
+    }
 }

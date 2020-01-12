@@ -1,9 +1,9 @@
-package com.eis.communication.network.commands;
+package com.eis.smsnetwork.smsnetcommands;
 
 import androidx.annotation.NonNull;
 
-import com.eis.communication.Peer;
 import com.eis.communication.network.NetSubscriberList;
+import com.eis.smslibrary.SMSPeer;
 
 /**
  * Command to add a peer to the Subscribers list
@@ -12,24 +12,23 @@ import com.eis.communication.network.NetSubscriberList;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public abstract class AddPeer<T extends Peer> extends Command {
-
-    protected final T peer;
-    protected final NetSubscriberList<T> netSubscribers;
+public class AddPeer extends com.eis.communication.network.commands.AddPeer<SMSPeer> {
 
     /**
      * AddPeer command constructor, receives the data it needs to operate on.
      *
-     * @param peer           The Peer to add to the network
+     * @param peer           The SMSPeer to add to the network
      * @param netSubscribers The subscribers to notify of the newest member
      */
-    public AddPeer(@NonNull T peer, @NonNull NetSubscriberList<T> netSubscribers) {
-        this.peer = peer;
-        this.netSubscribers = netSubscribers;
+    public AddPeer(@NonNull SMSPeer peer, @NonNull NetSubscriberList<SMSPeer> netSubscribers) {
+        super(peer, netSubscribers);
     }
 
     /**
      * Adds the peer to the subscribers list and broadcasts it to the net
      */
-    protected abstract void execute();
+    protected void execute() {
+        netSubscribers.addSubscriber(peer);
+        //TODO broadcast
+    }
 }

@@ -2,19 +2,18 @@ package com.eis.smsnetwork.broadcast;
 
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
-import com.eis.communication.network.commands.AddPeer;
-import com.eis.communication.network.commands.AddResource;
-import com.eis.communication.network.commands.RemovePeer;
-import com.eis.communication.network.commands.RemoveResource;
+import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
-import com.eis.smsnetwork.SMSNetDictionary;
 import com.eis.smsnetwork.SMSNetInvitation;
-import com.eis.smsnetwork.SMSNetSubscriberList;
+import com.eis.smsnetwork.smsnetcommands.AddPeer;
+import com.eis.smsnetwork.smsnetcommands.AddResource;
+import com.eis.smsnetwork.smsnetcommands.RemovePeer;
+import com.eis.smsnetwork.smsnetcommands.RemoveResource;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -24,12 +23,13 @@ import com.eis.smsnetwork.SMSNetSubscriberList;
  * <ul>
  * <li>Invite: there are no other fields</li>
  * <li>AcceptInvitation: there are no other fields</li>
- * <li>AddPeer: field 1 contains the phone number of the {@link com.eis.smslibrary.SMSPeer} we
- * have to add to our network</li>
+ * <li>AddPeer: fields from 1 to the last contain the phone numbers of each
+ * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
  * <li>RemovePeer: there are no other fields, because this request can only be sent by the
  * {@link com.eis.smslibrary.SMSPeer} who wants to be removed</li>
- * <li>AddResource: field 1 contains the key, field 2 contains the value</li>
- * <li>RemoveResource: field 1 contains the key</li>
+ * <li>AddResource: starting from 1, fields with odd numbers contain keys, their following (even)
+ * field contains the corresponding value</li>
+ * <li>RemoveResource: fields from 1 to the last contain the keys to remove</li>
  * </ul>
  *
  * @author Marco Cognolato, Giovanni Velludo
@@ -43,11 +43,11 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         RequestType request;
         try {
             request = RequestType.get(fields[0]);
-        } catch (NumberFormatException|ArrayIndexOutOfBoundsException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             return;
         }
-        if(request == null) return;
-        
+        if (request == null) return;
+
         SMSPeer sender;
         // TODO: reminder that the exception is not thrown in the latest version of the
         //  library, there's a method for checking the validity of the SMSPeer instead
@@ -86,10 +86,10 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (InvalidTelephoneNumberException e) {
                     return;
                 }
-                new AddPeer(peerToAdd, subscribers).execute();
+                CommandExecutor.execute(new AddPeer(peerToAdd, subscribers));
                 break;
             case RemovePeer:
-                new RemovePeer(sender, subscribers).execute();
+                CommandExecutor.execute(new RemovePeer(sender, subscribers));
                 break;
             case AddResource:
                 if (senderIsNotSubscriber) return;
@@ -100,7 +100,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                new AddResource(key, value, dictionary).execute();
+                CommandExecutor.execute(new AddResource(key, value, dictionary));
                 break;
             case RemoveResource:
                 if (senderIsNotSubscriber) return;
@@ -109,7 +109,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                new RemoveResource(key, dictionary).execute();
+                CommandExecutor.execute(new RemoveResource(key, dictionary));
         }
     }
 }
