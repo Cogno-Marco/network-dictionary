@@ -66,7 +66,11 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void getResource(String key, GetResourceListener<String, String, FailReason> getResourceListener) {
-
+        String resource = netDictionary.getResource(key);
+        if (resource != null) getResourceListener.onGetResource(key, resource);
+        else{
+            //TODO: define FailReason for a resource not being on the net
+        }
     }
 
     /**
