@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.smsnetwork;
 
 /**
  * This enum contains the Request Types, which are the CODE placed at the beginning of every message

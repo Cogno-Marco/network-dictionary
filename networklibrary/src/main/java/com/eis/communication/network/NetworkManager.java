@@ -1,7 +1,6 @@
 package com.eis.communication.network;
 
 import com.eis.communication.Peer;
-
 import com.eis.communication.network.listeners.GetResourceListener;
 import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;

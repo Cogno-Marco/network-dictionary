@@ -1,4 +1,5 @@
-package com.eis.communication.network;
+package com.eis.smsnetwork;
+
 
 import org.junit.Test;
 

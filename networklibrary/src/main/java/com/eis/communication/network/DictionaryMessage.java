@@ -3,6 +3,8 @@ package com.eis.communication.network;
 
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.MessageBuilder;
+import com.eis.smsnetwork.RequestType;
 
 /**
  * This class is similar to the Director part of the
