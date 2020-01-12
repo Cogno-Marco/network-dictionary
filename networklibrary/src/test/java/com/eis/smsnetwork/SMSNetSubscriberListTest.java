@@ -1,6 +1,6 @@
 package com.eis.communication.network;
 
-import com.eis.communication.network.smsnetwork.SMSNetSubscriberList;
+import smsnetwork.SMSNetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Before;

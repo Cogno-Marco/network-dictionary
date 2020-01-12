@@ -5,7 +5,8 @@ import com.eis.communication.Peer;
 import java.util.ArrayList;
 
 /**
- * Interface which defines common operations for Subscribers of a network
+ * Interface which defines common operations for Subscribers of a network.
+ * A subscriber is defined as a Peer currently connected to the network.
  * @param <T> The type of subscribers, must implement the {@link Peer} interface
  *
  * @author Marco Cognolato

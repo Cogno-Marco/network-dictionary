@@ -1,10 +1,13 @@
-package com.eis.communication.network.commands;
+package com.eis.smsnetwork.commands;
 
-import com.eis.communication.network.smsnetwork.SMSNetSubscriberList;
+import com.eis.communication.network.Command;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.SMSNetSubscriberList;
 
 /**
- * Command to add a peer to Subscribers
+ * Command to add a peer to the Subscribers list
+ *
+ * @author Edoardo Raimondi
  */
 public class AddPeer implements Command {
 

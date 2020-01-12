@@ -1,4 +1,4 @@
-package com.eis.communication.network.smsnetwork;
+package com.eis.smsnetwork;
 
 import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
@@ -11,7 +11,7 @@ import com.eis.smslibrary.SMSPeer;
  *
  * @author Marco Cognolato
  */
-public class SMSJoinableNetManager extends SMSNetworkManager
+public class SMSJoinableNetManager extends smsnetwork.SMSNetworkManager
         implements JoinableNetworkManager<String, String, SMSPeer, FailReason, Invitation<SMSPeer>> {
 
     /**

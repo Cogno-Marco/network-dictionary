@@ -1,7 +1,8 @@
-package com.eis.communication.network.commands;
+package com.eis.smsnetwork.commands;
 
-import com.eis.communication.network.smsnetwork.SMSNetSubscriberList;
+import com.eis.communication.network.Command;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.SMSNetSubscriberList;
 
 /**
  * Command to remove a peer from the subscribers

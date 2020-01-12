@@ -1,4 +1,4 @@
-package com.eis.communication.network.smsnetwork;
+package com.eis.smsnetwork;
 
 import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;

@@ -1,4 +1,5 @@
-package com.eis.communication.network.smsnetwork;
+package com.eis.smsnetwork;
+
 
 import com.eis.communication.network.NetworkDictionary;
 
@@ -52,7 +53,19 @@ public class SMSNetDictionary implements NetworkDictionary<String, String> {
 
     /**
      * Checks if a given key is valid, else throws IllegalArgumentException.
-     * A key is said to be valid only if it's composed of one word
+     * A key is said to be valid only if it's composed of one word.
+     *
+     * This is because when a Key-Resource pair gets embedded in an SMSMessage they need a separator.
+     * We decided to use a space as a separator, so if we allow multiple words keys we run into a
+     * problem: understanding how to distinguish a key from a resource.
+     * For example if a message has "a b c" is it the key "a" and the resource "b c", or the
+     * key "a b" and the resource "c".
+     *
+     * The immediate response would be "use a different separator" but the same logic applies to
+     * that separator. For example if we use "_" as a separator, the file
+     * really_big_image.jpg would be separater into the key "really" and the resource "big image.jpg"
+     * which is wrong.
+     *
      * @param key The key to check
      */
     private void checkKeyValidity(String key){

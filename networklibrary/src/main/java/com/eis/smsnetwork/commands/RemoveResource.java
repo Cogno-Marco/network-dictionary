@@ -1,6 +1,8 @@
-package com.eis.communication.network.commands;
+package com.eis.smsnetwork.commands;
 
-import com.eis.communication.network.smsnetwork.SMSNetDictionary;
+import com.eis.communication.network.Command;
+import com.eis.smsnetwork.SMSNetDictionary;
+
 
 /**
  * Command to remove a resource from the network dictionary

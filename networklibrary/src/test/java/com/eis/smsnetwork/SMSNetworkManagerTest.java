@@ -1,6 +1,6 @@
 package com.eis.communication.network;
 
-import com.eis.communication.network.smsnetwork.SMSNetworkManager;
+import smsnetwork.SMSNetworkManager;
 
 import org.junit.Test;
 
