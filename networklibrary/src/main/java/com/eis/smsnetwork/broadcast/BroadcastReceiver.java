@@ -1,5 +1,9 @@
 package com.eis.smsnetwork.broadcast;
 
+import com.eis.communication.network.commands.AddPeer;
+import com.eis.communication.network.commands.AddResource;
+import com.eis.communication.network.commands.RemovePeer;
+import com.eis.communication.network.commands.RemoveResource;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
@@ -8,10 +12,6 @@ import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis.smsnetwork.SMSNetDictionary;
 import com.eis.smsnetwork.SMSNetSubscriberList;
-import com.eis.smsnetwork.commands.AddPeer;
-import com.eis.smsnetwork.commands.AddResource;
-import com.eis.smsnetwork.commands.RemovePeer;
-import com.eis.smsnetwork.commands.RemoveResource;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -51,7 +51,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         } catch (InvalidTelephoneNumberException e) {
             return;
         }
-        SMSNetSubscriberList subscribers = SMSJoinableNetManager.getInstance().getNetSubscribers();
+        SMSNetSubscriberList subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
         SMSNetDictionary dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
         switch (request) {
