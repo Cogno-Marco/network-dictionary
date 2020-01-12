@@ -59,4 +59,14 @@ public class SMSNetMessageBuilderTest {
         assertEquals(constructedMessage.getData(), expectedMessage);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void setNullPeer_throws(){
+        new SMSNetMessageBuilder().setPeer(null).buildMessage();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void setNullRequest_throws(){
+        new SMSNetMessageBuilder().setRequest(null).buildMessage();
+    }
+
 }

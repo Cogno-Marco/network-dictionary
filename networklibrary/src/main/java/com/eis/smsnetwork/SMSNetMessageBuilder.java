@@ -1,5 +1,7 @@
 package com.eis.smsnetwork;
 
+import androidx.annotation.NonNull;
+
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 
@@ -29,7 +31,7 @@ public class SMSNetMessageBuilder extends MessageBuilder {
      * @return Returns an instance of this builder to concatenate calls
      */
     @Override
-    public SMSNetMessageBuilder setPeer(SMSPeer peer) {
+    public SMSNetMessageBuilder setPeer(@NonNull SMSPeer peer) {
         super.setPeer(peer);
         return this;
     }
@@ -40,7 +42,7 @@ public class SMSNetMessageBuilder extends MessageBuilder {
      * @param command The RequestType to set
      * @return Returns an instance of this builder to concatenate calls
      */
-    public SMSNetMessageBuilder setRequest(RequestType command) {
+    public SMSNetMessageBuilder setRequest(@NonNull RequestType command) {
         commandMessage = command.asString();
         return this;
     }
