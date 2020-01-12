@@ -1,5 +1,7 @@
 package com.eis.smsnetwork.broadcast;
 
+import com.eis.communication.network.NetDictionary;
+import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.commands.AddPeer;
 import com.eis.communication.network.commands.AddResource;
 import com.eis.communication.network.commands.RemovePeer;
@@ -53,8 +55,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         } catch (InvalidTelephoneNumberException e) {
             return;
         }
-        SMSNetSubscriberList subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
-        SMSNetDictionary dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
+        NetSubscriberList<SMSPeer> subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
+        NetDictionary<String, String> dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
         switch (request) {
             case Invite:
