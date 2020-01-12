@@ -39,10 +39,12 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         String[] fields = message.getData().split(" ");
         RequestType request;
         try {
-            request = RequestType.values()[Integer.parseInt(fields[0])];
+            request = RequestType.get(fields[0]);
         } catch (NumberFormatException|ArrayIndexOutOfBoundsException e) {
             return;
         }
+        if(request == null) return;
+        
         SMSPeer sender;
         // TODO: reminder that the exception is not thrown in the latest version of the
         //  library, there's a method for checking the validity of the SMSPeer instead
