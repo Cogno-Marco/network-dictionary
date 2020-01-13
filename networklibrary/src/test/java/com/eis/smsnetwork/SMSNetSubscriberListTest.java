@@ -1,7 +1,6 @@
 package com.eis.smsnetwork;
 
 import com.eis.smslibrary.SMSPeer;
-import com.eis.smsnetwork.SMSNetSubscriberList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +13,13 @@ import static org.junit.Assert.assertArrayEquals;
  * Unit tests for the SMSNetSubscriberList class
  *
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSNetSubscriberListTest {
 
-    public static final SMSPeer PEER1 = new SMSPeer("+393423541601");
-    public static final SMSPeer PEER2 = new SMSPeer("+393423541601");
-    public static final SMSPeer PEER3 = new SMSPeer("+393423541601");
+    static final SMSPeer PEER1 = new SMSPeer("+393423541601");
+    static final SMSPeer PEER2 = new SMSPeer("+393423541602");
+    static final SMSPeer PEER3 = new SMSPeer("+393423541603");
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private final ArrayList<SMSPeer> totalPeers = new ArrayList<>();
