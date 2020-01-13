@@ -23,13 +23,13 @@ import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
  * <ul>
  * <li>Invite: there are no other fields</li>
  * <li>AcceptInvitation: there are no other fields</li>
- * <li>SMSAddPeer: fields from 1 to the last contain the phone numbers of each
+ * <li>AddPeer: fields from 1 to the last one contain the phone numbers of each
  * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
- * <li>SMSRemovePeer: there are no other fields, because this request can only be sent by the
+ * <li>RemovePeer: there are no other fields, because this request can only be sent by the
  * {@link com.eis.smslibrary.SMSPeer} who wants to be removed</li>
- * <li>SMSAddResource: starting from 1, fields with odd numbers contain keys, their following (even)
+ * <li>AddResource: starting from 1, fields with odd numbers contain keys, their following (even)
  * field contains the corresponding value</li>
- * <li>SMSRemoveResource: fields from 1 to the last contain the keys to remove</li>
+ * <li>RemoveResource: fields from 1 to the last one contain the keys to remove</li>
  * </ul>
  *
  * @author Marco Cognolato, Giovanni Velludo
@@ -43,14 +43,12 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         RequestType request;
         try {
             request = RequestType.get(fields[0]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             return;
         }
         if (request == null) return;
 
         SMSPeer sender;
-        // TODO: reminder that the exception is not thrown in the latest version of the
-        //  library, there's a method for checking the validity of the SMSPeer instead
         try {
             sender = message.getPeer();
         } catch (InvalidTelephoneNumberException e) {
@@ -78,15 +76,20 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             case AddPeer:
                 if (senderIsNotSubscriber) return;
-                SMSPeer peerToAdd;
-                // TODO: reminder that the exception is not thrown in the latest version of the
-                //  library, there's a method for checking the validity of the SMSPeer instead
+                SMSPeer[] peersToAdd;
                 try {
-                    peerToAdd = new SMSPeer(fields[1]);
-                } catch (InvalidTelephoneNumberException e) {
+                    peersToAdd = new SMSPeer[fields.length - 1];
+                } catch (NegativeArraySizeException e) {
                     return;
                 }
-                CommandExecutor.execute(new SMSAddPeer(peerToAdd, subscribers));
+                try {
+                    for (int i = 1; i < fields.length; i++)
+                        peersToAdd[i] = new SMSPeer(fields[i]);
+                } catch (InvalidTelephoneNumberException|ArrayIndexOutOfBoundsException e) {
+                    return;
+                }
+                for (SMSPeer peer : peersToAdd)
+                SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
                 break;
             case RemovePeer:
                 CommandExecutor.execute(new SMSRemovePeer(sender, subscribers));
