@@ -103,11 +103,11 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     return;
                 }
                 for (SMSPeer peer : peersToAdd)
-                    SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
+                    subscribers.addSubscriber(peer);
                 break;
             }
             case RemovePeer: {
-                SMSJoinableNetManager.getInstance().getNetSubscriberList().removeSubscriber(sender);
+                subscribers.removeSubscriber(sender);
                 break;
             }
             case AddResource: {
@@ -132,8 +132,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     return;
                 }
                 for (int i = 0; i < keys.length; i++) {
-                    SMSJoinableNetManager.getInstance().getNetDictionary()
-                            .addResource(keys[i], values[i]);
+                    dictionary.addResource(keys[i], values[i]);
                 }
                 break;
             }
@@ -151,8 +150,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     return;
                 }
                 for (String key : keys) {
-                    SMSJoinableNetManager.getInstance().getNetDictionary()
-                            .removeResource(key);
+                   dictionary.removeResource(key);
                 }
             }
         }
