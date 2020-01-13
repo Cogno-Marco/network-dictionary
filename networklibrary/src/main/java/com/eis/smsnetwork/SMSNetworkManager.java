@@ -24,7 +24,7 @@ import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
  * @author Edoardo Raimondi
  * @author Marco Cognolato
  */
-public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, FailReason> {
+public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, SMSFailReason> {
 
     private NetSubscriberList<SMSPeer> netSubscribers = new SMSNetSubscriberList();
     private NetDictionary<String, String> netDictionary = new SMSNetDictionary();
@@ -52,7 +52,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void setResource(String key, String value, SetResourceListener<String, String, FailReason> setResourceListener) {
+    public void setResource(String key, String value, SetResourceListener<String, String, SMSFailReason> setResourceListener) {
         CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
     }
 
@@ -64,7 +64,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void getResource(String key, GetResourceListener<String, String, FailReason> getResourceListener) {
+    public void getResource(String key, GetResourceListener<String, String, SMSFailReason> getResourceListener) {
         String resource = netDictionary.getResource(key);
         if (resource != null) getResourceListener.onGetResource(key, resource);
         else{
@@ -80,7 +80,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void removeResource(String key, RemoveResourceListener<String, FailReason> removeResourceListener) {
+    public void removeResource(String key, RemoveResourceListener<String, SMSFailReason> removeResourceListener) {
         CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
     }
 
@@ -92,7 +92,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void invite(SMSPeer peer, InviteListener<SMSPeer, FailReason> inviteListener) {
+    public void invite(SMSPeer peer, InviteListener<SMSPeer, SMSFailReason> inviteListener) {
         CommandExecutor.execute(new SMSInvitePeer(peer));
     }
 
