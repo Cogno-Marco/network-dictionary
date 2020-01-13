@@ -16,7 +16,7 @@ import com.eis.smslibrary.SMSPeer;
  * @author Giovanni Velludo
  */
 public class SMSJoinableNetManager extends SMSNetworkManager
-        implements JoinableNetworkManager<String, String, SMSPeer, FailReason, Invitation<SMSPeer>> {
+        implements JoinableNetworkManager<String, String, SMSPeer, SMSFailReason, Invitation<SMSPeer>> {
 
     private static SMSJoinableNetManager instance;
 
