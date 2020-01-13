@@ -10,9 +10,6 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis.smsnetwork.SMSNetInvitation;
-import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
-import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
-import com.eis.smsnetwork.smsnetcommands.SMSRemovePeer;
 import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
 
 /**
@@ -85,25 +82,40 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 try {
                     for (int i = 1; i < fields.length; i++)
                         peersToAdd[i] = new SMSPeer(fields[i]);
-                } catch (InvalidTelephoneNumberException|ArrayIndexOutOfBoundsException e) {
+                } catch (InvalidTelephoneNumberException | ArrayIndexOutOfBoundsException e) {
                     return;
                 }
                 for (SMSPeer peer : peersToAdd)
-                SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
+                    SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
                 break;
             case RemovePeer:
-                CommandExecutor.execute(new SMSRemovePeer(sender, subscribers));
+                SMSJoinableNetManager.getInstance().getNetSubscriberList().removeSubscriber(sender);
                 break;
             case AddResource:
-                if (senderIsNotSubscriber) return;
-                String key, value;
+                // if the number of fields is even, that means not every key will have a
+                // corresponding value, so the message we received is garbage. For example, with 4
+                // fields we'll have: requestType, key, value, key
+                if (senderIsNotSubscriber || fields.length % 2 == 0) return;
+                String[] keys;
+                String[] values;
                 try {
-                    key = fields[1];
-                    value = fields[2];
+                    keys = new String[(fields.length - 1) / 2];
+                    values = new String[keys.length];
+                } catch (NegativeArraySizeException e) {
+                    return;
+                }
+                try {
+                    for (int i = 0, j = 1; j < fields.length; i++) {
+                        keys[i] = fields[j++];
+                        values[i] = fields[j++];
+                    }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                CommandExecutor.execute(new SMSAddResource(key, value, dictionary));
+                for (int i = 0; i < keys.length; i++) {
+                    SMSJoinableNetManager.getInstance().getNetDictionary()
+                            .addResource(keys[i], values[i]);
+                }
                 break;
             case RemoveResource:
                 if (senderIsNotSubscriber) return;
