@@ -13,10 +13,10 @@ import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSPeer;
-import com.eis.smsnetwork.smsnetcommands.AcceptInvite;
-import com.eis.smsnetwork.smsnetcommands.AddResource;
-import com.eis.smsnetwork.smsnetcommands.InvitePeer;
-import com.eis.smsnetwork.smsnetcommands.RemoveResource;
+import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
+import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
+import com.eis.smsnetwork.smsnetcommands.SMSInvitePeer;
+import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
 
 /**
  * The manager class of the network.
@@ -53,7 +53,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void setResource(String key, String value, SetResourceListener<String, String, FailReason> setResourceListener) {
-        CommandExecutor.execute(new AddResource(key, value, netDictionary));
+        CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
     }
 
     /**
@@ -81,7 +81,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void removeResource(String key, RemoveResourceListener<String, FailReason> removeResourceListener) {
-        CommandExecutor.execute(new RemoveResource(key, netDictionary));
+        CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
     }
 
     /**
@@ -93,7 +93,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void invite(SMSPeer peer, InviteListener<SMSPeer, FailReason> inviteListener) {
-        CommandExecutor.execute(new InvitePeer(peer));
+        CommandExecutor.execute(new SMSInvitePeer(peer));
     }
 
     /**
@@ -105,7 +105,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         // N.B. this function provides an implementation for automatically joining a network.
         // while SMSJoinableNetManager uses this function by sending the request to the user
         // using a listener set by the user.
-        CommandExecutor.execute(new AcceptInvite((SMSPeer)invitation.getInviterPeer(), netSubscribers));
+        CommandExecutor.execute(new SMSAcceptInvite((SMSPeer)invitation.getInviterPeer(), netSubscribers));
     }
 
     /**

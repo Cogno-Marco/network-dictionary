@@ -11,16 +11,16 @@ import com.eis.communication.network.NetDictionary;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public class AddResource extends com.eis.communication.network.commands.AddResource<String, String> {
+public class SMSAddResource extends com.eis.communication.network.commands.AddResource<String, String> {
 
     /**
-     * Constructor for the AddResource command, needs the data to operate
+     * Constructor for the SMSAddResource command, needs the data to operate
      *
      * @param key           The key of the resource to add
      * @param value         The value of the resource to add
      * @param netDictionary The dictionary to add the resource in
      */
-    public AddResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary<String, String> netDictionary) {
+    public SMSAddResource(@NonNull String key, @NonNull String value, @NonNull NetDictionary<String, String> netDictionary) {
         super(key, value, netDictionary);
     }
 

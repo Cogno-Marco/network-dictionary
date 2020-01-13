@@ -12,15 +12,15 @@ import com.eis.smslibrary.SMSPeer;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public class AddPeer extends com.eis.communication.network.commands.AddPeer<SMSPeer> {
+public class SMSAddPeer extends com.eis.communication.network.commands.AddPeer<SMSPeer> {
 
     /**
-     * AddPeer command constructor, receives the data it needs to operate on.
+     * SMSAddPeer command constructor, receives the data it needs to operate on.
      *
      * @param peer           The SMSPeer to add to the network
      * @param netSubscribers The subscribers to notify of the newest member
      */
-    public AddPeer(@NonNull SMSPeer peer, @NonNull NetSubscriberList<SMSPeer> netSubscribers) {
+    public SMSAddPeer(@NonNull SMSPeer peer, @NonNull NetSubscriberList<SMSPeer> netSubscribers) {
         super(peer, netSubscribers);
     }
 

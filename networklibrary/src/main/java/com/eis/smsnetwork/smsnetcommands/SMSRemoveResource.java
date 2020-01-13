@@ -11,15 +11,15 @@ import com.eis.communication.network.NetDictionary;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public class RemoveResource extends com.eis.communication.network.commands.RemoveResource<String, String> {
+public class SMSRemoveResource extends com.eis.communication.network.commands.RemoveResource<String, String> {
 
     /**
-     * Constructor for the RemoveResource command, needs the data to operate
+     * Constructor for the SMSRemoveResource command, needs the data to operate
      *
      * @param key           The key identifier of the resource to remove
      * @param netDictionary The dictionary to remove the resource from
      */
-    public RemoveResource(@NonNull String key, @NonNull NetDictionary<String, String> netDictionary) {
+    public SMSRemoveResource(@NonNull String key, @NonNull NetDictionary<String, String> netDictionary) {
         super(key, netDictionary);
     }
 

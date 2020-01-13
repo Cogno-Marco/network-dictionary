@@ -10,10 +10,10 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis.smsnetwork.SMSNetInvitation;
-import com.eis.smsnetwork.smsnetcommands.AddPeer;
-import com.eis.smsnetwork.smsnetcommands.AddResource;
-import com.eis.smsnetwork.smsnetcommands.RemovePeer;
-import com.eis.smsnetwork.smsnetcommands.RemoveResource;
+import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
+import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
+import com.eis.smsnetwork.smsnetcommands.SMSRemovePeer;
+import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -23,13 +23,13 @@ import com.eis.smsnetwork.smsnetcommands.RemoveResource;
  * <ul>
  * <li>Invite: there are no other fields</li>
  * <li>AcceptInvitation: there are no other fields</li>
- * <li>AddPeer: fields from 1 to the last contain the phone numbers of each
+ * <li>SMSAddPeer: fields from 1 to the last contain the phone numbers of each
  * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
- * <li>RemovePeer: there are no other fields, because this request can only be sent by the
+ * <li>SMSRemovePeer: there are no other fields, because this request can only be sent by the
  * {@link com.eis.smslibrary.SMSPeer} who wants to be removed</li>
- * <li>AddResource: starting from 1, fields with odd numbers contain keys, their following (even)
+ * <li>SMSAddResource: starting from 1, fields with odd numbers contain keys, their following (even)
  * field contains the corresponding value</li>
- * <li>RemoveResource: fields from 1 to the last contain the keys to remove</li>
+ * <li>SMSRemoveResource: fields from 1 to the last contain the keys to remove</li>
  * </ul>
  *
  * @author Marco Cognolato, Giovanni Velludo
@@ -73,7 +73,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 // TODO: check if we invited the peer, if yes then accept the invitation
                 SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
                 SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
-                // TODO: broadcast AddPeer for the new peer, we should probably add a Command for
+                // TODO: broadcast SMSAddPeer for the new peer, we should probably add a Command for
                 //  the whole AcceptInvitation process
                 break;
             case AddPeer:
@@ -86,10 +86,10 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (InvalidTelephoneNumberException e) {
                     return;
                 }
-                CommandExecutor.execute(new AddPeer(peerToAdd, subscribers));
+                CommandExecutor.execute(new SMSAddPeer(peerToAdd, subscribers));
                 break;
             case RemovePeer:
-                CommandExecutor.execute(new RemovePeer(sender, subscribers));
+                CommandExecutor.execute(new SMSRemovePeer(sender, subscribers));
                 break;
             case AddResource:
                 if (senderIsNotSubscriber) return;
@@ -100,7 +100,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                CommandExecutor.execute(new AddResource(key, value, dictionary));
+                CommandExecutor.execute(new SMSAddResource(key, value, dictionary));
                 break;
             case RemoveResource:
                 if (senderIsNotSubscriber) return;
@@ -109,7 +109,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                CommandExecutor.execute(new RemoveResource(key, dictionary));
+                CommandExecutor.execute(new SMSRemoveResource(key, dictionary));
         }
     }
 }

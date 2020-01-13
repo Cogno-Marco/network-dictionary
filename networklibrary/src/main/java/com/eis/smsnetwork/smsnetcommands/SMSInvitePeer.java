@@ -11,19 +11,19 @@ import com.eis.smsnetwork.RequestType;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public class InvitePeer extends com.eis.communication.network.commands.InvitePeer<SMSPeer> {
+public class SMSInvitePeer extends com.eis.communication.network.commands.InvitePeer<SMSPeer> {
 
     /**
-     * Constructor for the InvitePeer command, requires data to work
+     * Constructor for the SMSInvitePeer command, requires data to work
      *
      * @param peerToInvite The SMSPeer to invite to the network
      */
-    public InvitePeer(@NonNull SMSPeer peerToInvite) {
+    public SMSInvitePeer(@NonNull SMSPeer peerToInvite) {
         super(peerToInvite);
     }
 
     /**
-     * Execute the InvitePeer logic: sends a request to join a network
+     * Execute the SMSInvitePeer logic: sends a request to join a network
      */
     protected void execute() {
         String message = RequestType.Invite.asString();

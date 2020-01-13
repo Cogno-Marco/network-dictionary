@@ -13,7 +13,7 @@ public abstract class InvitePeer<T extends Peer> extends Command {
     protected final T peerToInvite;
 
     /**
-     * Constructor for the InvitePeer command, requires data to work
+     * Constructor for the SMSInvitePeer command, requires data to work
      *
      * @param peerToInvite The Peer to invite to the network
      */
@@ -22,7 +22,7 @@ public abstract class InvitePeer<T extends Peer> extends Command {
     }
 
     /**
-     * Execute the InvitePeer logic: sends a request to join a network
+     * Execute the SMSInvitePeer logic: sends a request to join a network
      */
     protected abstract void execute();
 }
