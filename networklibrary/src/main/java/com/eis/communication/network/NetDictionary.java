@@ -2,28 +2,31 @@ package com.eis.communication.network;
 
 /**
  * Interface to define a network dictionary
+ *
  * @param <K> The Key for each resource
  * @param <R> The Resource
- *
  * @author Marco Cognolato
  */
-public interface NetDictionary<K,R>{
+public interface NetDictionary<K, R> {
 
     /**
      * Adds a resource to the network dictionary
-     * @param key The key which defines the resource
+     *
+     * @param key      The key which defines the resource to be added
      * @param resource The resource to add
      */
     void addResource(K key, R resource);
 
     /**
      * Removes a resource from the dictionary
-     * @param key The key which defines the resource
+     *
+     * @param key The key which defines the resource to be removed
      */
     void removeResource(K key);
 
     /**
      * Returns a resource in the dictionary
+     *
      * @param key The key which defines the resource to get
      * @return Returns a resource corresponding to the key if present in the dictionary,
      * else returns null
