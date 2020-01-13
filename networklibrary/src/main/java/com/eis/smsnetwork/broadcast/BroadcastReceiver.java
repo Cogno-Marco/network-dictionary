@@ -2,7 +2,6 @@ package com.eis.smsnetwork.broadcast;
 
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
-import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
@@ -10,7 +9,9 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
 import com.eis.smsnetwork.SMSNetInvitation;
-import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -19,7 +20,8 @@ import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
  * The rest of the message varies depending on the {@link RequestType}:
  * <ul>
  * <li>Invite: there are no other fields</li>
- * <li>AcceptInvitation: there are no other fields</li>
+ * <li>AcceptInvitation: fields from 1 to the last one contain the phone numbers of each
+ *  * {@link com.eis.smslibrary.SMSPeer} subscriber of the network that merged with mine</li>
  * <li>AddPeer: fields from 1 to the last one contain the phone numbers of each
  * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
  * <li>RemovePeer: there are no other fields, because this request can only be sent by the
@@ -51,26 +53,41 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         } catch (InvalidTelephoneNumberException e) {
             return;
         }
+
         NetSubscriberList<SMSPeer> subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
         NetDictionary<String, String> dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
+
         switch (request) {
             case Invite:
-                if (subscribers.getSubscribers().isEmpty()) {
-                    // if there's nobody in my network, which means that I'm not in a network
-                    // TODO: ask user if they want to join the network, then act accordingly
-                } else {
-                    // TODO: ask the user if they want to leave the current network and join the new
-                    //  one
-                }
-                break;
-            case AcceptInvitation:
-                // TODO: check if we invited the peer, if yes then accept the invitation
                 SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
                 SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
-                // TODO: broadcast SMSAddPeer for the new peer, we should probably add a Command for
-                //  the whole AcceptInvitation process
                 break;
+
+            case AcceptInvitation:
+                // TODO: check if I invited the peer, if I did then accept the invitation
+                //Creating the list of new members,
+                List<SMSPeer> newMembers = new ArrayList<>();
+                for (int i = 1; i < fields.length; i++) newMembers.add(new SMSPeer(fields[i]));
+                String myNetwork = RequestType.AddPeer.asString() + " ";
+                //Converting the list into a String
+                for (SMSPeer peerToAdd : subscribers.getSubscribers())
+                    myNetwork += peerToAdd + " ";
+                //Broadcasting the new peers to add to my old subscribers list
+                BroadcastSender.broadcastMessage(newMembers, myNetwork);
+
+                //Obtaining the list of old subscribers, converting it into a String
+                String newNetwork = RequestType.AddPeer.asString() + " ";
+                for (SMSPeer peerToAdd : newMembers)
+                    newNetwork += peerToAdd + " ";
+                //Broadcasting my old peers to the new subscribers, so that they can add them
+                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork);
+
+                //Updating my local subscribers list
+                for (SMSPeer peerToAddLocally : newMembers)
+                    subscribers.addSubscriber(peerToAddLocally);
+                break;
+
             case AddPeer:
                 if (senderIsNotSubscriber) return;
                 SMSPeer[] peersToAdd;
@@ -88,9 +105,11 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 for (SMSPeer peer : peersToAdd)
                     SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
                 break;
+
             case RemovePeer:
                 SMSJoinableNetManager.getInstance().getNetSubscriberList().removeSubscriber(sender);
                 break;
+
             case AddResource:
                 // if the number of fields is even, that means not every key will have a
                 // corresponding value, so the message we received is garbage. For example, with 4
@@ -117,6 +136,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                             .addResource(keys[i], values[i]);
                 }
                 break;
+
             case RemoveResource:
                 if (senderIsNotSubscriber) return;
                 try {
@@ -124,7 +144,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                CommandExecutor.execute(new SMSRemoveResource(key, dictionary));
+                dictionary.removeResource(key);
         }
     }
 }
