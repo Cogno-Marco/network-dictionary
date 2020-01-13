@@ -3,6 +3,7 @@ package com.eis.smsnetwork.broadcast;
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.commands.CommandExecutor;
+import com.eis.smslibrary.SMSHandler;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
@@ -14,6 +15,9 @@ import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
 import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
 import com.eis.smsnetwork.smsnetcommands.SMSRemovePeer;
 import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -56,40 +60,54 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         } catch (InvalidTelephoneNumberException e) {
             return;
         }
+
+        BroadcastSender broadcastSender = new BroadcastSender();
         NetSubscriberList<SMSPeer> subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
         NetDictionary<String, String> dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
+
         switch (request) {
             case Invite:
-                if (subscribers.getSubscribers().isEmpty()) {
-                    // if there's nobody in my network, which means that I'm not in a network
-                    // TODO: ask user if they want to join the network, then act accordingly
-                } else {
-                    // TODO: ask the user if they want to leave the current network and join the new
-                    //  one
-                }
+                SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
+                SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
                 break;
             case AcceptInvitation:
                 // TODO: check if we invited the peer, if yes then accept the invitation
-                SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
-                SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
-                // TODO: broadcast SMSAddPeer for the new peer, we should probably add a Command for
-                //  the whole AcceptInvitation process
+                List<SMSPeer> newMembers = new ArrayList<>();
+                for(int i=1; i<fields.length; i++) newMembers.add(new SMSPeer(fields[i]));
+
+                String myNetwork = RequestType.AddPeer.asString() + " ";
+                for(SMSPeer peerToAdd : subscribers.getSubscribers())
+                    myNetwork += peerToAdd + " ";
+                BroadcastSender.broadcastMessage(newMembers, myNetwork);
+
+                String newNetwork = RequestType.AddPeer.asString() + " ";
+                for(SMSPeer peerToAdd : newMembers)
+                    newNetwork += peerToAdd + " ";
+                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork);
                 break;
             case AddPeer:
                 if (senderIsNotSubscriber) return;
-                SMSPeer peerToAdd;
+                List<SMSPeer> peersToAdd = new ArrayList<>();
                 // TODO: reminder that the exception is not thrown in the latest version of the
                 //  library, there's a method for checking the validity of the SMSPeer instead
                 try {
-                    peerToAdd = new SMSPeer(fields[1]);
+                    for (int i = 0; i < fields.length; i++) peersToAdd.add(new SMSPeer(fields[i]));
                 } catch (InvalidTelephoneNumberException e) {
                     return;
                 }
-                CommandExecutor.execute(new SMSAddPeer(peerToAdd, subscribers));
+                for (SMSPeer peerToAdd : peersToAdd)
+                    subscribers.addSubscriber(peerToAdd);
                 break;
             case RemovePeer:
-                CommandExecutor.execute(new SMSRemovePeer(sender, subscribers));
+                if (senderIsNotSubscriber) return;
+                SMSPeer peerToRemove;
+                try {
+                    peerToRemove = new SMSPeer(fields[1]);
+                } catch (InvalidTelephoneNumberException e) {
+                    return;
+                }
+                subscribers.removeSubscriber(peerToRemove);
                 break;
             case AddResource:
                 if (senderIsNotSubscriber) return;
@@ -100,7 +118,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                CommandExecutor.execute(new SMSAddResource(key, value, dictionary));
+                dictionary.addResource(key, value);
                 break;
             case RemoveResource:
                 if (senderIsNotSubscriber) return;
@@ -109,7 +127,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                CommandExecutor.execute(new SMSRemoveResource(key, dictionary));
+               dictionary.removeResource(key);
         }
     }
 }
