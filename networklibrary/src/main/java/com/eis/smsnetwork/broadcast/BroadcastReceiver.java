@@ -21,7 +21,7 @@ import java.util.List;
  * <ul>
  * <li>Invite: there are no other fields</li>
  * <li>AcceptInvitation: fields from 1 to the last one contain the phone numbers of each
- *  * {@link com.eis.smslibrary.SMSPeer} subscriber of the network that merged with mine</li>
+ * * {@link com.eis.smslibrary.SMSPeer} subscriber of the network that merged with mine</li>
  * <li>AddPeer: fields from 1 to the last one contain the phone numbers of each
  * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
  * <li>RemovePeer: there are no other fields, because this request can only be sent by the
@@ -59,12 +59,12 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
 
         switch (request) {
-            case Invite:
+            case Invite: {
                 SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
                 SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
                 break;
-
-            case AcceptInvitation:
+            }
+            case AcceptInvitation: {
                 // TODO: check if I invited the peer, if I did then accept the invitation
                 //Creating the list of new members,
                 List<SMSPeer> newMembers = new ArrayList<>();
@@ -87,8 +87,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 for (SMSPeer peerToAddLocally : newMembers)
                     subscribers.addSubscriber(peerToAddLocally);
                 break;
-
-            case AddPeer:
+            }
+            case AddPeer: {
                 if (senderIsNotSubscriber) return;
                 SMSPeer[] peersToAdd;
                 try {
@@ -98,19 +98,19 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 }
                 try {
                     for (int i = 1; i < fields.length; i++)
-                        peersToAdd[i] = new SMSPeer(fields[i]);
+                        peersToAdd[i-1] = new SMSPeer(fields[i]);
                 } catch (InvalidTelephoneNumberException | ArrayIndexOutOfBoundsException e) {
                     return;
                 }
                 for (SMSPeer peer : peersToAdd)
                     SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
                 break;
-
-            case RemovePeer:
+            }
+            case RemovePeer: {
                 SMSJoinableNetManager.getInstance().getNetSubscriberList().removeSubscriber(sender);
                 break;
-
-            case AddResource:
+            }
+            case AddResource: {
                 // if the number of fields is even, that means not every key will have a
                 // corresponding value, so the message we received is garbage. For example, with 4
                 // fields we'll have: requestType, key, value, key
@@ -136,15 +136,25 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                             .addResource(keys[i], values[i]);
                 }
                 break;
-
-            case RemoveResource:
+            }
+            case RemoveResource: {
                 if (senderIsNotSubscriber) return;
+                String[] keys;
                 try {
-                    key = fields[1];
-                } catch (ArrayIndexOutOfBoundsException e) {
+                    keys = new String[fields.length - 1];
+                } catch (NegativeArraySizeException e) {
                     return;
                 }
-                dictionary.removeResource(key);
+                try {
+                    System.arraycopy(fields, 1, keys, 0, fields.length);
+                } catch (IndexOutOfBoundsException e) {
+                    return;
+                }
+                for (String key : keys) {
+                    SMSJoinableNetManager.getInstance().getNetDictionary()
+                            .removeResource(key);
+                }
+            }
         }
     }
 }
