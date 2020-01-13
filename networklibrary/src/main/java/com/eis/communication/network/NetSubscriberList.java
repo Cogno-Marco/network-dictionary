@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * A subscriber is defined as a Peer currently connected to the network.
  * @param <T> The type of subscribers, must implement the {@link Peer} interface
  *
- * @author Marco Cognolato, Giovanni Velludo
+ * @author Marco Cognolato
  */
 public interface NetSubscriberList<T extends Peer> {
 
@@ -23,7 +23,7 @@ public interface NetSubscriberList<T extends Peer> {
     /**
      * @return Returns the list of all the current subscribers to the net
      */
-    ArrayList<SMSPeer> getSubscribers();
+    ArrayList<T> getSubscribers();
 
     /**
      * Removes a given subscriber from the subscribers

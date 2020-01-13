@@ -18,7 +18,7 @@ public abstract class AddResource<K, R> extends Command {
     protected final NetDictionary<K, R> netDictionary;
 
     /**
-     * Constructor for the SMSAddResource command, needs the data to operate
+     * Constructor for the AddResource command, needs the data to operate
      *
      * @param key           The key of the resource to add
      * @param value         The value of the resource to add

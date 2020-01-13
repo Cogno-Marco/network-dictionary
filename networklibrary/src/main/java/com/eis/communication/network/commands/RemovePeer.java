@@ -18,7 +18,7 @@ public abstract class RemovePeer<T extends Peer> extends Command {
     protected final NetSubscriberList<T> netSubscribers;
 
     /**
-     * Constructor for the SMSRemovePeer command, needs the data to operate
+     * Constructor for the RemovePeer command, needs the data to operate
      *
      * @param peer           The peer to remove from the network
      * @param netSubscribers The subscribers currently in the network

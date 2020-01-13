@@ -18,7 +18,7 @@ public abstract class AddPeer<T extends Peer> extends Command {
     protected final NetSubscriberList<T> netSubscribers;
 
     /**
-     * SMSAddPeer command constructor, receives the data it needs to operate on.
+     * AddPeer command constructor, receives the data it needs to operate on.
      *
      * @param peer           The Peer to add to the network
      * @param netSubscribers The subscribers to notify of the newest member
