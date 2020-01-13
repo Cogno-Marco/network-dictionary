@@ -1,9 +1,8 @@
 package com.eis.communication.network;
 
 import com.eis.communication.Peer;
-import com.eis.smslibrary.SMSPeer;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Interface which defines common operations for Subscribers of a network.
@@ -21,9 +20,9 @@ public interface NetSubscriberList<T extends Peer> {
     void addSubscriber(T subscriber);
 
     /**
-     * @return Returns the list of all the current subscribers to the net
+     * @return Returns the set of all the current subscribers to the net
      */
-    ArrayList<T> getSubscribers();
+    Set<T> getSubscribers();
 
     /**
      * Removes a given subscriber from the subscribers

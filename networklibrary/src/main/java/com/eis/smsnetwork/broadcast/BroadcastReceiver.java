@@ -8,10 +8,9 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
-import com.eis.smsnetwork.SMSNetInvitation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -56,30 +55,34 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
 
         switch (request) {
             case Invite: {
-                SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
-                SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
+                SMSJoinableNetManager.getInstance().checkInvitation(() -> sender);
                 break;
             }
             case AcceptInvitation: {
-                // TODO: check if I invited the peer, if I did then accept the invitation
-                //Creating the list of new members,
-                List<SMSPeer> newMembers = new ArrayList<>();
-                for (int i = 1; i < fields.length; i++) newMembers.add(new SMSPeer(fields[i]));
-                String myNetwork = RequestType.AddPeer.asString() + " ";
-                //Converting the list into a String
+                NetSubscriberList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
+                        .getInvitedPeers();
+                if (invitedPeers.getSubscribers().contains(sender))
+                    invitedPeers.removeSubscriber(sender);
+                else return;
+                //Creating the set of new members
+                Set<SMSPeer> newMembers = new HashSet<>();
+                for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
+                    newMembers.add(new SMSPeer(fields[i]));
+                StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
+                //Converting the set into a String
                 for (SMSPeer peerToAdd : subscribers.getSubscribers())
-                    myNetwork += peerToAdd + " ";
-                //Broadcasting the new peers to add to my old subscribers list
-                BroadcastSender.broadcastMessage(newMembers, myNetwork);
+                    myNetwork.append(peerToAdd).append(" ");
+                //Broadcasting the new peers to add to my old subscribers set
+                BroadcastSender.broadcastMessage(newMembers, myNetwork.toString());
 
-                //Obtaining the list of old subscribers, converting it into a String
-                String newNetwork = RequestType.AddPeer.asString() + " ";
+                //Obtaining the set of old subscribers, converting it into a String
+                StringBuilder newNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
                 for (SMSPeer peerToAdd : newMembers)
-                    newNetwork += peerToAdd + " ";
+                    newNetwork.append(peerToAdd).append(" ");
                 //Broadcasting my old peers to the new subscribers, so that they can add them
-                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork);
+                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork.toString());
 
-                //Updating my local subscribers list
+                //Updating my local subscribers set
                 for (SMSPeer peerToAddLocally : newMembers)
                     subscribers.addSubscriber(peerToAddLocally);
                 break;
@@ -103,7 +106,11 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             }
             case RemovePeer: {
-                subscribers.removeSubscriber(sender);
+                try {
+                    subscribers.removeSubscriber(sender);
+                } catch (IllegalArgumentException e) {
+                    return;
+                }
                 break;
             }
             case AddResource: {
@@ -140,6 +147,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
+                break;
             }
         }
     }
