@@ -31,10 +31,12 @@ import java.util.List;
  * <li>RemoveResource: fields from 1 to the last one contain the keys to remove</li>
  * </ul>
  *
- * @author Marco Cognolato, Giovanni Velludo
+ * @author Marco Cognolato, Giovanni Velludo, Enrico Cestaro
  */
 public class BroadcastReceiver extends SMSReceivedServiceListener {
     //TODO: write tests
+
+    private static final int NUM_OF_REQUEST_FIELDS = 1;
 
     @Override
     public void onMessageReceived(SMSMessage message) {
@@ -45,14 +47,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             return;
         }
-        if (request == null) return;
 
-        SMSPeer sender;
-        try {
-            sender = message.getPeer();
-        } catch (InvalidTelephoneNumberException e) {
-            return;
-        }
+        SMSPeer sender = message.getPeer();
 
         NetSubscriberList<SMSPeer> subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
         NetDictionary<String, String> dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
@@ -92,22 +88,22 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 if (senderIsNotSubscriber) return;
                 SMSPeer[] peersToAdd;
                 try {
-                    peersToAdd = new SMSPeer[fields.length - 1];
+                    peersToAdd = new SMSPeer[fields.length - NUM_OF_REQUEST_FIELDS];
                 } catch (NegativeArraySizeException e) {
                     return;
                 }
                 try {
-                    for (int i = 1; i < fields.length; i++)
-                        peersToAdd[i-1] = new SMSPeer(fields[i]);
+                    for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
+                        peersToAdd[i - NUM_OF_REQUEST_FIELDS] = new SMSPeer(fields[i]);
                 } catch (InvalidTelephoneNumberException | ArrayIndexOutOfBoundsException e) {
                     return;
                 }
                 for (SMSPeer peer : peersToAdd)
-                    SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
+                    subscribers.addSubscriber(peer);
                 break;
             }
             case RemovePeer: {
-                SMSJoinableNetManager.getInstance().getNetSubscriberList().removeSubscriber(sender);
+                subscribers.removeSubscriber(sender);
                 break;
             }
             case AddResource: {
@@ -118,13 +114,13 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 String[] keys;
                 String[] values;
                 try {
-                    keys = new String[(fields.length - 1) / 2];
+                    keys = new String[(fields.length - NUM_OF_REQUEST_FIELDS) / 2];
                     values = new String[keys.length];
                 } catch (NegativeArraySizeException e) {
                     return;
                 }
                 try {
-                    for (int i = 0, j = 1; j < fields.length; i++) {
+                    for (int i = 0, j = NUM_OF_REQUEST_FIELDS; j < fields.length; i++) {
                         keys[i] = fields[j++];
                         values[i] = fields[j++];
                     }
@@ -132,27 +128,17 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     return;
                 }
                 for (int i = 0; i < keys.length; i++) {
-                    SMSJoinableNetManager.getInstance().getNetDictionary()
-                            .addResource(keys[i], values[i]);
+                    dictionary.addResource(keys[i], values[i]);
                 }
                 break;
             }
             case RemoveResource: {
                 if (senderIsNotSubscriber) return;
-                String[] keys;
                 try {
-                    keys = new String[fields.length - 1];
-                } catch (NegativeArraySizeException e) {
+                    for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
+                        dictionary.removeResource(fields[i]);
+                } catch (ArrayIndexOutOfBoundsException e) {
                     return;
-                }
-                try {
-                    System.arraycopy(fields, 1, keys, 0, fields.length);
-                } catch (IndexOutOfBoundsException e) {
-                    return;
-                }
-                for (String key : keys) {
-                    SMSJoinableNetManager.getInstance().getNetDictionary()
-                            .removeResource(key);
                 }
             }
         }
