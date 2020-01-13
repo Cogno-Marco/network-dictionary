@@ -1,6 +1,8 @@
-package com.eis.communication.network;
+package com.eis.communication.network.listeners;
 
 import com.eis.communication.Peer;
+import com.eis.communication.network.FailReason;
+import com.eis.communication.network.NetworkManager;
 
 /**
  * Listener for sent invitations to join the network, often passed as parameter in {@link NetworkManager#invite(Peer, InviteListener)}.
