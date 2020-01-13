@@ -1,7 +1,7 @@
 package com.eis.communication.network;
 
 /**
- * Class that manage all the sent commands.
+ * Class that manages all the sent commands.
  * It just lets them executing.
  *
  * @author Edoardo Raimondi, idea by Marco Cognolato, Enrico cestaro
