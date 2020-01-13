@@ -68,7 +68,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         String resource = netDictionary.getResource(key);
         if (resource != null) getResourceListener.onGetResource(key, resource);
         else{
-            //TODO: define FailReason for a resource not being on the net
+            getResourceListener.onGetResourceFailed(key, SMSFailReason.NO_RESOURCE);
         }
     }
 
