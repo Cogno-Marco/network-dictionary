@@ -27,7 +27,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class BroadcastReceiverTest {
 
     @Test
-    public void onMessageReceived_garbageIsIgnored() {
+    public void onMessageReceived_garbage_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
         SMSMessage garbage = new SMSMessage(sender, "aidsajfksda;ds");
@@ -44,7 +44,7 @@ public class BroadcastReceiverTest {
     }
 
     @Test
-    public void onMessageReceived_InviteWithGarbage_IsIgnored() {
+    public void onMessageReceived_inviteWithGarbage_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
         String garbageText = RequestType.Invite.asString() + ">";
@@ -61,7 +61,7 @@ public class BroadcastReceiverTest {
     }
 
     @Test
-    public void onMessageReceived_RemovePeerWithGarbage_IsIgnored() {
+    public void onMessageReceived_removePeerWithGarbage_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
         String garbageText = RequestType.RemovePeer.asString() + ">";
