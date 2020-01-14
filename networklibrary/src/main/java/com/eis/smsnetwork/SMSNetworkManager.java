@@ -1,5 +1,7 @@
 package com.eis.smsnetwork;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.eis.communication.network.commands.CommandExecutor;
@@ -29,6 +31,8 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     private NetSubscriberList<SMSPeer> netSubscribers = new SMSNetSubscriberList();
     private NetDictionary<String, String> netDictionary = new SMSNetDictionary();
     private NetSubscriberList<SMSPeer> invitedPeers = new SMSNetSubscriberList();
+
+    private String LOG_KEY = "NET_MANAGER";
 
     /**
      * @return netSubscribers
@@ -62,7 +66,16 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void setResource(String key, String value, SetResourceListener<String, String, SMSFailReason> setResourceListener) {
-        CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
+        boolean hasSucceeded = false;
+        try{
+            CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
+            hasSucceeded = true;
+        }
+        catch(Exception e){
+            Log.e(LOG_KEY, "There's been an error: " + e);
+            setResourceListener.onResourceSetFail(key, value, SMSFailReason.MESSAGE_SEND_ERROR);
+        }
+        if(hasSucceeded) setResourceListener.onResourceSet(key, value);
     }
 
     /**
@@ -90,7 +103,16 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void removeResource(String key, RemoveResourceListener<String, SMSFailReason> removeResourceListener) {
-        CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
+        boolean hasSucceeded = false;
+        try{
+            CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
+            hasSucceeded = true;
+        }
+        catch(Exception e){
+            Log.e(LOG_KEY, "There's been an error: " + e);
+            removeResourceListener.onResourceRemoveFail(key, SMSFailReason.MESSAGE_SEND_ERROR);
+        }
+        if(hasSucceeded) removeResourceListener.onResourceRemoved(key);
     }
 
     /**
@@ -102,7 +124,16 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void invite(SMSPeer peer, InviteListener<SMSPeer, SMSFailReason> inviteListener) {
-        CommandExecutor.execute(new SMSInvitePeer(peer));
+        boolean hasSucceeded = false;
+        try{
+            CommandExecutor.execute(new SMSInvitePeer(peer));
+            hasSucceeded = true;
+        }
+        catch(Exception e){
+            Log.e(LOG_KEY, "There's been an error: " + e);
+            inviteListener.onInvitationNotSent(peer, SMSFailReason.MESSAGE_SEND_ERROR);
+        }
+        if(hasSucceeded) inviteListener.onInvitationSent(peer);
     }
 
     /**
