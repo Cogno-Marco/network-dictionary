@@ -2,22 +2,15 @@ package com.eis.smsnetwork.broadcast;
 
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
-import com.eis.communication.network.commands.CommandExecutor;
-import com.eis.smslibrary.SMSHandler;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
-import com.eis.smsnetwork.SMSNetInvitation;
-import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
-import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
-import com.eis.smsnetwork.smsnetcommands.SMSRemovePeer;
-import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class receives messages from other peers in the network and acts according to the content of
@@ -26,7 +19,8 @@ import java.util.List;
  * The rest of the message varies depending on the {@link RequestType}:
  * <ul>
  * <li>Invite: there are no other fields</li>
- * <li>AcceptInvitation: the subscribers of the network that merged with mine</li>
+ * <li>AcceptInvitation: fields from 1 to the last one contain the phone numbers of each
+ * * {@link com.eis.smslibrary.SMSPeer} subscriber of the network that merged with mine</li>
  * <li>AddPeer: fields from 1 to the last one contain the phone numbers of each
  * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
  * <li>RemovePeer: there are no other fields, because this request can only be sent by the
@@ -36,10 +30,12 @@ import java.util.List;
  * <li>RemoveResource: fields from 1 to the last one contain the keys to remove</li>
  * </ul>
  *
- * @author Marco Cognolato, Giovanni Velludo
+ * @author Marco Cognolato, Giovanni Velludo, Enrico Cestaro
  */
 public class BroadcastReceiver extends SMSReceivedServiceListener {
     //TODO: write tests
+
+    private static final int NUM_OF_REQUEST_FIELDS = 1;
 
     @Override
     public void onMessageReceived(SMSMessage message) {
@@ -50,98 +46,109 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             return;
         }
-        if (request == null) return;
 
-        SMSPeer sender;
-        try {
-            sender = message.getPeer();
-        } catch (InvalidTelephoneNumberException e) {
-            return;
-        }
+        SMSPeer sender = message.getPeer();
 
         NetSubscriberList<SMSPeer> subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
         NetDictionary<String, String> dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
 
         switch (request) {
-            case Invite:
-                SMSNetInvitation netInvitation = new SMSNetInvitation(sender);
-                SMSJoinableNetManager.getInstance().checkInvitation(netInvitation);
+            case Invite: {
+                SMSJoinableNetManager.getInstance().checkInvitation(() -> sender);
                 break;
-
-            case AcceptInvitation:
-                // TODO: check if I invited the peer, if I did then accept the invitation
-                //Creating the list of new members,
-                List<SMSPeer> newMembers = new ArrayList<>();
-                for (int i = 1; i < fields.length; i++) newMembers.add(new SMSPeer(fields[i]));
-                String myNetwork = RequestType.AddPeer.asString() + " ";
-                //Converting the list into a String
+            }
+            case AcceptInvitation: {
+                NetSubscriberList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
+                        .getInvitedPeers();
+                if (invitedPeers.getSubscribers().contains(sender))
+                    invitedPeers.removeSubscriber(sender);
+                else return;
+                //Creating the set of new members
+                Set<SMSPeer> newMembers = new HashSet<>();
+                for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
+                    newMembers.add(new SMSPeer(fields[i]));
+                StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
+                //Converting the set into a String
                 for (SMSPeer peerToAdd : subscribers.getSubscribers())
-                    myNetwork += peerToAdd + " ";
-                //Broadcasting the new peers to add to my old subscribers list
-                BroadcastSender.broadcastMessage(newMembers, myNetwork);
+                    myNetwork.append(peerToAdd).append(" ");
+                //Broadcasting the new peers to add to my old subscribers set
+                BroadcastSender.broadcastMessage(newMembers, myNetwork.toString());
 
-                //Obtaining the list of old subscribers, converting it into a String
-                String newNetwork = RequestType.AddPeer.asString() + " ";
+                //Obtaining the set of old subscribers, converting it into a String
+                StringBuilder newNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
                 for (SMSPeer peerToAdd : newMembers)
-                    newNetwork += peerToAdd + " ";
+                    newNetwork.append(peerToAdd).append(" ");
                 //Broadcasting my old peers to the new subscribers, so that they can add them
-                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork);
+                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork.toString());
 
-                //Updating my local subscribers list
+                //Updating my local subscribers set
                 for (SMSPeer peerToAddLocally : newMembers)
                     subscribers.addSubscriber(peerToAddLocally);
                 break;
-
-            case AddPeer:
+            }
+            case AddPeer: {
                 if (senderIsNotSubscriber) return;
                 SMSPeer[] peersToAdd;
                 try {
-                    peersToAdd = new SMSPeer[fields.length - 1];
+                    peersToAdd = new SMSPeer[fields.length - NUM_OF_REQUEST_FIELDS];
                 } catch (NegativeArraySizeException e) {
                     return;
                 }
                 try {
-                    for (int i = 1; i < fields.length; i++)
-                        peersToAdd[i] = new SMSPeer(fields[i]);
+                    for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
+                        peersToAdd[i - NUM_OF_REQUEST_FIELDS] = new SMSPeer(fields[i]);
                 } catch (InvalidTelephoneNumberException | ArrayIndexOutOfBoundsException e) {
                     return;
                 }
                 for (SMSPeer peer : peersToAdd)
-                    SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(peer);
+                    subscribers.addSubscriber(peer);
                 break;
-
-            case RemovePeer:
-                if (senderIsNotSubscriber) return;
-                SMSPeer peerToRemove;
+            }
+            case RemovePeer: {
                 try {
-                    peerToRemove = new SMSPeer(fields[1]);
-                } catch (InvalidTelephoneNumberException e) {
+                    subscribers.removeSubscriber(sender);
+                } catch (IllegalArgumentException e) {
                     return;
                 }
-                subscribers.removeSubscriber(peerToRemove);
                 break;
-
-            case AddResource:
-                if (senderIsNotSubscriber) return;
-                String key, value;
+            }
+            case AddResource: {
+                // if the number of fields is even, that means not every key will have a
+                // corresponding value, so the message we received is garbage. For example, with 4
+                // fields we'll have: requestType, key, value, key
+                if (senderIsNotSubscriber || fields.length % 2 == 0) return;
+                String[] keys;
+                String[] values;
                 try {
-                    key = fields[1];
-                    value = fields[2];
+                    keys = new String[(fields.length - NUM_OF_REQUEST_FIELDS) / 2];
+                    values = new String[keys.length];
+                } catch (NegativeArraySizeException e) {
+                    return;
+                }
+                try {
+                    for (int i = 0, j = NUM_OF_REQUEST_FIELDS; j < fields.length; i++) {
+                        keys[i] = fields[j++];
+                        values[i] = fields[j++];
+                    }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                dictionary.addResource(key, value);
+                for (int i = 0; i < keys.length; i++) {
+                    dictionary.addResource(keys[i], values[i]);
+                }
                 break;
-
-            case RemoveResource:
+            }
+            case RemoveResource: {
                 if (senderIsNotSubscriber) return;
                 try {
-                    key = fields[1];
+                    for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
+                        dictionary.removeResource(fields[i]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }
-                dictionary.removeResource(key);
+                break;
+            }
         }
     }
 }

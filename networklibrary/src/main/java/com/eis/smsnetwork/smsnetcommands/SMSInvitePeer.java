@@ -6,6 +6,7 @@ import com.eis.smslibrary.SMSHandler;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.SMSJoinableNetManager;
 
 /**
  * @author Marco Cognolato
@@ -29,5 +30,6 @@ public class SMSInvitePeer extends com.eis.communication.network.commands.Invite
         String message = RequestType.Invite.asString();
         SMSMessage messageToSend = new SMSMessage(peerToInvite, message);
         SMSHandler.getInstance().sendMessage(messageToSend);
+        SMSJoinableNetManager.getInstance().getInvitedPeers().addSubscriber(peerToInvite);
     }
 }

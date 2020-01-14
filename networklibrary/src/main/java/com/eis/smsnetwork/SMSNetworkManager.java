@@ -3,7 +3,6 @@ package com.eis.smsnetwork;
 import androidx.annotation.NonNull;
 
 import com.eis.communication.network.commands.CommandExecutor;
-import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
@@ -23,11 +22,13 @@ import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, SMSFailReason> {
 
     private NetSubscriberList<SMSPeer> netSubscribers = new SMSNetSubscriberList();
     private NetDictionary<String, String> netDictionary = new SMSNetDictionary();
+    private NetSubscriberList<SMSPeer> invitedPeers = new SMSNetSubscriberList();
 
     /**
      * @return netSubscribers
@@ -41,6 +42,14 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     public NetDictionary<String, String> getNetDictionary() {
         return netDictionary;
+    }
+
+    /**
+     * @return A {@link NetSubscriberList} containing Peers who were invited to join the network and
+     * haven't answered yet.
+     */
+    public NetSubscriberList<SMSPeer> getInvitedPeers() {
+        return invitedPeers;
     }
 
     /**
@@ -67,7 +76,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     public void getResource(String key, GetResourceListener<String, String, SMSFailReason> getResourceListener) {
         String resource = netDictionary.getResource(key);
         if (resource != null) getResourceListener.onGetResource(key, resource);
-        else{
+        else {
             getResourceListener.onGetResourceFailed(key, SMSFailReason.NO_RESOURCE);
         }
     }
@@ -105,7 +114,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         // N.B. this function provides an implementation for automatically joining a network.
         // while SMSJoinableNetManager uses this function by sending the request to the user
         // using a listener set by the user.
-        CommandExecutor.execute(new SMSAcceptInvite((SMSPeer)invitation.getInviterPeer(), netSubscribers));
+        CommandExecutor.execute(new SMSAcceptInvite((SMSPeer) invitation.getInviterPeer(), netSubscribers));
     }
 
     /**
