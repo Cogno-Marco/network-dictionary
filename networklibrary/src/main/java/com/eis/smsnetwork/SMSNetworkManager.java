@@ -115,7 +115,9 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param list A NetSubscriberList of type <SMSPeer> to provide
      */
     public void setNetSubscriberList(@NonNull NetSubscriberList<SMSPeer> list) {
-
+        for(SMSPeer sub : netSubscribers.getSubscribers())
+            list.addSubscriber(sub);
+        netSubscribers = list;
     }
 
     /**
@@ -125,6 +127,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param dictionary A NetDictionary of type <String,String> to provide
      */
     public void setNetDictionary(@NonNull NetDictionary<String, String> dictionary) {
-
+        //TODO: transfer dictionary elements into the new dictionary
+        netDictionary = dictionary;
     }
 }
