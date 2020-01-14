@@ -11,18 +11,19 @@ import java.util.Map;
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public enum RequestType {
 
     // Requests to manage subscribers
-    Invite("IN"),
-    AcceptInvitation("AI"),
-    AddPeer("AP"),
-    RemovePeer("RP"),
+    Invite("@"),
+    AcceptInvitation("£"),
+    AddPeer("$"),
+    RemovePeer("¥"),
 
     // Requests to manage the dictionary
-    AddResource("AR"),
-    RemoveResource("RR");
+    AddResource("è"),
+    RemoveResource("é");
 
     private final String command;
 
