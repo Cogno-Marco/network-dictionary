@@ -71,7 +71,7 @@ public class SMSNetworkManagerTest {
     }
 
     @Test
-    /**
+    /*
      * Tested the modification of a given <key, resource> pair; the value is modified even if it has
      * never been added to the Dictionary, but there is no error since, if the pair is not found, is
      * added to the Dictionary as a new pair.
@@ -90,7 +90,7 @@ public class SMSNetworkManagerTest {
     }
 
     @Test
-    /**
+    /*
      * The system is not able to send the message
      */
     public void invite_failed() {
@@ -106,11 +106,10 @@ public class SMSNetworkManagerTest {
         //networkManager.invite(VALID_PEER, inviteListenerMock);
     }
 
-@Test
+    @Test
     public void acceptJoinInvitation() {
         SMSInvitation invitation = new SMSInvitation(VALID_PEER);
         networkManager.acceptJoinInvitation(invitation);
-
-}
+    }
 
 }

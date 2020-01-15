@@ -40,21 +40,6 @@ public class SMSNetDictionaryTest {
         assertEquals(netDictionary.getResource(KEY2), RESOURCE2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void addInvalidKey_throws() {
-        netDictionary.addResource(INVALID_KEY, RESOURCE1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getInvalidKey_throws() {
-        netDictionary.getResource(INVALID_KEY);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void removeInvalidKey_throws() {
-        netDictionary.removeResource(INVALID_KEY);
-    }
-
     @Test
     public void searchResourceNotPresent_returnsNull() {
         assertNull(netDictionary.getResource(KEY1));
