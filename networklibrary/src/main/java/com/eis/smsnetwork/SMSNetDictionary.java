@@ -28,6 +28,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param resource The resource to add
      */
     public void addResource(String key, String resource) {
+        checkKeyValidity(key);
+        checkKeyValidity(resource);
         dict.put(key, resource);
     }
 
@@ -37,6 +39,7 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param key The key which defines the resource
      */
     public void removeResource(String key) {
+        checkKeyValidity(key);
         dict.remove(key);
     }
 
@@ -48,6 +51,7 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * else returns null
      */
     public String getResource(String key) {
+        checkKeyValidity(key);
         return dict.get(key);
     }
 
@@ -58,7 +62,7 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param resource The resource to add
      */
     public void addResourceFromSMS(@NonNull String key, @NonNull String resource) {
-        dict.put(removeEscapes(key), removeEscapes(resource));
+        addResource(removeEscapes(key), removeEscapes(resource));
     }
 
     /**
@@ -67,7 +71,7 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param key The key which defines the resource
      */
     public void removeResourceFromSMS(@NonNull String key) {
-        dict.remove(removeEscapes(key));
+        removeResource(removeEscapes(key));
     }
 
     /**
@@ -127,5 +131,24 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
     public static String removeEscapes(@NonNull String string) {
         String regex = Matcher.quoteReplacement("\\" + BroadcastReceiver.FIELD_SEPARATOR);
         return string.replaceAll(regex, BroadcastReceiver.FIELD_SEPARATOR);
+    }
+
+    /**
+     * Checks if a given key or resource is valid, else throws IllegalArgumentException.
+     * A key or resource is said to be valid only if its last character is not a backslash "\".
+     * <p>
+     * This is because when a Key-Resource pair gets embedded in an SMSMessage they need a separator.
+     * We decided to use {@link BroadcastReceiver#FIELD_SEPARATOR} as a separator between different
+     * objects in SMS messages, and {@link BroadcastReceiver#FIELD_SEPARATOR} characters contained
+     * in keys and resources are replaced by a backslash and a
+     * {@link BroadcastReceiver#FIELD_SEPARATOR}, so if we allow keys and resource to have a
+     * backslash character as their last one, this might result in two different objects being
+     * considered one single object.
+     *
+     * @param string The string to check
+     */
+    private static void checkKeyValidity(String string) {
+        if (string == null || string.matches("\\p{all}*\\\\$"))
+            throw new IllegalArgumentException("The given string is not valid! Given string was: " + string);
     }
 }

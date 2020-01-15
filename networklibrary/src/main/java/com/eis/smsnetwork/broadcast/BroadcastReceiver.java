@@ -22,7 +22,7 @@ import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
 public class BroadcastReceiver extends SMSReceivedServiceListener {
 
     private static final int NUM_OF_REQUEST_FIELDS = 1;
-    public static final String FIELD_SEPARATOR = " ";
+    public static final String FIELD_SEPARATOR = "¤";
     static final String SEPARATOR_REGEX = "(?<!\\\\)" + FIELD_SEPARATOR;
 
 

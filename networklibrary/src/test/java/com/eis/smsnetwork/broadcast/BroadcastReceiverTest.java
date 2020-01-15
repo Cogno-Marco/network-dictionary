@@ -48,18 +48,18 @@ public class BroadcastReceiverTest {
 
     @Test
     public void splitMessage() {
-        String message = "è saluto buon\\ giorno albero pino\\ marittimo\\ ";
-        String[] expectedFields0 = {"è", "saluto", "buon\\ giorno", "albero", "pino\\ marittimo\\ "};
+        String message = "è¤saluto¤buon\\¤giorno¤albero¤pino\\¤marittimo\\¤";
+        String[] expectedFields0 = {"è", "saluto", "buon\\¤giorno", "albero", "pino\\¤marittimo\\¤"};
         String[] fields = message.split(BroadcastReceiver.SEPARATOR_REGEX);
         Assert.assertArrayEquals(expectedFields0, fields);
 
-        message = "\\ \\  \\ciao";
-        String[] expectedFields1 = {"\\ \\ ", "\\ciao"};
+        message = "\\¤\\¤¤\\ciao";
+        String[] expectedFields1 = {"\\¤\\¤", "\\ciao"};
         fields = message.split(BroadcastReceiver.SEPARATOR_REGEX);
         Assert.assertArrayEquals(expectedFields1, fields);
 
-        message = "parola \\\\ parola \\ parola";
-        String[] expectedFields2 = {"parola", "\\\\ parola", "\\ parola"};
+        message = "parola¤\\\\¤parola¤\\¤parola";
+        String[] expectedFields2 = {"parola", "\\\\¤parola", "\\¤parola"};
         fields = message.split(BroadcastReceiver.SEPARATOR_REGEX);
         Assert.assertArrayEquals(expectedFields2, fields);
     }
@@ -166,7 +166,7 @@ public class BroadcastReceiverTest {
     public void onMessageReceived_addPeerFromNonSubscriber_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
-        String garbageText = RequestType.AddPeer.asString() + " +393478512584 +393338512123";
+        String garbageText = RequestType.AddPeer.asString() + "¤+393478512584¤+393338512123";
         SMSMessage garbageMessage = new SMSMessage(sender, garbageText);
         Set<SMSPeer> subscribersSet = new HashSet<>();
 
@@ -186,7 +186,7 @@ public class BroadcastReceiverTest {
     public void onMessageReceived_addPeerWithWrongNumber_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
-        String garbageText = RequestType.AddPeer.asString() + " +393478512584 +0000333812123";
+        String garbageText = RequestType.AddPeer.asString() + "¤+393478512584¤+0000333812123";
         SMSMessage garbageMessage = new SMSMessage(sender, garbageText);
         Set<SMSPeer> subscribersSet = new HashSet<>();
         subscribersSet.add(sender);
@@ -207,7 +207,7 @@ public class BroadcastReceiverTest {
     public void onMessageReceived_correctAddPeer() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
-        String correctText = RequestType.AddPeer.asString() + " +393478512584 +39333812123";
+        String correctText = RequestType.AddPeer.asString() + "¤+393478512584¤+39333812123";
         SMSMessage correctMessage = new SMSMessage(sender, correctText);
         Set<SMSPeer> subscribersSet = new HashSet<>();
         subscribersSet.add(sender);

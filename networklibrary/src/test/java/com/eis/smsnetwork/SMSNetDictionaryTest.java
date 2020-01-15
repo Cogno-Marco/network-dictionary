@@ -14,7 +14,7 @@ public class SMSNetDictionaryTest {
 
     private final String KEY1 = "ResourceKey";
     private final String KEY2 = "OtherKey";
-    private final String INVALID_KEY = "This is not a valid key";
+    private final String INVALID_KEY = "This is not a valid key\\";
 
     private final String RESOURCE1 = "This is a valid resource";
     private final String RESOURCE2 = "This is another valid resource";
@@ -38,6 +38,21 @@ public class SMSNetDictionaryTest {
         netDictionary.addResource(KEY2, RESOURCE2);
         assertEquals(netDictionary.getResource(KEY1), RESOURCE1);
         assertEquals(netDictionary.getResource(KEY2), RESOURCE2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addInvalidKey_throws() {
+        netDictionary.addResource(INVALID_KEY, RESOURCE1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getInvalidKey_throws() {
+        netDictionary.getResource(INVALID_KEY);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeInvalidKey_throws() {
+        netDictionary.removeResource(INVALID_KEY);
     }
 
     @Test
@@ -65,26 +80,26 @@ public class SMSNetDictionaryTest {
 
     @Test
     public void addEscapes() {
-        String textToEscape = "hello, my name is Donald Duck \\ ";
-        String expectedText = "hello,\\ my\\ name\\ is\\ Donald\\ Duck\\ \\\\ ";
+        String textToEscape = "hello,¤my¤name¤is¤Donald¤Duck¤\\¤";
+        String expectedText = "hello,\\¤my\\¤name\\¤is\\¤Donald\\¤Duck\\¤\\\\¤";
         String escapedText = SMSNetDictionary.addEscapes(textToEscape);
         assertEquals(expectedText, escapedText);
     }
 
     @Test
     public void removeEscapes() {
-        String escapedText = "hello,\\ my\\ name\\ is\\ Donald\\ Duck\\ \\\\ ";
-        String expectedText = "hello, my name is Donald Duck \\ ";
+        String escapedText = "hello,\\¤my\\¤name\\¤is\\¤Donald\\¤Duck\\¤\\\\¤";
+        String expectedText = "hello,¤my¤name¤is¤Donald¤Duck¤\\¤";
         String unescapedText = SMSNetDictionary.removeEscapes(escapedText);
         assertEquals(expectedText, unescapedText);
     }
 
     @Test
     public void getAllKeyValuePairsForSMS() {
-        netDictionary.addResource(KEY1, RESOURCE1);
-        netDictionary.addResource(KEY2, RESOURCE2);
+        netDictionary.addResource(KEY1, RESOURCE1.replaceAll(" ", "¤"));
+        netDictionary.addResource(KEY2, RESOURCE2.replaceAll(" ", "¤"));
         String dictToString = netDictionary.getAllKeyResourcePairsForSMS();
-        String expectedString = "OtherKey This\\ is\\ another\\ valid\\ resource ResourceKey This\\ is\\ a\\ valid\\ resource";
+        String expectedString = "OtherKey¤This\\¤is\\¤another\\¤valid\\¤resource¤ResourceKey¤This\\¤is\\¤a\\¤valid\\¤resource";
         assertEquals(expectedString, dictToString);
     }
 }
