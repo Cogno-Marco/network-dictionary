@@ -130,7 +130,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
             hasSucceeded = true;
         }
         catch(Exception e){
-            //Log.e(LOG_KEY, "There's been an error: " + e);
+            Log.e(LOG_KEY, "There's been an error: " + e);
             inviteListener.onInvitationNotSent(peer, SMSFailReason.MESSAGE_SEND_ERROR);
         }
         if(hasSucceeded) inviteListener.onInvitationSent(peer);

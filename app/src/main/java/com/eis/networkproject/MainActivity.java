@@ -1,7 +1,9 @@
 package com.eis.networkproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +17,6 @@ import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.SMSFailReason;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 
-import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,6 +28,13 @@ public class MainActivity extends AppCompatActivity implements InviteListener<SM
     private SMSPeer[] subsToNet;
     private ArrayAdapter<SMSPeer> adapter;
 
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_SMS
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements InviteListener<SM
 
         editText = (EditText) findViewById(R.id.phone_input);
         subsList = findViewById(R.id.listView);
+
+        ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
 
         SMSHandler.getInstance().setup(this);
 
