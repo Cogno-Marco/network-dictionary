@@ -225,7 +225,51 @@ public class BroadcastReceiverTest {
         verify(mockSubscribers).addSubscriber(new SMSPeer("+39333812123"));
     }
 
+    @Test
+    public void onMessageReceived_correctAddResource() {
+        BroadcastReceiver instance = new BroadcastReceiver();
+        SMSPeer sender = new SMSPeer("+393492794133");
+        String correctText = RequestType.AddResource.asString() +
+                "¤the cat is on¤the table¤the book is¤under the table";
+        SMSMessage correctMessage = new SMSMessage(sender, correctText);
+        Set<SMSPeer> subscribersSet = new HashSet<>();
+        subscribersSet.add(sender);
 
+        SMSNetSubscriberList mockSubscribers = mock(SMSNetSubscriberList.class);
+        when(mockSubscribers.getSubscribers()).thenReturn(subscribersSet);
+        SMSNetDictionary mockDictionary = mock(SMSNetDictionary.class);
+        SMSJoinableNetManager mockManager = mock(SMSJoinableNetManager.class);
+        when(mockManager.getNetSubscriberList()).thenReturn(mockSubscribers);
+        when(mockManager.getNetDictionary()).thenReturn(mockDictionary);
+        PowerMockito.mockStatic(SMSJoinableNetManager.class);
+        when(SMSJoinableNetManager.getInstance()).thenReturn(mockManager);
 
-    //TODO: write tests for messages with correct fields[0], and garbage in successive fields
+        instance.onMessageReceived(correctMessage);
+        verify(mockDictionary).addResourceFromSMS("the cat is on", "the table");
+        verify(mockDictionary).addResourceFromSMS("the book is", "under the table");
+    }
+
+    @Test
+    public void onMessageReceived_correctRemoveResource() {
+        BroadcastReceiver instance = new BroadcastReceiver();
+        SMSPeer sender = new SMSPeer("+393492794133");
+        String correctText = RequestType.RemoveResource.asString() +
+                "¤the cat is on¤the table";
+        SMSMessage correctMessage = new SMSMessage(sender, correctText);
+        Set<SMSPeer> subscribersSet = new HashSet<>();
+        subscribersSet.add(sender);
+
+        SMSNetSubscriberList mockSubscribers = mock(SMSNetSubscriberList.class);
+        when(mockSubscribers.getSubscribers()).thenReturn(subscribersSet);
+        SMSNetDictionary mockDictionary = mock(SMSNetDictionary.class);
+        SMSJoinableNetManager mockManager = mock(SMSJoinableNetManager.class);
+        when(mockManager.getNetSubscriberList()).thenReturn(mockSubscribers);
+        when(mockManager.getNetDictionary()).thenReturn(mockDictionary);
+        PowerMockito.mockStatic(SMSJoinableNetManager.class);
+        when(SMSJoinableNetManager.getInstance()).thenReturn(mockManager);
+
+        instance.onMessageReceived(correctMessage);
+        verify(mockDictionary).removeResourceFromSMS("the cat is on");
+        verify(mockDictionary).removeResourceFromSMS("the table");
+    }
 }

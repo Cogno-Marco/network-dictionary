@@ -102,4 +102,18 @@ public class SMSNetDictionaryTest {
         String expectedString = "OtherKey¤This\\¤is\\¤another\\¤valid\\¤resource¤ResourceKey¤This\\¤is\\¤a\\¤valid\\¤resource";
         assertEquals(expectedString, dictToString);
     }
+
+    @Test
+    public void addResourceFromSMS() {
+        netDictionary.addResourceFromSMS("the\\¤cat\\¤is\\¤on", "the\\¤table");
+        assertEquals("the¤table", netDictionary.getResource("the¤cat¤is¤on"));
+    }
+
+    @Test
+    public void removeResourceFromSMS() {
+        netDictionary.addResourceFromSMS("the\\¤cat\\¤is\\¤on", "the\\¤table");
+        assertEquals("the¤table", netDictionary.getResource("the¤cat¤is¤on"));
+        netDictionary.removeResource("the¤cat¤is¤on");
+        assertNull(netDictionary.getResource("the¤cat¤is¤on"));
+    }
 }
