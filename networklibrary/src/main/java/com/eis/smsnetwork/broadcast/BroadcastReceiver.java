@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
-import com.eis.smslibrary.SMSReceivedBroadcastReceiver;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSInvitation;
 import com.eis.smsnetwork.SMSJoinableNetManager;
@@ -23,6 +22,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     //TODO: write tests
 
     private static final int NUM_OF_REQUEST_FIELDS = 1;
+    public static final String FIELD_SEPARATOR = " ";
 
     /**
      * Receives messages from other peers in the network and acts according to the content of those
@@ -47,7 +47,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     @Override
     public void onMessageReceived(SMSMessage message) {
         Log.d("BR_RECEIVER", "Message received: " + message.getPeer() + " " + message.getData());
-        String[] fields = message.getData().split(" ");
+        String[] fields = message.getData().split(FIELD_SEPARATOR);
         RequestType request;
         try {
             request = RequestType.get(fields[0]);

@@ -1,24 +1,18 @@
 package com.eis.smsnetwork;
 
-import com.eis.communication.Peer;
-import com.eis.communication.network.Invitation;
 import com.eis.communication.network.listeners.GetResourceListener;
 import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
-import com.eis.smslibrary.SMSHandler;
-import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class SMSNetworkManagerTest {
 
