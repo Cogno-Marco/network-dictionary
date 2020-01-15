@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.eis.communication.MessageParseStrategy;
 import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.NetDictionary;
@@ -15,6 +16,8 @@ import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSManager;
+import com.eis.smslibrary.SMSMessage;
+import com.eis.smslibrary.SMSMessageHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
@@ -178,6 +181,24 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param context The android context to make this work on
      */
     public void setup(Context context){
-        SMSManager.getInstance().setReceivedListener(BroadcastReceiver.class, context);
+        SMSManager.getInstance().setReceivedListener(BroadcastReceiver.class,
+                context.getApplicationContext());
+        SMSMessageHandler.getInstance()
+                .setMessageParseStrategy(new MessageParseStrategy<String, SMSPeer, SMSMessage>() {
+            private String hiddenCharacter = "¤";
+
+            @Override
+            public SMSMessage parseMessage(String channelData, SMSPeer channelPeer) {
+                if (!channelData.startsWith(hiddenCharacter))
+                    return null;
+                String messageData = channelData.substring(1);
+                return new SMSMessage(channelPeer, messageData);
+            }
+
+            @Override
+            public String parseData(SMSMessage message) {
+                return hiddenCharacter + message.getData();
+            }
+        });
     }
 }
