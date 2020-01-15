@@ -28,8 +28,9 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
 
     /**
      * Receives messages from other peers in the network and acts according to the content of those
-     * messages. Messages are composed of different fields, separated by spaces. Spaces escaped with
-     * a backslash do not separate fields.
+     * messages. Messages are composed of different fields, separated by
+     * {@link BroadcastReceiver#FIELD_SEPARATOR}. {@link BroadcastReceiver#FIELD_SEPARATOR}s
+     * preceded by a backslash do not separate fields.
      * Field 0 contains the {@link RequestType} of the request contained in this message.
      * The rest of the message varies depending on the {@link RequestType}:
      * <ul>
