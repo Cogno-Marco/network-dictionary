@@ -3,21 +3,29 @@ package com.eis.networkproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.eis.communication.network.listeners.InviteListener;
+import com.eis.smslibrary.SMSHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.SMSFailReason;
 import com.eis.smsnetwork.SMSJoinableNetManager;
+
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity implements InviteListener<SMSPeer, SMSFailReason> {
 
     private EditText editText;
-    private LinearLayout layout;
+    private ListView subsList;
+    private SMSPeer[] subsToNet;
+    private ArrayAdapter<SMSPeer> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,19 +33,20 @@ public class MainActivity extends AppCompatActivity implements InviteListener<SM
         setContentView(R.layout.activity_main);
 
         editText = (EditText) findViewById(R.id.phone_input);
-        layout = (LinearLayout) findViewById(R.id.vertical_layout); // Your linear layout.
-        updateLayout();
+        subsList = findViewById(R.id.listView);
+
+        SMSHandler.getInstance().setup(this);
+
+        setupLayout();
+        Timer timer = new Timer();
+        timer.schedule(new UpdateList(this), 0, 200);
     }
 
-    public void updateLayout(){
-        ListAdapter adapter = ... // Your adapter.
-
-        final int adapterCount = adapter.getCount();
-
-        for (int i = 0; i < adapterCount; i++) {
-            View item = adapter.getView(i, null, null);
-            layout.addView(item);
-        }
+    public void setupLayout(){
+        subsToNet = SMSJoinableNetManager.getInstance().
+                getNetSubscriberList().getSubscribers().toArray(new SMSPeer[] {});
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, subsToNet);
+        subsList.setAdapter(adapter);
     }
 
     public SMSPeer getMessage(){
@@ -49,13 +58,38 @@ public class MainActivity extends AppCompatActivity implements InviteListener<SM
         SMSJoinableNetManager.getInstance().invite(getMessage(), this);
     }
 
+    public void updateList(){
+        subsToNet = SMSJoinableNetManager.getInstance().
+                getNetSubscriberList().getSubscribers().toArray(new SMSPeer[] {});
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onInvitationSent(SMSPeer invitedPeer) {
-
+        Log.d("NET_DEMO", "Invitation was sent to: " + invitedPeer);
     }
 
     @Override
     public void onInvitationNotSent(SMSPeer notInvitedPeer, SMSFailReason failReason) {
+        Log.e("NET_DEMO", "Invitation was NOT sent to: " + notInvitedPeer + " error was: " + failReason);
+    }
 
+    class UpdateList extends TimerTask{
+
+        private MainActivity activity;
+
+        public UpdateList(MainActivity activity){
+            this.activity = activity;
+        }
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.updateList();
+                }
+            });
+        }
     }
 }
