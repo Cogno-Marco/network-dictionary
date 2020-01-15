@@ -1,8 +1,10 @@
 package com.eis.smsnetwork;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
-import com.eis.communication.network.FailReason;
+import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
@@ -12,17 +14,25 @@ import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
+import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
+import com.eis.smsnetwork.smsnetcommands.SMSInvitePeer;
+import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
 
 /**
  * The manager class of the network.
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
-public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, FailReason> {
+public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer, SMSFailReason> {
 
     private NetSubscriberList<SMSPeer> netSubscribers = new SMSNetSubscriberList();
     private NetDictionary<String, String> netDictionary = new SMSNetDictionary();
+    private NetSubscriberList<SMSPeer> invitedPeers = new SMSNetSubscriberList();
+
+    private String LOG_KEY = "NET_MANAGER";
 
     /**
      * @return netSubscribers
@@ -39,6 +49,14 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     }
 
     /**
+     * @return A {@link NetSubscriberList} containing Peers who were invited to join the network and
+     * haven't answered yet.
+     */
+    public NetSubscriberList<SMSPeer> getInvitedPeers() {
+        return invitedPeers;
+    }
+
+    /**
      * Starts a setResource request to the net
      *
      * @param key                 The key identifier for the resource.
@@ -47,8 +65,17 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void setResource(String key, String value, SetResourceListener<String, String, FailReason> setResourceListener) {
-
+    public void setResource(String key, String value, SetResourceListener<String, String, SMSFailReason> setResourceListener) {
+        boolean hasSucceeded = false;
+        try{
+            CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
+            hasSucceeded = true;
+        }
+        catch(Exception e){
+            Log.e(LOG_KEY, "There's been an error: " + e);
+            setResourceListener.onResourceSetFail(key, value, SMSFailReason.MESSAGE_SEND_ERROR);
+        }
+        if(hasSucceeded) setResourceListener.onResourceSet(key, value);
     }
 
     /**
@@ -59,8 +86,12 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void getResource(String key, GetResourceListener<String, String, FailReason> getResourceListener) {
-
+    public void getResource(String key, GetResourceListener<String, String, SMSFailReason> getResourceListener) {
+        String resource = netDictionary.getResource(key);
+        if (resource != null) getResourceListener.onGetResource(key, resource);
+        else {
+            getResourceListener.onGetResourceFailed(key, SMSFailReason.NO_RESOURCE);
+        }
     }
 
     /**
@@ -71,8 +102,17 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void removeResource(String key, RemoveResourceListener<String, FailReason> removeResourceListener) {
-
+    public void removeResource(String key, RemoveResourceListener<String, SMSFailReason> removeResourceListener) {
+        boolean hasSucceeded = false;
+        try{
+            CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
+            hasSucceeded = true;
+        }
+        catch(Exception e){
+            Log.e(LOG_KEY, "There's been an error: " + e);
+            removeResourceListener.onResourceRemoveFail(key, SMSFailReason.MESSAGE_SEND_ERROR);
+        }
+        if(hasSucceeded) removeResourceListener.onResourceRemoved(key);
     }
 
     /**
@@ -83,8 +123,17 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @author Marco Cognolato
      */
     @Override
-    public void invite(SMSPeer peer, InviteListener<SMSPeer, FailReason> inviteListener) {
-
+    public void invite(SMSPeer peer, InviteListener<SMSPeer, SMSFailReason> inviteListener) {
+        boolean hasSucceeded = false;
+        try{
+            CommandExecutor.execute(new SMSInvitePeer(peer));
+            hasSucceeded = true;
+        }
+        catch(Exception e){
+            //Log.e(LOG_KEY, "There's been an error: " + e);
+            inviteListener.onInvitationNotSent(peer, SMSFailReason.MESSAGE_SEND_ERROR);
+        }
+        if(hasSucceeded) inviteListener.onInvitationSent(peer);
     }
 
     /**
@@ -96,6 +145,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
         // N.B. this function provides an implementation for automatically joining a network.
         // while SMSJoinableNetManager uses this function by sending the request to the user
         // using a listener set by the user.
+        CommandExecutor.execute(new SMSAcceptInvite((SMSPeer) invitation.getInviterPeer(), netSubscribers));
     }
 
     /**
@@ -105,7 +155,9 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param list A NetSubscriberList of type <SMSPeer> to provide
      */
     public void setNetSubscriberList(@NonNull NetSubscriberList<SMSPeer> list) {
-
+        for(SMSPeer sub : netSubscribers.getSubscribers())
+            list.addSubscriber(sub);
+        netSubscribers = list;
     }
 
     /**
@@ -115,6 +167,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param dictionary A NetDictionary of type <String,String> to provide
      */
     public void setNetDictionary(@NonNull NetDictionary<String, String> dictionary) {
-
+        //TODO: transfer dictionary elements into the new dictionary
+        netDictionary = dictionary;
     }
 }

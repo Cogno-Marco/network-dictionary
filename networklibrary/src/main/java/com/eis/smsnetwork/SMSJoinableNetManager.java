@@ -13,9 +13,30 @@ import com.eis.smslibrary.SMSPeer;
  * else you should call that from the listener if you want to accept an invitation
  *
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSJoinableNetManager extends SMSNetworkManager
-        implements JoinableNetworkManager<String, String, SMSPeer, FailReason, Invitation<SMSPeer>> {
+        implements JoinableNetworkManager<String, String, SMSPeer, SMSFailReason, Invitation<SMSPeer>> {
+
+    private static SMSJoinableNetManager instance;
+
+    private JoinInvitationListener<Invitation<SMSPeer>> invitationListener = null;
+
+    /**
+     * Private constructor of the singleton.
+     */
+    private SMSJoinableNetManager() {
+    }
+
+    /**
+     * Gets the only instance of this class.
+     *
+     * @return the only instance of SMSNetworkManager.
+     */
+    public static SMSJoinableNetManager getInstance() {
+        if(instance == null) instance = new SMSJoinableNetManager();
+        return instance;
+    }
 
     /**
      * Accepts a given join invitation.
@@ -38,6 +59,16 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      */
     @Override
     public void setJoinInvitationListener(JoinInvitationListener<Invitation<SMSPeer>> joinInvitationListener) {
+        invitationListener = joinInvitationListener;
+    }
 
+    /**
+     * When an invitation in received separates between auto accepting and forwarding it to the
+     * user depending if a listener was set by the user
+     * @param invitation The invitation received
+     */
+    public void checkInvitation(Invitation<SMSPeer> invitation){
+        if(invitationListener == null) acceptJoinInvitation(invitation);
+        invitationListener.onJoinInvitationReceived(invitation);
     }
 }

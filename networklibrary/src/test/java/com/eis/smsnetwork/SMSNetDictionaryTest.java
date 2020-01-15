@@ -1,4 +1,4 @@
-package com.eis.communication.network;
+package com.eis.smsnetwork;
 
 import com.eis.smsnetwork.SMSNetDictionary;
 
@@ -14,17 +14,17 @@ import static org.junit.Assert.*;
  */
 public class SMSNetDictionaryTest {
 
-    public final String KEY1 = "ResourceKey";
-    public final String KEY2 = "OtherKey";
-    public final String INVALID_KEY = "This is not a valid key";
+    private final String KEY1 = "ResourceKey";
+    private final String KEY2 = "OtherKey";
+    private final String INVALID_KEY = "This is not a valid key";
 
-    public final String RESOURCE1 = "This is a valid resource";
-    public final String RESOURCE2 = "This is another valid resource";
+    private final String RESOURCE1 = "This is a valid resource";
+    private final String RESOURCE2 = "This is another valid resource";
 
     private SMSNetDictionary netDictionary;
 
     @Before
-    public void setup(){
+    public void setup() {
         netDictionary = new SMSNetDictionary();
     }
 
@@ -43,38 +43,38 @@ public class SMSNetDictionaryTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addInvalidKey_throws(){
+    public void addInvalidKey_throws() {
         netDictionary.addResource(INVALID_KEY, RESOURCE1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getInvalidKey_throws(){
+    public void getInvalidKey_throws() {
         netDictionary.getResource(INVALID_KEY);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void removeInvalidKey_throws(){
+    public void removeInvalidKey_throws() {
         netDictionary.removeResource(INVALID_KEY);
     }
 
     @Test
-    public void searchResourceNotPresent_returnsNull(){
+    public void searchResourceNotPresent_returnsNull() {
         assertNull(netDictionary.getResource(KEY1));
     }
 
     @Test
-    public void searchResourceNotAdded_returnsNull(){
+    public void searchResourceNotAdded_returnsNull() {
         netDictionary.addResource(KEY2, RESOURCE1);
         assertNull(netDictionary.getResource(KEY1));
     }
 
     @Test
-    public void removeNonAddedResource_doesNothing(){
+    public void removeNonAddedResource_doesNothing() {
         netDictionary.removeResource(KEY1);
     }
 
     @Test
-    public void removeResource_getsRemoved(){
+    public void removeResource_getsRemoved() {
         netDictionary.addResource(KEY2, RESOURCE1);
         netDictionary.removeResource(KEY2);
         assertNull(netDictionary.getResource(KEY2));
