@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.eis.communication.network.listeners.InviteListener;
-import com.eis.smslibrary.SMSHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.SMSFailReason;
 import com.eis.smsnetwork.SMSJoinableNetManager;
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements InviteListener<SM
 
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
 
-        SMSHandler.getInstance().setup(this);
+        SMSJoinableNetManager.getInstance().setup(this);
 
         setupLayout();
         Timer timer = new Timer();

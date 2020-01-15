@@ -1,7 +1,10 @@
 package com.eis.smsnetwork.broadcast;
 
+import android.util.Log;
+
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
+import com.eis.smslibrary.SMSReceivedBroadcastReceiver;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
@@ -42,6 +45,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
      */
     @Override
     public void onMessageReceived(SMSMessage message) {
+        Log.d("BR_RECEIVER", "Message received: " + message.getPeer() + " " + message.getData());
         String[] fields = message.getData().split(" ");
         RequestType request;
         try {

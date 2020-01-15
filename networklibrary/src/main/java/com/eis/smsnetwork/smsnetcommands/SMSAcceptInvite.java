@@ -2,7 +2,7 @@ package com.eis.smsnetwork.smsnetcommands;
 
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.commands.CommandExecutor;
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.RequestType;
@@ -26,7 +26,7 @@ public class SMSAcceptInvite extends com.eis.communication.network.commands.Acce
     protected void execute() {
         //TODO other than sending the AcceptInvitation, you should send all the peers in my network,
         //so he can notify we were added at the same time
-        SMSHandler.getInstance().sendMessage(new SMSMessage(inviter, RequestType.AcceptInvitation.asString()));
+        SMSManager.getInstance().sendMessage(new SMSMessage(inviter, RequestType.AcceptInvitation.asString()));
         CommandExecutor.execute(new SMSAddPeer(inviter, netSubscribers));
     }
 }

@@ -1,10 +1,14 @@
 package com.eis.smsnetwork;
 
+import android.content.Context;
+
 import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.JoinableNetworkManager;
 import com.eis.communication.network.listeners.JoinInvitationListener;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 
 /**
  * Concrete JoinableNetwork for SMS Messages
@@ -36,6 +40,14 @@ public class SMSJoinableNetManager extends SMSNetworkManager
     public static SMSJoinableNetManager getInstance() {
         if(instance == null) instance = new SMSJoinableNetManager();
         return instance;
+    }
+
+    /**
+     * Setups all the basic android-related operations to let the network function
+     * @param context The android context to make this work on
+     */
+    public void setup(Context context){
+        SMSManager.getInstance().setReceivedListener(BroadcastReceiver.class, context);
     }
 
     /**

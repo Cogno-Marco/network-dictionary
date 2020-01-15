@@ -4,7 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.RequestType;
@@ -31,7 +31,7 @@ public class SMSInvitePeer extends com.eis.communication.network.commands.Invite
     protected void execute() {
         String message = RequestType.Invite.asString();
         SMSMessage messageToSend = new SMSMessage(peerToInvite, message);
-        SMSHandler.getInstance().sendMessage(messageToSend);
+        SMSManager.getInstance().sendMessage(messageToSend);
         Log.d("SMSINVITE_COMMAND", "Invitation Sent to: " + peerToInvite);
         SMSJoinableNetManager.getInstance().getInvitedPeers().addSubscriber(peerToInvite);
     }

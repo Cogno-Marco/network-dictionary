@@ -1,6 +1,6 @@
 package com.eis.smsnetwork.broadcast;
 
-import com.eis.smslibrary.SMSHandler;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.SMSNetSubscriberList;
@@ -24,7 +24,7 @@ public class BroadcastSender {
         //Naive implementation of a broadcast: this node sends a message to each subscriber
         for (SMSPeer peer : receivers) {
             SMSMessage message = new SMSMessage(peer, textMessage);
-            SMSHandler.getInstance().sendMessage(message);
+            SMSManager.getInstance().sendMessage(message);
         }
     }
 
