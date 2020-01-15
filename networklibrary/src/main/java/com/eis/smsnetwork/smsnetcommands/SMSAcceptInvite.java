@@ -26,10 +26,7 @@ public class SMSAcceptInvite extends com.eis.communication.network.commands.Acce
     }
 
     protected void execute() {
-        //TODO other than sending the AcceptInvitation, you should send all the peers in my network,
-        //so he can notify we were added at the same time
         SMSManager.getInstance().sendMessage(new SMSMessage(inviter, RequestType.AcceptInvitation.asString()));
         Log.d("ACCEPTINVITE_COMMAND", "Accepting invite from: " + inviter);
-        CommandExecutor.execute(new SMSAddPeer(inviter, netSubscribers));
     }
 }

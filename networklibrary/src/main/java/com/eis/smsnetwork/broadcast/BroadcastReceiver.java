@@ -4,6 +4,11 @@ import android.util.Log;
 
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
+import com.eis.communication.network.commands.AddPeer;
+import com.eis.communication.network.commands.CommandExecutor;
+import com.eis.smslibrary.SMSManager;
+import com.eis.smslibrary.SMSMessageHandler;
+import com.eis.smslibrary.SMSReceivedBroadcastReceiver;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSInvitation;
 import com.eis.smsnetwork.SMSJoinableNetManager;
@@ -11,6 +16,7 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
+import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -69,33 +75,28 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             }
             case AcceptInvitation: {
+                //Verifying if the sender has been invited to joi the network
                 NetSubscriberList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
                         .getInvitedPeers();
                 if (invitedPeers.getSubscribers().contains(sender))
                     invitedPeers.removeSubscriber(sender);
                 else return;
-                //Creating the set of new members
-                Set<SMSPeer> newMembers = new HashSet<>();
-                for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
-                    newMembers.add(new SMSPeer(fields[i]));
+
+                //Sending to the invited peer my subscribers list
                 StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
-                //Converting the set into a String
                 for (SMSPeer peerToAdd : subscribers.getSubscribers())
                     myNetwork.append(peerToAdd).append(" ");
-                //Broadcasting the new peers to add to my old subscribers set
-                BroadcastSender.broadcastMessage(newMembers, myNetwork.toString());
+                SMSMessage myNetworkMessage = new SMSMessage(sender, myNetwork.toString());
+                SMSManager.getInstance().sendMessage(myNetworkMessage);
 
-                //Obtaining the set of old subscribers, converting it into a String
-                StringBuilder newNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
-                for (SMSPeer peerToAdd : newMembers)
-                    newNetwork.append(peerToAdd).append(" ");
-                //Broadcasting my old peers to the new subscribers, so that they can add them
-                BroadcastSender.broadcastMessage(subscribers.getSubscribers(), newNetwork.toString());
+                //Broadcasting to the previous subscribers the new subscriber
+                CommandExecutor.execute(new SMSAddPeer(sender, subscribers));
+                //Updating my local subscribers list
+                subscribers.addSubscriber(sender);
 
-                //Updating my local subscribers set
-                for (SMSPeer peerToAddLocally : newMembers)
-                    subscribers.addSubscriber(peerToAddLocally);
-                break;
+                //TODO add the resources sending process
+
+
             }
             case AddPeer: {
                 if (senderIsNotSubscriber) return;
