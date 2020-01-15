@@ -3,6 +3,10 @@ package com.eis.smsnetwork.smsnetcommands;
 import androidx.annotation.NonNull;
 
 import com.eis.communication.network.NetDictionary;
+import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.SMSJoinableNetManager;
+import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.smsnetwork.broadcast.BroadcastSender;
 
 /**
  * Command to remove a resource from the network dictionary
@@ -27,7 +31,10 @@ public class SMSRemoveResource extends com.eis.communication.network.commands.Re
      * Removes a Resource from the dictionary, then broadcasts it to the net
      */
     protected void execute() {
+        String removeResourceMessage =
+                RequestType.RemoveResource.asString() + " " + SMSNetDictionary.addEscapes(key);
+        BroadcastSender.broadcastMessage(SMSJoinableNetManager.getInstance().getNetSubscriberList()
+                .getSubscribers(), removeResourceMessage);
         netDictionary.removeResource(key);
-        //TODO broadcast
     }
 }

@@ -12,17 +12,14 @@ import com.eis.communication.network.NetSubscriberList;
 public abstract class AcceptInvite<T extends Peer> extends Command {
 
     protected final T inviter;
-    protected final NetSubscriberList<T> netSubscribers;
 
     /**
      * Constructor for AcceptInvite command, requires data to work
      *
      * @param inviter        The Peer who sent the invitation to his network
-     * @param netSubscribers The list of subscribers of this network (so they can be joined)
      */
-    public AcceptInvite(T inviter, NetSubscriberList<T> netSubscribers) {
+    public AcceptInvite(T inviter) {
         this.inviter = inviter;
-        this.netSubscribers = netSubscribers;
     }
 
     /**

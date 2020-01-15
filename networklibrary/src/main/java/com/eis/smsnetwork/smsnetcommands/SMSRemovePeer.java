@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.broadcast.BroadcastSender;
 
 /**
  * Command to remove a peer from the subscribers
@@ -28,8 +30,9 @@ public class SMSRemovePeer extends com.eis.communication.network.commands.Remove
      * Removes a peer from the subscribers list and broadcasts it to the net
      */
     protected void execute() {
+        String removePeerMessage = RequestType.RemovePeer.asString();
+        BroadcastSender.broadcastMessage(netSubscribers.getSubscribers(), removePeerMessage);
         netSubscribers.removeSubscriber(peer);
-        //TODO broadcast
     }
 
 }

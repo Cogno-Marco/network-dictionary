@@ -20,7 +20,6 @@ import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
  * @author Marco Cognolato, Giovanni Velludo, Enrico Cestaro
  */
 public class BroadcastReceiver extends SMSReceivedServiceListener {
-    //TODO: write tests
 
     private static final int NUM_OF_REQUEST_FIELDS = 1;
     public static final String FIELD_SEPARATOR = " ";
@@ -48,6 +47,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     @Override
     public void onMessageReceived(SMSMessage message) {
         Log.d("BR_RECEIVER", "Message received: " + message.getPeer() + " " + message.getData());
+        // To allow spaces in keys and resources, we escape them with a backslash. Therefore we only
+        // split the message when spaces are not preceded by a backslash.
         String[] fields = message.getData().split("(?<!\\\\)" + FIELD_SEPARATOR);
         RequestType request;
         try {
@@ -70,6 +71,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             }
             case AcceptInvitation: {
+                if (fields.length > 1) return;
                 //Verifying if the sender has been invited to join the network
                 NetSubscriberList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
                         .getInvitedPeers();

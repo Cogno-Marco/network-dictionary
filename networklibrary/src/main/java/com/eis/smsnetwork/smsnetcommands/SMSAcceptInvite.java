@@ -8,6 +8,9 @@ import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.SMSJoinableNetManager;
+import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.smsnetwork.SMSNetSubscriberList;
 
 /**
  * @author Marco Cognolato
@@ -19,14 +22,16 @@ public class SMSAcceptInvite extends com.eis.communication.network.commands.Acce
      * Constructor for SMSAcceptInvite command, requires data to work
      *
      * @param inviter        The SMSPeer who sent the invitation to his network
-     * @param netSubscribers The list of subscribers of this network (so they can be joined)
      */
-    public SMSAcceptInvite(SMSPeer inviter, NetSubscriberList<SMSPeer> netSubscribers) {
-        super(inviter, netSubscribers);
+    public SMSAcceptInvite(SMSPeer inviter) {
+        super(inviter);
     }
 
     protected void execute() {
         SMSManager.getInstance().sendMessage(new SMSMessage(inviter, RequestType.AcceptInvitation.asString()));
+        SMSJoinableNetManager.getInstance().setNetSubscriberList(new SMSNetSubscriberList());
+        SMSJoinableNetManager.getInstance().setNetDictionary(new SMSNetDictionary());
+        SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(inviter);
         Log.d("ACCEPTINVITE_COMMAND", "Accepting invite from: " + inviter);
     }
 }
