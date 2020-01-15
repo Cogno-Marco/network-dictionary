@@ -1,19 +1,31 @@
 package com.eis.smsnetwork;
 
+import android.util.Log;
+
 import com.eis.communication.network.listeners.GetResourceListener;
 import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({SMSManager.class, Log.class})
 public class SMSNetworkManagerTest {
 
     private SMSNetworkManager networkManager;
@@ -94,6 +106,8 @@ public class SMSNetworkManagerTest {
      * The system is not able to send the message
      */
     public void invite_failed() {
+        PowerMockito.mockStatic(Log.class);
+        when(Log.e(anyString(), anyString())).thenReturn(0);
         networkManager.invite(VALID_PEER, inviteListenerMock);
         verify(inviteListenerMock, times(1)).onInvitationNotSent(VALID_PEER, SMSFailReason.MESSAGE_SEND_ERROR);
     }
@@ -108,6 +122,11 @@ public class SMSNetworkManagerTest {
 
     @Test
     public void acceptJoinInvitation() {
+        PowerMockito.mockStatic(Log.class);
+        when(Log.d(anyString(), anyString())).thenReturn(0);
+        SMSManager mockManager = mock(SMSManager.class);
+        mockStatic(SMSManager.class);
+        when(SMSManager.getInstance()).thenReturn(mockManager);
         SMSInvitation invitation = new SMSInvitation(VALID_PEER);
         networkManager.acceptJoinInvitation(invitation);
     }
