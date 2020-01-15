@@ -47,7 +47,7 @@ public class SMSNetSubscriberListTest {
         netSubscribers.addSubscriber(PEER1);
         netSubscribers.addSubscriber(PEER2);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
-                new SMSPeer[]{PEER1, PEER2});
+                new SMSPeer[]{PEER2, PEER1});
     }
 
     @Test
@@ -56,7 +56,7 @@ public class SMSNetSubscriberListTest {
         netSubscribers.addSubscriber(PEER2);
         netSubscribers.addSubscriber(PEER3);
         assertArrayEquals(netSubscribers.getSubscribers().toArray(),
-                new SMSPeer[]{PEER1, PEER2, PEER3});
+                new SMSPeer[]{PEER3, PEER2, PEER1});
     }
 
     @Test
