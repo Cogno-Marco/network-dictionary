@@ -49,8 +49,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     @Override
     public void onMessageReceived(SMSMessage message) {
         Log.d("BR_RECEIVER", "Message received: " + message.getPeer() + " " + message.getData());
-        // To allow spaces in keys and resources, we escape them with a backslash. Therefore we only
-        // split the message when spaces are not preceded by a backslash.
+        // To allow FIELD_SEPARATOR in keys and resources, we escape it with a backslash. Therefore
+        // we only split the message when FIELD_SEPARATOR is not preceded by a backslash.
         String[] fields = message.getData().split(SEPARATOR_REGEX);
         RequestType request;
         try {

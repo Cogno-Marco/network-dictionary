@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.eis.communication.network.NetDictionary;
 import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +74,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * Returns a String containing all keys and resources from the dictionary, in the format
      * "key1 resource1 key2 resource2", after calling {@link SMSNetDictionary#addEscapes(String)} on each of them.
      *
-     * @return All keys present in the dictionary, ready to be sent through an SMS.
+     * @return All keys and resources present in the dictionary, ready to be sent through an SMS.
+     * If there are none, returns null.
      */
     public String getAllKeyResourcePairsForSMS() {
         Set<String> keySet = dict.keySet();
@@ -91,7 +91,11 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
             result.append(keys.get(i)).append(BroadcastReceiver.FIELD_SEPARATOR);
             result.append(resources.get(i)).append(BroadcastReceiver.FIELD_SEPARATOR);
         }
-        return result.deleteCharAt(result.length()-1).toString();
+        try {
+            return result.deleteCharAt(result.length() - 1).toString();
+        } catch (StringIndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
