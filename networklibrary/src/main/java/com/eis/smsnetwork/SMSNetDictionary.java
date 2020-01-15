@@ -88,8 +88,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
         }
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < keys.size(); i++) {
-            result.append(keys.get(i)).append(" ");
-            result.append(resources.get(i)).append(" ");
+            result.append(keys.get(i)).append(BroadcastReceiver.FIELD_SEPARATOR);
+            result.append(resources.get(i)).append(BroadcastReceiver.FIELD_SEPARATOR);
         }
         return result.deleteCharAt(result.length()-1).toString();
     }

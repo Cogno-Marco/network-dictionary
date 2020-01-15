@@ -6,6 +6,7 @@ import com.eis.communication.network.NetDictionary;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 import com.eis.smsnetwork.broadcast.BroadcastSender;
 
 /**
@@ -32,8 +33,9 @@ public class SMSAddResource extends com.eis.communication.network.commands.AddRe
      * Adds the key-resource pair to the dictionary, then broadcasts the message
      */
     protected void execute() {
-        String addResourceMessage = RequestType.AddResource.asString() + " " +
-                SMSNetDictionary.addEscapes(key) + " " + SMSNetDictionary.addEscapes(value);
+        String addResourceMessage = RequestType.AddResource.asString() +
+                BroadcastReceiver.FIELD_SEPARATOR + SMSNetDictionary.addEscapes(key) +
+                BroadcastReceiver.FIELD_SEPARATOR + SMSNetDictionary.addEscapes(value);
         BroadcastSender.broadcastMessage(SMSJoinableNetManager.getInstance().getNetSubscriberList()
                 .getSubscribers(), addResourceMessage);
         netDictionary.addResource(key, value);

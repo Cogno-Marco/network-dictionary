@@ -23,6 +23,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
 
     private static final int NUM_OF_REQUEST_FIELDS = 1;
     public static final String FIELD_SEPARATOR = " ";
+    static final String SEPARATOR_REGEX = "(?<!\\\\)" + FIELD_SEPARATOR;
+
 
     /**
      * Receives messages from other peers in the network and acts according to the content of those
@@ -49,7 +51,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         Log.d("BR_RECEIVER", "Message received: " + message.getPeer() + " " + message.getData());
         // To allow spaces in keys and resources, we escape them with a backslash. Therefore we only
         // split the message when spaces are not preceded by a backslash.
-        String[] fields = message.getData().split("(?<!\\\\)" + FIELD_SEPARATOR);
+        String[] fields = message.getData().split(SEPARATOR_REGEX);
         RequestType request;
         try {
             request = RequestType.get(fields[0]);
@@ -80,15 +82,16 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 else return;
 
                 //Sending to the invited peer my subscribers list
-                StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
+                StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() +
+                        FIELD_SEPARATOR);
                 for (SMSPeer peerToAdd : subscribers.getSubscribers())
-                    myNetwork.append(peerToAdd).append(" ");
+                    myNetwork.append(peerToAdd).append(FIELD_SEPARATOR);
                 SMSMessage myNetworkMessage = new SMSMessage(
                         sender, myNetwork.deleteCharAt(myNetwork.length()-1).toString());
                 SMSManager.getInstance().sendMessage(myNetworkMessage);
 
                 //Sending to the invited peer my dictionary
-                String myDictionary = RequestType.AddResource.asString() + " " +
+                String myDictionary = RequestType.AddResource.asString() + FIELD_SEPARATOR +
                         dictionary.getAllKeyResourcePairsForSMS();
                 SMSMessage myDictionaryMessage = new SMSMessage(sender, myDictionary);
                 SMSManager.getInstance().sendMessage(myDictionaryMessage);

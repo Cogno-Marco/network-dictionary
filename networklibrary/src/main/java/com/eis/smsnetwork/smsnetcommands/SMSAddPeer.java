@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 import com.eis.smsnetwork.broadcast.BroadcastSender;
 
 /**
@@ -30,7 +31,8 @@ public class SMSAddPeer extends com.eis.communication.network.commands.AddPeer<S
      * Adds the peer to the subscribers list and broadcasts it to the net
      */
     protected void execute() {
-        String addPeerMessage = RequestType.AddPeer.asString() + " " + peer.getAddress();
+        String addPeerMessage = RequestType.AddPeer.asString() + BroadcastReceiver.FIELD_SEPARATOR +
+                peer.getAddress();
         BroadcastSender.broadcastMessage(netSubscribers.getSubscribers(), addPeerMessage);
         netSubscribers.addSubscriber(peer);
     }

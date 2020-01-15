@@ -49,19 +49,19 @@ public class BroadcastReceiverTest {
     @Test
     public void splitMessage() {
         String message = "è saluto buon\\ giorno albero pino\\ marittimo\\ ";
-        String[] expectedFields = {"è", "saluto", "buon\\ giorno", "albero", "pino\\ marittimo\\ "};
-        String[] fields = message.split("(?<!\\\\) ");
-        Assert.assertArrayEquals(expectedFields, fields);
+        String[] expectedFields0 = {"è", "saluto", "buon\\ giorno", "albero", "pino\\ marittimo\\ "};
+        String[] fields = message.split(BroadcastReceiver.SEPARATOR_REGEX);
+        Assert.assertArrayEquals(expectedFields0, fields);
 
         message = "\\ \\  \\ciao";
-        String[] ecspectedFields = {"\\ \\ ", "\\ciao"};
-        fields = message.split("(?<!\\\\) ");
-        Assert.assertArrayEquals(ecspectedFields, fields);
+        String[] expectedFields1 = {"\\ \\ ", "\\ciao"};
+        fields = message.split(BroadcastReceiver.SEPARATOR_REGEX);
+        Assert.assertArrayEquals(expectedFields1, fields);
 
         message = "parola \\\\ parola \\ parola";
-        String[] exxpectedFields = {"parola", "\\\\ parola", "\\ parola"};
-        fields = message.split("(?<!\\\\) ");
-        Assert.assertArrayEquals(exxpectedFields, fields);
+        String[] expectedFields2 = {"parola", "\\\\ parola", "\\ parola"};
+        fields = message.split(BroadcastReceiver.SEPARATOR_REGEX);
+        Assert.assertArrayEquals(expectedFields2, fields);
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.eis.communication.network.NetDictionary;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 import com.eis.smsnetwork.broadcast.BroadcastSender;
 
 /**
@@ -32,7 +33,8 @@ public class SMSRemoveResource extends com.eis.communication.network.commands.Re
      */
     protected void execute() {
         String removeResourceMessage =
-                RequestType.RemoveResource.asString() + " " + SMSNetDictionary.addEscapes(key);
+                RequestType.RemoveResource.asString() + BroadcastReceiver.FIELD_SEPARATOR +
+                        SMSNetDictionary.addEscapes(key);
         BroadcastSender.broadcastMessage(SMSJoinableNetManager.getInstance().getNetSubscriberList()
                 .getSubscribers(), removeResourceMessage);
         netDictionary.removeResource(key);
