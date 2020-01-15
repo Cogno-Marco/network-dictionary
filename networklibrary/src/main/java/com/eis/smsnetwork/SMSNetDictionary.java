@@ -1,15 +1,22 @@
 package com.eis.smsnetwork;
 
+import androidx.annotation.NonNull;
 
 import com.eis.communication.network.NetDictionary;
+import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
 
 /**
  * Concrete implementation of a NetDictionary
  *
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSNetDictionary implements NetDictionary<String, String> {
 
@@ -20,11 +27,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      *
      * @param key      The key which defines the resource
      * @param resource The resource to add
-     * @throws IllegalArgumentException If the key is invalid.
-     *                                  A key is said to be valid only if it's composed of a single word
      */
     public void addResource(String key, String resource) {
-        checkKeyValidity(key);
         dict.put(key, resource);
     }
 
@@ -32,11 +36,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * Removes a resource from the dictionary
      *
      * @param key The key which defines the resource
-     * @throws IllegalArgumentException If the key is invalid.
-     *                                  A key is said to be valid only if it's composed of a single word
      */
     public void removeResource(String key) {
-        checkKeyValidity(key);
         dict.remove(key);
     }
 
@@ -46,33 +47,81 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param key The key which defines the resource to get
      * @return Returns a resource corresponding to the key if present in the dictionary,
      * else returns null
-     * @throws IllegalArgumentException If the key is invalid.
-     *                                  A key is said to be valid only if it's composed of a single word
      */
     public String getResource(String key) {
-        checkKeyValidity(key);
         return dict.get(key);
     }
 
     /**
-     * Checks if a given key is valid, else throws IllegalArgumentException.
-     * A key is said to be valid only if it's composed of one word.
-     * <p>
-     * This is because when a Key-Resource pair gets embedded in an SMSMessage they need a separator.
-     * We decided to use a space as a separator, so if we allow multiple words keys we run into a
-     * problem: understanding how to distinguish a key from a resource.
-     * For example if a message has "a b c" is it the key "a" and the resource "b c", or the
-     * key "a b" and the resource "c".?
-     * <p>
-     * The immediate response would be "use a different separator" but the same logic applies to
-     * that separator. For example if we use "_" as a separator, the file
-     * really_big_image.jpg would be separated into the key "really" and the resource "big image.jpg"
-     * which is wrong.
+     * Adds a resource parsed from an SMS to the network dictionary
      *
-     * @param key The key to check
+     * @param key      The key which defines the resource
+     * @param resource The resource to add
      */
-    private void checkKeyValidity(String key) {
-        if (key == null || !key.matches("^\\w+$"))
-            throw new IllegalArgumentException("The given key is not valid! Given key was: " + key);
+    public void addResourceFromSMS(@NonNull String key, @NonNull String resource) {
+        dict.put(removeEscapes(key), removeEscapes(resource));
+    }
+
+    /**
+     * Removes a resource from the dictionary, given a key parsed from an SMS
+     *
+     * @param key The key which defines the resource
+     */
+    public void removeResourceFromSMS(@NonNull String key) {
+        dict.remove(removeEscapes(key));
+    }
+
+    /**
+     * Returns a String containing all keys and resources from the dictionary, in the format
+     * "key1 resource1 key2 resource2", after calling {@link SMSNetDictionary#addEscapes(String)} on each of them.
+     *
+     * @return All keys present in the dictionary, ready to be sent through an SMS.
+     */
+    public String getAllKeyResourcePairsForSMS() {
+        Set<String> keySet = dict.keySet();
+        ArrayList<String> keys = new ArrayList<>(keySet.size());
+        ArrayList<String> resources = new ArrayList<>(keySet.size());
+        for (String key : keySet) {
+            String resource = getResource(key);
+            resources.add(addEscapes(resource));
+            keys.add(addEscapes(key));
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < keys.size(); i++) {
+            result.append(keys.get(i)).append(" ");
+            result.append(resources.get(i)).append(" ");
+        }
+        return result.deleteCharAt(result.length()-1).toString();
+    }
+
+    /**
+     * Adds a backslash before every character corresponding to
+     * {@link com.eis.smsnetwork.broadcast.BroadcastReceiver#FIELD_SEPARATOR}. Needed when reading
+     * keys and resources before sending them through an SMS.
+     *
+     * @param string The String where to escape every occurrence of
+     *               {@link com.eis.smsnetwork.broadcast.BroadcastReceiver#FIELD_SEPARATOR}.
+     * @return A String where every
+     * {@link com.eis.smsnetwork.broadcast.BroadcastReceiver#FIELD_SEPARATOR} is escaped with a
+     * backslash.
+     */
+    public static String addEscapes(@NonNull String string) {
+        String replacement = Matcher.quoteReplacement("\\" + BroadcastReceiver.FIELD_SEPARATOR);
+        return string.replaceAll(BroadcastReceiver.FIELD_SEPARATOR, replacement);
+    }
+
+    /**
+     * Whenever a backslash precedes a {@link BroadcastReceiver#FIELD_SEPARATOR}, removes that
+     * backslash. Needed when reading keys and resources from an SMS, before adding them to the
+     * dictionary.
+     *
+     * @param string The String where to remove every backslash preceding an occurrence of
+     *               {@link com.eis.smsnetwork.broadcast.BroadcastReceiver#FIELD_SEPARATOR}.
+     * @return A String where every backslash preceding an occurrence of
+     * {@link com.eis.smsnetwork.broadcast.BroadcastReceiver#FIELD_SEPARATOR} was removed.
+     */
+    public static String removeEscapes(@NonNull String string) {
+        String regex = Matcher.quoteReplacement("\\" + BroadcastReceiver.FIELD_SEPARATOR);
+        return string.replaceAll(regex, BroadcastReceiver.FIELD_SEPARATOR);
     }
 }

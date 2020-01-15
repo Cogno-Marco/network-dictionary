@@ -1,7 +1,5 @@
 package com.eis.smsnetwork;
 
-import com.eis.smsnetwork.SMSNetDictionary;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,5 +76,30 @@ public class SMSNetDictionaryTest {
         netDictionary.addResource(KEY2, RESOURCE1);
         netDictionary.removeResource(KEY2);
         assertNull(netDictionary.getResource(KEY2));
+    }
+
+    @Test
+    public void addEscapes() {
+        String textToEscape = "hello, my name is Donald Duck \\ ";
+        String expectedText = "hello,\\ my\\ name\\ is\\ Donald\\ Duck\\ \\\\ ";
+        String escapedText = SMSNetDictionary.addEscapes(textToEscape);
+        assertEquals(expectedText, escapedText);
+    }
+
+    @Test
+    public void removeEscapes() {
+        String escapedText = "hello,\\ my\\ name\\ is\\ Donald\\ Duck\\ \\\\ ";
+        String expectedText = "hello, my name is Donald Duck \\ ";
+        String unescapedText = SMSNetDictionary.removeEscapes(escapedText);
+        assertEquals(expectedText, unescapedText);
+    }
+
+    @Test
+    public void getAllKeyValuePairsForSMS() {
+        netDictionary.addResource(KEY1, RESOURCE1);
+        netDictionary.addResource(KEY2, RESOURCE2);
+        String dictToString = netDictionary.getAllKeyResourcePairsForSMS();
+        String expectedString = "OtherKey This\\ is\\ another\\ valid\\ resource ResourceKey This\\ is\\ a\\ valid\\ resource";
+        assertEquals(expectedString, dictToString);
     }
 }

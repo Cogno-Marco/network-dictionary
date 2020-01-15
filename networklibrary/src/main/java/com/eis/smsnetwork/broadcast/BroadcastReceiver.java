@@ -2,13 +2,9 @@ package com.eis.smsnetwork.broadcast;
 
 import android.util.Log;
 
-import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
-import com.eis.communication.network.commands.AddPeer;
 import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.smslibrary.SMSManager;
-import com.eis.smslibrary.SMSMessageHandler;
-import com.eis.smslibrary.SMSReceivedBroadcastReceiver;
 import com.eis.smsnetwork.RequestType;
 import com.eis.smsnetwork.SMSInvitation;
 import com.eis.smsnetwork.SMSJoinableNetManager;
@@ -16,10 +12,9 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smslibrary.exceptions.InvalidTelephoneNumberException;
 import com.eis.smslibrary.listeners.SMSReceivedServiceListener;
+import com.eis.smsnetwork.SMSNetDictionary;
+import com.eis.smsnetwork.SMSNetSubscriberList;
 import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Marco Cognolato, Giovanni Velludo, Enrico Cestaro
@@ -32,13 +27,13 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
 
     /**
      * Receives messages from other peers in the network and acts according to the content of those
-     * messages. Messages are composed of different fields, separated by spaces.
+     * messages. Messages are composed of different fields, separated by spaces. Spaces escaped with
+     * a backslash do not separate fields.
      * Field 0 contains the {@link RequestType} of the request contained in this message.
      * The rest of the message varies depending on the {@link RequestType}:
      * <ul>
      * <li>Invite: there are no other fields</li>
-     * <li>AcceptInvitation: fields from 1 to the last one contain the phone numbers of each
-     * * {@link com.eis.smslibrary.SMSPeer} subscriber of the network that merged with mine</li>
+     * <li>AcceptInvitation: there are no other fields</li>
      * <li>AddPeer: fields from 1 to the last one contain the phone numbers of each
      * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
      * <li>RemovePeer: there are no other fields, because this request can only be sent by the
@@ -53,7 +48,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
     @Override
     public void onMessageReceived(SMSMessage message) {
         Log.d("BR_RECEIVER", "Message received: " + message.getPeer() + " " + message.getData());
-        String[] fields = message.getData().split(FIELD_SEPARATOR);
+        String[] fields = message.getData().split("(?<!\\\\)" + FIELD_SEPARATOR);
         RequestType request;
         try {
             request = RequestType.get(fields[0]);
@@ -64,8 +59,8 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
 
         SMSPeer sender = message.getPeer();
 
-        NetSubscriberList<SMSPeer> subscribers = SMSJoinableNetManager.getInstance().getNetSubscriberList();
-        NetDictionary<String, String> dictionary = SMSJoinableNetManager.getInstance().getNetDictionary();
+        SMSNetSubscriberList subscribers = (SMSNetSubscriberList) SMSJoinableNetManager.getInstance().getNetSubscriberList();
+        SMSNetDictionary dictionary = (SMSNetDictionary) SMSJoinableNetManager.getInstance().getNetDictionary();
         boolean senderIsNotSubscriber = !subscribers.getSubscribers().contains(sender);
 
         switch (request) {
@@ -75,7 +70,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 break;
             }
             case AcceptInvitation: {
-                //Verifying if the sender has been invited to joi the network
+                //Verifying if the sender has been invited to join the network
                 NetSubscriberList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
                         .getInvitedPeers();
                 if (invitedPeers.getSubscribers().contains(sender))
@@ -86,17 +81,20 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() + " ");
                 for (SMSPeer peerToAdd : subscribers.getSubscribers())
                     myNetwork.append(peerToAdd).append(" ");
-                SMSMessage myNetworkMessage = new SMSMessage(sender, myNetwork.toString());
+                SMSMessage myNetworkMessage = new SMSMessage(
+                        sender, myNetwork.deleteCharAt(myNetwork.length()-1).toString());
                 SMSManager.getInstance().sendMessage(myNetworkMessage);
+
+                //Sending to the invited peer my dictionary
+                String myDictionary = RequestType.AddResource.asString() + " " +
+                        dictionary.getAllKeyResourcePairsForSMS();
+                SMSMessage myDictionaryMessage = new SMSMessage(sender, myDictionary);
+                SMSManager.getInstance().sendMessage(myDictionaryMessage);
 
                 //Broadcasting to the previous subscribers the new subscriber
                 CommandExecutor.execute(new SMSAddPeer(sender, subscribers));
                 //Updating my local subscribers list
                 subscribers.addSubscriber(sender);
-
-                //TODO add the resources sending process
-
-
             }
             case AddPeer: {
                 if (senderIsNotSubscriber) return;
@@ -147,7 +145,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     return;
                 }
                 for (int i = 0; i < keys.length; i++) {
-                    dictionary.addResource(keys[i], values[i]);
+                    dictionary.addResourceFromSMS(keys[i], values[i]);
                 }
                 break;
             }
@@ -155,7 +153,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 if (senderIsNotSubscriber) return;
                 try {
                     for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
-                        dictionary.removeResource(fields[i]);
+                        dictionary.removeResourceFromSMS(fields[i]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return;
                 }

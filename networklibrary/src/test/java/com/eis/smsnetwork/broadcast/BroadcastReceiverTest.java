@@ -47,6 +47,24 @@ public class BroadcastReceiverTest {
     }
 
     @Test
+    public void splitMessage() {
+        String message = "è saluto buon\\ giorno albero pino\\ marittimo\\ ";
+        String[] expectedFields = {"è", "saluto", "buon\\ giorno", "albero", "pino\\ marittimo\\ "};
+        String[] fields = message.split("(?<!\\\\) ");
+        Assert.assertArrayEquals(expectedFields, fields);
+
+        message = "\\ \\  \\ciao";
+        String[] ecspectedFields = {"\\ \\ ", "\\ciao"};
+        fields = message.split("(?<!\\\\) ");
+        Assert.assertArrayEquals(ecspectedFields, fields);
+
+        message = "parola \\\\ parola \\ parola";
+        String[] exxpectedFields = {"parola", "\\\\ parola", "\\ parola"};
+        fields = message.split("(?<!\\\\) ");
+        Assert.assertArrayEquals(exxpectedFields, fields);
+    }
+
+    @Test
     public void onMessageReceived_garbage_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
