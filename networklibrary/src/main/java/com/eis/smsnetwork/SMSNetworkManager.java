@@ -1,5 +1,6 @@
 package com.eis.smsnetwork;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,9 @@ import com.eis.communication.network.listeners.GetResourceListener;
 import com.eis.communication.network.listeners.InviteListener;
 import com.eis.communication.network.listeners.RemoveResourceListener;
 import com.eis.communication.network.listeners.SetResourceListener;
+import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
 import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
 import com.eis.smsnetwork.smsnetcommands.SMSInvitePeer;
@@ -169,5 +172,13 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     public void setNetDictionary(@NonNull NetDictionary<String, String> dictionary) {
         //TODO: transfer dictionary elements into the new dictionary
         netDictionary = dictionary;
+    }
+
+    /**
+     * Setups all the basic android-related operations to let the network function
+     * @param context The android context to make this work on
+     */
+    public void setup(Context context){
+        SMSManager.getInstance().setReceivedListener(BroadcastReceiver.class, context);
     }
 }

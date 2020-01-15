@@ -6,6 +6,7 @@ import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.smslibrary.SMSReceivedBroadcastReceiver;
 import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.SMSInvitation;
 import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSPeer;
@@ -64,7 +65,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
         switch (request) {
             case Invite: {
                 if (fields.length > 1) return;
-                SMSJoinableNetManager.getInstance().checkInvitation(() -> sender);
+                SMSJoinableNetManager.getInstance().checkInvitation(new SMSInvitation(sender));
                 break;
             }
             case AcceptInvitation: {

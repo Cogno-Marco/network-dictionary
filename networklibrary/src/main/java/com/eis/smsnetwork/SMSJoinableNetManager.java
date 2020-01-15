@@ -1,6 +1,7 @@
 package com.eis.smsnetwork;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
@@ -42,13 +43,7 @@ public class SMSJoinableNetManager extends SMSNetworkManager
         return instance;
     }
 
-    /**
-     * Setups all the basic android-related operations to let the network function
-     * @param context The android context to make this work on
-     */
-    public void setup(Context context){
-        SMSManager.getInstance().setReceivedListener(BroadcastReceiver.class, context);
-    }
+
 
     /**
      * Accepts a given join invitation.
@@ -80,7 +75,13 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      * @param invitation The invitation received
      */
     public void checkInvitation(Invitation<SMSPeer> invitation){
-        if(invitationListener == null) acceptJoinInvitation(invitation);
-        invitationListener.onJoinInvitationReceived(invitation);
+        if(invitationListener == null){
+            Log.d("JOINABLE_NET", "No listener is set, accepting automatically");
+            acceptJoinInvitation(invitation);
+        }
+        else{
+            Log.d("JOINABLE_NET", "Listener IS set, accepting manually");
+            invitationListener.onJoinInvitationReceived(invitation);
+        }
     }
 }
