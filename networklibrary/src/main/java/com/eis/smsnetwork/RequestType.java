@@ -19,7 +19,7 @@ public enum RequestType {
     Invite("@"),
     AcceptInvitation("£"),
     AddPeer("$"),
-    RemovePeer("¥"),
+    QuitNetwork("¥"),
 
     // Requests to manage the dictionary
     AddResource("è"),

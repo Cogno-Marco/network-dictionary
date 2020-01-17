@@ -121,10 +121,10 @@ public class BroadcastReceiverTest {
     }
 
     @Test
-    public void onMessageReceived_removePeerWithGarbage_isIgnored() {
+    public void onMessageReceived_quitNetworkWithGarbage_isIgnored() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
-        String garbageText = RequestType.RemovePeer.asString() + ">";
+        String garbageText = RequestType.QuitNetwork.asString() + ">";
         SMSMessage garbageMessage = new SMSMessage(sender, garbageText);
         Set<SMSPeer> subscribersSet = new HashSet<>();
         subscribersSet.add(sender);
@@ -142,10 +142,10 @@ public class BroadcastReceiverTest {
     }
 
     @Test
-    public void onMessageReceived_correctRemovePeer() {
+    public void onMessageReceived_correctQuitNetwork() {
         BroadcastReceiver instance = new BroadcastReceiver();
         SMSPeer sender = new SMSPeer("+393492794133");
-        String correctText = RequestType.RemovePeer.asString();
+        String correctText = RequestType.QuitNetwork.asString();
         SMSMessage correctMessage = new SMSMessage(sender, correctText);
         Set<SMSPeer> subscribersSet = new HashSet<>();
         subscribersSet.add(sender);

@@ -120,7 +120,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     subscribers.addSubscriber(peer);
                 break;
             }
-            case RemovePeer: {
+            case QuitNetwork: {
                 if (fields.length > 1) return;
                 try {
                     subscribers.removeSubscriber(sender);

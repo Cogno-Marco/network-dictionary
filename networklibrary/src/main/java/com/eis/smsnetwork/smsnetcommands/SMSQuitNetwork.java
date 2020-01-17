@@ -31,8 +31,8 @@ public class SMSQuitNetwork extends QuitNetwork<SMSPeer> {
      * Removes myself from the subscribers list and broadcasts it to the net
      */
     protected void execute() {
-        String removePeerMessage = RequestType.RemovePeer.asString();
-        BroadcastSender.broadcastMessage(netSubscribers.getSubscribers(), removePeerMessage);
+        String quitNetworkMessage = RequestType.QuitNetwork.asString();
+        BroadcastSender.broadcastMessage(netSubscribers.getSubscribers(), quitNetworkMessage);
         SMSJoinableNetManager.getInstance().getNetSubscriberList().getSubscribers().clear();
         SMSJoinableNetManager.getInstance().getNetDictionary().clear();
     }
