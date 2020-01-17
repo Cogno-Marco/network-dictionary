@@ -65,29 +65,31 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     /**
      * Starts a setResource request to the net
      *
-     * @param key                 The key identifier for the resource.
-     * @param value               The identified value of the resource.
+     * @param key                 The key identifier for the resource. It cannot have a backslash as
+     *                            its last character.
+     * @param value               The identified value of the resource.It cannot have a backslash as
+     *                            its last character.
      * @param setResourceListener Listener called on resource successfully saved or on fail.
      * @author Marco Cognolato
      */
     @Override
     public void setResource(String key, String value, SetResourceListener<String, String, SMSFailReason> setResourceListener) {
         boolean hasSucceeded = false;
-        try{
+        try {
             CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
             hasSucceeded = true;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             setResourceListener.onResourceSetFail(key, value, SMSFailReason.MESSAGE_SEND_ERROR);
         }
-        if(hasSucceeded) setResourceListener.onResourceSet(key, value);
+        if (hasSucceeded) setResourceListener.onResourceSet(key, value);
     }
 
     /**
      * Starts a getResource request to the net
      *
-     * @param key                 The key identifier for the resource.
+     * @param key                 The key identifier for the resource. It cannot have a backslash as
+     *                            its last character.
      * @param getResourceListener Listener called on resource successfully retrieved or on fail.
      * @author Marco Cognolato
      */
@@ -103,22 +105,22 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     /**
      * Starts a remove resource request to the net
      *
-     * @param key                    The key identifier for the resource.
+     * @param key                    The key identifier for the resource. It cannot have a backslash
+     *                               as its last character.
      * @param removeResourceListener Listener called on resource successfully removed or on fail.
      * @author Marco Cognolato
      */
     @Override
     public void removeResource(String key, RemoveResourceListener<String, SMSFailReason> removeResourceListener) {
         boolean hasSucceeded = false;
-        try{
+        try {
             CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
             hasSucceeded = true;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             removeResourceListener.onResourceRemoveFail(key, SMSFailReason.MESSAGE_SEND_ERROR);
         }
-        if(hasSucceeded) removeResourceListener.onResourceRemoved(key);
+        if (hasSucceeded) removeResourceListener.onResourceRemoved(key);
     }
 
     /**
@@ -131,15 +133,14 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     @Override
     public void invite(SMSPeer peer, InviteListener<SMSPeer, SMSFailReason> inviteListener) {
         boolean hasSucceeded = false;
-        try{
+        try {
             CommandExecutor.execute(new SMSInvitePeer(peer));
             hasSucceeded = true;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             inviteListener.onInvitationNotSent(peer, SMSFailReason.MESSAGE_SEND_ERROR);
         }
-        if(hasSucceeded) inviteListener.onInvitationSent(peer);
+        if (hasSucceeded) inviteListener.onInvitationSent(peer);
     }
 
     /**
@@ -161,7 +162,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param list A NetSubscriberList of type <SMSPeer> to provide
      */
     public void setNetSubscriberList(@NonNull NetSubscriberList<SMSPeer> list) {
-        for(SMSPeer sub : netSubscribers.getSubscribers())
+        for (SMSPeer sub : netSubscribers.getSubscribers())
             list.addSubscriber(sub);
         netSubscribers = list;
     }
@@ -178,27 +179,28 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
 
     /**
      * Setups all the basic android-related operations to let the network function
+     *
      * @param context The android context to make this work on
      */
-    public void setup(Context context){
+    public void setup(Context context) {
         SMSManager.getInstance().setReceivedListener(BroadcastReceiver.class,
                 context.getApplicationContext());
         SMSMessageHandler.getInstance()
                 .setMessageParseStrategy(new MessageParseStrategy<String, SMSPeer, SMSMessage>() {
-            private String hiddenCharacter = "¤";
+                    private String hiddenCharacter = "¤";
 
-            @Override
-            public SMSMessage parseMessage(String channelData, SMSPeer channelPeer) {
-                if (!channelData.startsWith(hiddenCharacter))
-                    return null;
-                String messageData = channelData.substring(1);
-                return new SMSMessage(channelPeer, messageData);
-            }
+                    @Override
+                    public SMSMessage parseMessage(String channelData, SMSPeer channelPeer) {
+                        if (!channelData.startsWith(hiddenCharacter))
+                            return null;
+                        String messageData = channelData.substring(1);
+                        return new SMSMessage(channelPeer, messageData);
+                    }
 
-            @Override
-            public String parseData(SMSMessage message) {
-                return hiddenCharacter + message.getData();
-            }
-        });
+                    @Override
+                    public String parseData(SMSMessage message) {
+                        return hiddenCharacter + message.getData();
+                    }
+                });
     }
 }

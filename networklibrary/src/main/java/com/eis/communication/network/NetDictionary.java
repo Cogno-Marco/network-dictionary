@@ -6,6 +6,7 @@ package com.eis.communication.network;
  * @param <K> The Key for each resource
  * @param <R> The Resource
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public interface NetDictionary<K, R> {
 
@@ -32,4 +33,9 @@ public interface NetDictionary<K, R> {
      * else returns null
      */
     R getResource(K key);
+
+    /**
+     * Removes all keys and resources from the dictionary.
+     */
+    void clear();
 }

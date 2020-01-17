@@ -38,7 +38,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
      * <li>AcceptInvitation: there are no other fields</li>
      * <li>AddPeer: fields from 1 to the last one contain the phone numbers of each
      * {@link com.eis.smslibrary.SMSPeer} we have to add to our network</li>
-     * <li>RemovePeer: there are no other fields, because this request can only be sent by the
+     * <li>QuitNetwork: there are no other fields, because this request can only be sent by the
      * {@link com.eis.smslibrary.SMSPeer} who wants to be removed</li>
      * <li>AddResource: starting from 1, fields with odd numbers contain keys, their following (even)
      * field contains the corresponding value</li>
@@ -88,7 +88,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 for (SMSPeer peerToAdd : subscribers.getSubscribers())
                     myNetwork.append(peerToAdd).append(FIELD_SEPARATOR);
                 SMSMessage myNetworkMessage = new SMSMessage(
-                        sender, myNetwork.deleteCharAt(myNetwork.length()-1).toString());
+                        sender, myNetwork.deleteCharAt(myNetwork.length() - 1).toString());
                 SMSManager.getInstance().sendMessage(myNetworkMessage);
 
                 //Sending to the invited peer my dictionary
@@ -151,7 +151,13 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                     return;
                 }
                 for (int i = 0; i < keys.length; i++) {
-                    dictionary.addResourceFromSMS(keys[i], values[i]);
+                    try {
+                        dictionary.addResourceFromSMS(keys[i], values[i]);
+                    } catch (IllegalArgumentException e) {
+                        // this can only happen in the last element of values, because it's the only
+                        // one that can contain a backslash
+                        return;
+                    }
                 }
                 break;
             }
@@ -160,7 +166,7 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
                 try {
                     for (int i = NUM_OF_REQUEST_FIELDS; i < fields.length; i++)
                         dictionary.removeResourceFromSMS(fields[i]);
-                } catch (ArrayIndexOutOfBoundsException e) {
+                } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
                     return;
                 }
                 break;

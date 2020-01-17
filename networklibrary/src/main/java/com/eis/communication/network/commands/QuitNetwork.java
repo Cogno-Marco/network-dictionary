@@ -12,24 +12,21 @@ import com.eis.communication.network.NetSubscriberList;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public abstract class RemovePeer<T extends Peer> extends Command {
+public abstract class QuitNetwork<T extends Peer> extends Command {
 
-    protected final T peer;
     protected final NetSubscriberList<T> netSubscribers;
 
     /**
-     * Constructor for the RemovePeer command, needs the data to operate
+     * Constructor for the QuitNetwork command, needs the data to operate
      *
-     * @param peer           The peer to remove from the network
      * @param netSubscribers The subscribers currently in the network
      */
-    public RemovePeer(@NonNull T peer, @NonNull NetSubscriberList<T> netSubscribers) {
-        this.peer = peer;
+    public QuitNetwork(@NonNull NetSubscriberList<T> netSubscribers) {
         this.netSubscribers = netSubscribers;
     }
 
     /**
-     * Removes a peer from the subscribers list and broadcasts it to the net
+     * Removes myself from the subscribers list and broadcasts it to the net
      */
     protected abstract void execute();
 

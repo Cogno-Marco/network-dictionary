@@ -31,6 +31,9 @@ public class SMSAddResource extends com.eis.communication.network.commands.AddRe
 
     /**
      * Adds the key-resource pair to the dictionary, then broadcasts the message
+     *
+     * @throws IllegalArgumentException if fields key or value contain a backslash as their last
+     *                                  character.
      */
     protected void execute() {
         netDictionary.addResource(key, value);

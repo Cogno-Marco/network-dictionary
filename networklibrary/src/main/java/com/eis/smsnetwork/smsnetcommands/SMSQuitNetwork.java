@@ -3,36 +3,37 @@ package com.eis.smsnetwork.smsnetcommands;
 import androidx.annotation.NonNull;
 
 import com.eis.communication.network.NetSubscriberList;
+import com.eis.communication.network.commands.QuitNetwork;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.RequestType;
+import com.eis.smsnetwork.SMSJoinableNetManager;
 import com.eis.smsnetwork.broadcast.BroadcastSender;
 
 /**
- * Command to remove a peer from the subscribers
+ * Command to quit the current network.
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public class SMSRemovePeer extends com.eis.communication.network.commands.RemovePeer<SMSPeer> {
+public class SMSQuitNetwork extends QuitNetwork<SMSPeer> {
 
     /**
-     * Constructor for the SMSRemovePeer command, needs the data to operate
+     * Constructor for the SMSQuitNetwork command, needs the data to operate
      *
-     * @param peer           The peer to remove from the network
      * @param netSubscribers The subscribers currently in the network
      */
-    public SMSRemovePeer(@NonNull SMSPeer peer, @NonNull NetSubscriberList<SMSPeer> netSubscribers) {
-        super(peer, netSubscribers);
+    public SMSQuitNetwork(@NonNull NetSubscriberList<SMSPeer> netSubscribers) {
+        super(netSubscribers);
     }
 
     /**
-     * Removes a peer from the subscribers list and broadcasts it to the net
+     * Removes myself from the subscribers list and broadcasts it to the net
      */
     protected void execute() {
         String removePeerMessage = RequestType.RemovePeer.asString();
         BroadcastSender.broadcastMessage(netSubscribers.getSubscribers(), removePeerMessage);
-        netSubscribers.removeSubscriber(peer);
+        SMSJoinableNetManager.getInstance().getNetSubscriberList().getSubscribers().clear();
+        SMSJoinableNetManager.getInstance().getNetDictionary().clear();
     }
-
 }

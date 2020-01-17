@@ -1,15 +1,11 @@
 package com.eis.smsnetwork;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.eis.communication.network.FailReason;
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.JoinableNetworkManager;
 import com.eis.communication.network.listeners.JoinInvitationListener;
-import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSPeer;
-import com.eis.smsnetwork.broadcast.BroadcastReceiver;
 
 /**
  * Concrete JoinableNetwork for SMS Messages
@@ -39,11 +35,9 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      * @return the only instance of SMSNetworkManager.
      */
     public static SMSJoinableNetManager getInstance() {
-        if(instance == null) instance = new SMSJoinableNetManager();
+        if (instance == null) instance = new SMSJoinableNetManager();
         return instance;
     }
-
-
 
     /**
      * Accepts a given join invitation.
@@ -72,14 +66,14 @@ public class SMSJoinableNetManager extends SMSNetworkManager
     /**
      * When an invitation in received separates between auto accepting and forwarding it to the
      * user depending if a listener was set by the user
+     *
      * @param invitation The invitation received
      */
-    public void checkInvitation(Invitation<SMSPeer> invitation){
-        if(invitationListener == null){
+    public void checkInvitation(Invitation<SMSPeer> invitation) {
+        if (invitationListener == null) {
             Log.d("JOINABLE_NET", "No listener is set, accepting automatically");
             acceptJoinInvitation(invitation);
-        }
-        else{
+        } else {
             Log.d("JOINABLE_NET", "Listener IS set, accepting manually");
             invitationListener.onJoinInvitationReceived(invitation);
         }

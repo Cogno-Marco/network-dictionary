@@ -19,13 +19,15 @@ import java.util.regex.Matcher;
  */
 public class SMSNetDictionary implements NetDictionary<String, String> {
 
-    Map<String, String> dict = new HashMap<>();
+    private final Map<String, String> dict = new HashMap<>();
 
     /**
      * Adds a resource to the network dictionary
      *
      * @param key      The key which defines the resource
      * @param resource The resource to add
+     * @throws IllegalArgumentException if one of the arguments contains a backslash as its last
+     *                                  character.
      */
     public void addResource(String key, String resource) {
         checkKeyValidity(key);
@@ -37,6 +39,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * Removes a resource from the dictionary
      *
      * @param key The key which defines the resource
+     * @throws IllegalArgumentException if the argument contains a backslash as its last
+     *                                  character.
      */
     public void removeResource(String key) {
         checkKeyValidity(key);
@@ -49,6 +53,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param key The key which defines the resource to get
      * @return Returns a resource corresponding to the key if present in the dictionary,
      * else returns null
+     * @throws IllegalArgumentException if the argument contains a backslash as its last
+     *                                  character.
      */
     public String getResource(String key) {
         checkKeyValidity(key);
@@ -56,10 +62,19 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
     }
 
     /**
+     * Removes all keys and resources from the dictionary.
+     */
+    public void clear() {
+        dict.clear();
+    }
+
+    /**
      * Adds a resource parsed from an SMS to the network dictionary
      *
      * @param key      The key which defines the resource
      * @param resource The resource to add
+     * @throws IllegalArgumentException if one of the arguments contains a backslash as its last
+     *                                  character.
      */
     public void addResourceFromSMS(@NonNull String key, @NonNull String resource) {
         addResource(removeEscapes(key), removeEscapes(resource));
@@ -69,6 +84,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * Removes a resource from the dictionary, given a key parsed from an SMS
      *
      * @param key The key which defines the resource
+     * @throws IllegalArgumentException if the argument contains a backslash as its last
+     *                                  character.
      */
     public void removeResourceFromSMS(@NonNull String key) {
         removeResource(removeEscapes(key));
@@ -146,6 +163,7 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * considered one single object.
      *
      * @param string The string to check
+     * @throws IllegalArgumentException if the argument contains a backslash as its last character.
      */
     private static void checkKeyValidity(String string) {
         if (string == null || string.matches("\\p{all}*\\\\$"))

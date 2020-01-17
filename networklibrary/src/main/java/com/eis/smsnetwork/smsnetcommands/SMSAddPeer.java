@@ -31,9 +31,9 @@ public class SMSAddPeer extends com.eis.communication.network.commands.AddPeer<S
      * Adds the peer to the subscribers list and broadcasts it to the net
      */
     protected void execute() {
+        netSubscribers.addSubscriber(peer);
         String addPeerMessage = RequestType.AddPeer.asString() + BroadcastReceiver.FIELD_SEPARATOR +
                 peer.getAddress();
         BroadcastSender.broadcastMessage(netSubscribers.getSubscribers(), addPeerMessage);
-        netSubscribers.addSubscriber(peer);
     }
 }

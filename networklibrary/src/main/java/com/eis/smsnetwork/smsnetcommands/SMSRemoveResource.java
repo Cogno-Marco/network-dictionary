@@ -30,13 +30,16 @@ public class SMSRemoveResource extends com.eis.communication.network.commands.Re
 
     /**
      * Removes a Resource from the dictionary, then broadcasts it to the net
+     *
+     * @throws IllegalArgumentException if fields key or value contain a backslash as their last
+     *                                  character.
      */
     protected void execute() {
+        netDictionary.removeResource(key);
         String removeResourceMessage =
                 RequestType.RemoveResource.asString() + BroadcastReceiver.FIELD_SEPARATOR +
                         SMSNetDictionary.addEscapes(key);
         BroadcastSender.broadcastMessage(SMSJoinableNetManager.getInstance().getNetSubscriberList()
                 .getSubscribers(), removeResourceMessage);
-        netDictionary.removeResource(key);
     }
 }
