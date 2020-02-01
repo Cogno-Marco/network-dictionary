@@ -10,7 +10,6 @@ import java.util.Map;
  * Concrete implementation of a NetDictionary
  *
  * @author Marco Cognolato
- * @author Giovanni Velludo
  */
 public class SMSNetDictionary implements NetDictionary<String, String> {
 
@@ -26,7 +25,6 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      */
     public void addResource(String key, String resource) {
         checkKeyValidity(key);
-        checkKeyValidity(resource);
         dict.put(key, resource);
     }
 
@@ -55,7 +53,6 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
         checkKeyValidity(key);
         return dict.get(key);
     }
-
 
     /**
      * Checks if a given key is valid, else throws IllegalArgumentException.

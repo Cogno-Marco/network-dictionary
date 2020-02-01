@@ -6,7 +6,6 @@ package com.eis.communication.network;
  * @param <K> The Key for each resource
  * @param <R> The Resource
  * @author Marco Cognolato
- * @author Giovanni Velludo
  */
 public interface NetDictionary<K, R> {
 
