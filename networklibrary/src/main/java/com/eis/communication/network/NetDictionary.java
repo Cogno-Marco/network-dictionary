@@ -33,9 +33,4 @@ public interface NetDictionary<K, R> {
      * else returns null
      */
     R getResource(K key);
-
-    /**
-     * Removes all keys and resources from the dictionary.
-     */
-    void clear();
 }
