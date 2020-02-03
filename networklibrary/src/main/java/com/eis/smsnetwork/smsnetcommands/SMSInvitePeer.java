@@ -16,13 +16,17 @@ import com.eis.smsnetwork.SMSJoinableNetManager;
  */
 public class SMSInvitePeer extends com.eis.communication.network.commands.InvitePeer<SMSPeer> {
 
+    SMSJoinableNetManager netManager;
+
     /**
      * Constructor for the SMSInvitePeer command, requires data to work
      *
      * @param peerToInvite The SMSPeer to invite to the network
+     * @param netManager A valid SMSJoinableNetManager, used by the command
      */
-    public SMSInvitePeer(@NonNull SMSPeer peerToInvite) {
+    public SMSInvitePeer(@NonNull SMSPeer peerToInvite, @NonNull SMSJoinableNetManager netManager) {
         super(peerToInvite);
+        this.netManager = netManager;
     }
 
     /**
@@ -33,6 +37,6 @@ public class SMSInvitePeer extends com.eis.communication.network.commands.Invite
         SMSMessage messageToSend = new SMSMessage(peerToInvite, message);
         SMSManager.getInstance().sendMessage(messageToSend);
         Log.d("SMSINVITE_COMMAND", "Invitation Sent to: " + peerToInvite);
-        SMSJoinableNetManager.getInstance().getInvitedPeers().addSubscriber(peerToInvite);
+        netManager.getInvitedPeers().addSubscriber(peerToInvite);
     }
 }

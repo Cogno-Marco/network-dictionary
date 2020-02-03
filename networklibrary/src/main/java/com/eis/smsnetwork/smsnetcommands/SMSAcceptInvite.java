@@ -2,6 +2,8 @@ package com.eis.smsnetwork.smsnetcommands;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.smslibrary.SMSManager;
 import com.eis.smslibrary.SMSMessage;
@@ -22,8 +24,9 @@ public class SMSAcceptInvite extends com.eis.communication.network.commands.Acce
      * Constructor for SMSAcceptInvite command, requires data to work
      *
      * @param invitation The SMSInvitation to a network
+     * @param netManager A valid SMSJoinableNetManager, used by the command
      */
-    public SMSAcceptInvite(SMSInvitation invitation, SMSJoinableNetManager netManager) {
+    public SMSAcceptInvite(@NonNull SMSInvitation invitation, @NonNull SMSJoinableNetManager netManager) {
         super(invitation);
         this.netManager = netManager;
     }
