@@ -79,4 +79,12 @@ public class SMSJoinableNetManager extends SMSNetworkManager
             invitationListener.onJoinInvitationReceived(invitation);
         }
     }
+
+    /**
+     * Clears the state of the network
+     */
+    public void clear(){
+        super.getNetSubscriberList().getSubscribers().clear();
+        super.getNetDictionary().clear();
+    }
 }
