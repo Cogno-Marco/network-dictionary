@@ -1,7 +1,6 @@
 package com.eis.communication.network.commands;
 
-import com.eis.communication.Peer;
-import com.eis.communication.network.NetSubscriberList;
+import com.eis.communication.network.Invitation;
 
 /**
  * Command to accept an Invitation to the network
@@ -9,17 +8,17 @@ import com.eis.communication.network.NetSubscriberList;
  * @author Marco Cognolato
  * @author Giovanni Velludo
  */
-public abstract class AcceptInvite<T extends Peer> extends Command {
+public abstract class AcceptInvite<I extends Invitation> extends Command {
 
-    protected final T inviter;
+    protected final I invitation;
 
     /**
      * Constructor for AcceptInvite command, requires data to work
      *
-     * @param inviter        The Peer who sent the invitation to his network
+     * @param invitation The Invitation to a network
      */
-    public AcceptInvite(T inviter) {
-        this.inviter = inviter;
+    public AcceptInvite(I invitation) {
+        this.invitation = invitation;
     }
 
     /**
