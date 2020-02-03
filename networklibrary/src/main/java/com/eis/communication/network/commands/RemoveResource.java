@@ -5,7 +5,10 @@ import androidx.annotation.NonNull;
 import com.eis.communication.network.NetDictionary;
 
 /**
- * Command to remove a resource from the network dictionary
+ * Command to remove a resource from the local network dictionary.
+ * A network dictionary is a dictionary containing key-resource pairs.
+ * A key identifies a resource, while a resource can be anything, from a string, to a file,
+ * to a Peer with a file, basically something to keep in a network.
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
