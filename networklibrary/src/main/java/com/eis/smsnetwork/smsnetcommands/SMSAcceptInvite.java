@@ -16,19 +16,22 @@ import com.eis.smsnetwork.SMSJoinableNetManager;
  */
 public class SMSAcceptInvite extends com.eis.communication.network.commands.AcceptInvite<SMSInvitation> {
 
+    SMSJoinableNetManager netManager;
+
     /**
      * Constructor for SMSAcceptInvite command, requires data to work
      *
      * @param invitation The SMSInvitation to a network
      */
-    public SMSAcceptInvite(SMSInvitation invitation) {
+    public SMSAcceptInvite(SMSInvitation invitation, SMSJoinableNetManager netManager) {
         super(invitation);
+        this.netManager = netManager;
     }
 
     protected void execute() {
         SMSPeer inviter = invitation.getInviterPeer();
         CommandExecutor.execute(new SMSQuitNetwork(SMSJoinableNetManager.getInstance().getNetSubscriberList()));
-        SMSJoinableNetManager.getInstance().getNetSubscriberList().addSubscriber(inviter);
+        netManager.getNetSubscriberList().addSubscriber(inviter);
         SMSManager.getInstance().sendMessage(new SMSMessage(inviter, RequestType.AcceptInvitation.asString()));
         Log.d("ACCEPTINVITE_COMMAND", "Accepting invite from: " + inviter);
     }

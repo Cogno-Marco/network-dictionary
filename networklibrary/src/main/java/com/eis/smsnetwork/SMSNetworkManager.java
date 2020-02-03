@@ -143,18 +143,6 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     }
 
     /**
-     * Accepts a given join invitation.
-     *
-     * @param invitation The invitation previously received.
-     */
-    public void acceptJoinInvitation(Invitation invitation) {
-        // N.B. this function provides an implementation for automatically joining a network.
-        // while SMSJoinableNetManager uses this function by sending the request to the user
-        // using a listener set by the user.
-        CommandExecutor.execute(new SMSAcceptInvite((SMSInvitation)invitation));
-    }
-
-    /**
      * Sets a given list of subscribers, to provide the network
      * with your own implementation
      *
