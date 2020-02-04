@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import com.eis.communication.MessageParseStrategy;
 import com.eis.communication.network.commands.CommandExecutor;
-import com.eis.communication.network.Invitation;
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.NetworkManager;
@@ -20,9 +19,8 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSMessageHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.broadcast.BroadcastReceiver;
-import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
 import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
-import com.eis.smsnetwork.smsnetcommands.SMSInvitePeer;
+import com.eis.smsnetwork.smsnetcommands.SMSSendInvitation;
 import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
 
 import java.util.ArrayList;
@@ -133,7 +131,8 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
     @Override
     public void invite(SMSPeer peer, InviteListener<SMSPeer, SMSFailReason> inviteListener) {
         try {
-            CommandExecutor.execute(new SMSInvitePeer(peer));
+            SMSInvitation invitation = new SMSInvitation(peer);
+            CommandExecutor.execute(new SMSSendInvitation(invitation, this));
         } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             inviteListener.onInvitationNotSent(peer, SMSFailReason.MESSAGE_SEND_ERROR);
