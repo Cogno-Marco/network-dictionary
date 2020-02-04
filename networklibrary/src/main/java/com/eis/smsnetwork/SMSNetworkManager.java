@@ -172,11 +172,11 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
                 context.getApplicationContext());
         SMSMessageHandler.getInstance()
                 .setMessageParseStrategy(new MessageParseStrategy<String, SMSPeer, SMSMessage>() {
-                    private String hiddenCharacter = "¤";
+                    private final String HIDDEN_CHARACTER = "¤";
 
                     @Override
                     public SMSMessage parseMessage(String channelData, SMSPeer channelPeer) {
-                        if (!channelData.startsWith(hiddenCharacter))
+                        if (!channelData.startsWith(HIDDEN_CHARACTER))
                             return null;
                         String messageData = channelData.substring(1);
                         return new SMSMessage(channelPeer, messageData);
@@ -184,7 +184,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
 
                     @Override
                     public String parseData(SMSMessage message) {
-                        return hiddenCharacter + message.getData();
+                        return HIDDEN_CHARACTER + message.getData();
                     }
                 });
     }
