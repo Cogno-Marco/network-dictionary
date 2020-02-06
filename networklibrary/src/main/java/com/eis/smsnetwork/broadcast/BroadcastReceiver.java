@@ -16,6 +16,8 @@ import com.eis.smsnetwork.SMSNetDictionary;
 import com.eis.smsnetwork.SMSNetSubscriberList;
 import com.eis.smsnetwork.smsnetcommands.SMSAddPeer;
 
+import java.util.ArrayList;
+
 /**
  * @author Marco Cognolato, Giovanni Velludo, Enrico Cestaro
  */
@@ -76,11 +78,11 @@ public class BroadcastReceiver extends SMSReceivedServiceListener {
             case AcceptInvitation: {
                 if (fields.length > 1) return;
                 //Verifying if the sender has been invited to join the network
-                NetSubscriberList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
+                ArrayList<SMSPeer> invitedPeers = SMSJoinableNetManager.getInstance()
                         .getInvitedPeers();
-                if (invitedPeers.getSubscribers().contains(sender))
-                    invitedPeers.removeSubscriber(sender);
-                else return;
+                if (!invitedPeers.contains(sender))
+                    return;
+                invitedPeers.remove(sender);
 
                 //Sending to the invited peer my subscribers list
                 StringBuilder myNetwork = new StringBuilder(RequestType.AddPeer.asString() +

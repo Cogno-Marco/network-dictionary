@@ -33,6 +33,6 @@ public class SMSInvitePeer extends com.eis.communication.network.commands.Invite
         SMSMessage messageToSend = new SMSMessage(peerToInvite, message);
         SMSManager.getInstance().sendMessage(messageToSend);
         Log.d("SMSINVITE_COMMAND", "Invitation Sent to: " + peerToInvite);
-        SMSJoinableNetManager.getInstance().getInvitedPeers().addSubscriber(peerToInvite);
+        SMSJoinableNetManager.getInstance().getInvitedPeers().add(peerToInvite);
     }
 }
