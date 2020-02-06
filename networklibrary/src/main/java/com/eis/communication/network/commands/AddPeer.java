@@ -3,7 +3,6 @@ package com.eis.communication.network.commands;
 import androidx.annotation.NonNull;
 
 import com.eis.communication.Peer;
-import com.eis.communication.network.Command;
 import com.eis.communication.network.NetSubscriberList;
 
 /**
@@ -11,28 +10,26 @@ import com.eis.communication.network.NetSubscriberList;
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
-public class AddPeer implements Command {
+public abstract class AddPeer<T extends Peer> extends Command {
 
-    private Peer peer;
-    private NetSubscriberList netSubscribers;
+    protected final T peer;
+    protected final NetSubscriberList<T> netSubscribers;
 
     /**
-     * AddPeer command constructor, receives the data it needs to operate
+     * AddPeer command constructor, receives the data it needs to operate on.
      *
      * @param peer           The Peer to add to the network
-     * @param netSubscribers The subscribers list to add the peer to
+     * @param netSubscribers The subscribers to notify of the newest member
      */
-    public AddPeer(@NonNull Peer peer, @NonNull NetSubscriberList netSubscribers) {
+    public AddPeer(@NonNull T peer, @NonNull NetSubscriberList<T> netSubscribers) {
         this.peer = peer;
         this.netSubscribers = netSubscribers;
     }
 
     /**
-     * Add the peer to the subscribers list and broadcasts it to the net
+     * Adds the peer to the subscribers list and broadcasts it to the net
      */
-    public void execute() {
-        netSubscribers.addSubscriber(peer);
-        //TODO broadcast
-    }
+    protected abstract void execute();
 }
