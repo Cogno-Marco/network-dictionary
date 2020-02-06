@@ -1,10 +1,13 @@
 package com.eis.smsnetwork;
 
-import com.eis.communication.network.FailReason;
+import android.util.Log;
+
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.JoinableNetworkManager;
+import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.communication.network.listeners.JoinInvitationListener;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
 
 /**
  * Concrete JoinableNetwork for SMS Messages
@@ -13,9 +16,30 @@ import com.eis.smslibrary.SMSPeer;
  * else you should call that from the listener if you want to accept an invitation
  *
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSJoinableNetManager extends SMSNetworkManager
-        implements JoinableNetworkManager<String, String, SMSPeer, FailReason, Invitation<SMSPeer>> {
+        implements JoinableNetworkManager<String, String, SMSPeer, SMSFailReason, Invitation<SMSPeer>> {
+
+    private static SMSJoinableNetManager instance;
+
+    private JoinInvitationListener<Invitation<SMSPeer>> invitationListener = null;
+
+    /**
+     * Private constructor of the singleton.
+     */
+    private SMSJoinableNetManager() {
+    }
+
+    /**
+     * Gets the only instance of this class.
+     *
+     * @return the only instance of SMSNetworkManager.
+     */
+    public static SMSJoinableNetManager getInstance() {
+        if (instance == null) instance = new SMSJoinableNetManager();
+        return instance;
+    }
 
     /**
      * Accepts a given join invitation.
@@ -27,8 +51,7 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      */
     @Override
     public void acceptJoinInvitation(Invitation invitation) {
-        //redirects the call to the acceptJoinInvitation in the parent class.
-        super.acceptJoinInvitation(invitation);
+        CommandExecutor.execute(new SMSAcceptInvite((SMSInvitation)invitation, instance));
     }
 
     /**
@@ -38,6 +61,30 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      */
     @Override
     public void setJoinInvitationListener(JoinInvitationListener<Invitation<SMSPeer>> joinInvitationListener) {
+        invitationListener = joinInvitationListener;
+    }
 
+    /**
+     * When an invitation in received separates between auto accepting and forwarding it to the
+     * user depending if a listener was set by the user
+     *
+     * @param invitation The invitation received
+     */
+    public void checkInvitation(Invitation<SMSPeer> invitation) {
+        if (invitationListener == null) {
+            Log.d("JOINABLE_NET", "No listener is set, accepting automatically");
+            acceptJoinInvitation(invitation);
+        } else {
+            Log.d("JOINABLE_NET", "Listener IS set, accepting manually");
+            invitationListener.onJoinInvitationReceived(invitation);
+        }
+    }
+
+    /**
+     * Clears the state of the network
+     */
+    public void clear(){
+        super.getNetSubscriberList().getSubscribers().clear();
+        super.getNetDictionary().clear();
     }
 }
