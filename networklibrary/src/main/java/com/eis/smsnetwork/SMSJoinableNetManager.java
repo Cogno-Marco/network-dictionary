@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.eis.communication.network.Invitation;
 import com.eis.communication.network.JoinableNetworkManager;
+import com.eis.communication.network.commands.CommandExecutor;
 import com.eis.communication.network.listeners.JoinInvitationListener;
 import com.eis.smslibrary.SMSPeer;
+import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
 
 /**
  * Concrete JoinableNetwork for SMS Messages
@@ -49,8 +51,7 @@ public class SMSJoinableNetManager extends SMSNetworkManager
      */
     @Override
     public void acceptJoinInvitation(Invitation invitation) {
-        //redirects the call to the acceptJoinInvitation in the parent class.
-        super.acceptJoinInvitation(invitation);
+        CommandExecutor.execute(new SMSAcceptInvite((SMSInvitation)invitation, instance));
     }
 
     /**
@@ -77,5 +78,13 @@ public class SMSJoinableNetManager extends SMSNetworkManager
             Log.d("JOINABLE_NET", "Listener IS set, accepting manually");
             invitationListener.onJoinInvitationReceived(invitation);
         }
+    }
+
+    /**
+     * Clears the state of the network
+     */
+    public void clear(){
+        super.getNetSubscriberList().getSubscribers().clear();
+        super.getNetDictionary().clear();
     }
 }

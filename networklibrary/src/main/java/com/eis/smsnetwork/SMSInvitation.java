@@ -13,7 +13,6 @@ public class SMSInvitation implements Invitation<SMSPeer> {
         this.inviter = inviter;
     }
 
-
     /**
      * Returns the {@link SMSPeer} who sent the Invitation to join a new network
      */

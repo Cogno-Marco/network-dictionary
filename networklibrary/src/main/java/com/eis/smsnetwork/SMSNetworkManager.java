@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import com.eis.communication.MessageParseStrategy;
 import com.eis.communication.network.commands.CommandExecutor;
-import com.eis.communication.network.Invitation;
 import com.eis.communication.network.NetDictionary;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.communication.network.NetworkManager;
@@ -20,10 +19,11 @@ import com.eis.smslibrary.SMSMessage;
 import com.eis.smslibrary.SMSMessageHandler;
 import com.eis.smslibrary.SMSPeer;
 import com.eis.smsnetwork.broadcast.BroadcastReceiver;
-import com.eis.smsnetwork.smsnetcommands.SMSAcceptInvite;
 import com.eis.smsnetwork.smsnetcommands.SMSAddResource;
-import com.eis.smsnetwork.smsnetcommands.SMSInvitePeer;
+import com.eis.smsnetwork.smsnetcommands.SMSSendInvitation;
 import com.eis.smsnetwork.smsnetcommands.SMSRemoveResource;
+
+import java.util.ArrayList;
 
 /**
  * The manager class of the network.
@@ -36,7 +36,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
 
     private NetSubscriberList<SMSPeer> netSubscribers = new SMSNetSubscriberList();
     private NetDictionary<String, String> netDictionary = new SMSNetDictionary();
-    private NetSubscriberList<SMSPeer> invitedPeers = new SMSNetSubscriberList();
+    private ArrayList<SMSPeer> invitedPeers = new ArrayList<SMSPeer>();
 
     private String LOG_KEY = "NET_MANAGER";
 
@@ -58,7 +58,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @return A {@link NetSubscriberList} containing Peers who were invited to join the network and
      * haven't answered yet.
      */
-    public NetSubscriberList<SMSPeer> getInvitedPeers() {
+    public ArrayList<SMSPeer> getInvitedPeers() {
         return invitedPeers;
     }
 
@@ -74,15 +74,14 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void setResource(String key, String value, SetResourceListener<String, String, SMSFailReason> setResourceListener) {
-        boolean hasSucceeded = false;
         try {
             CommandExecutor.execute(new SMSAddResource(key, value, netDictionary));
-            hasSucceeded = true;
         } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             setResourceListener.onResourceSetFail(key, value, SMSFailReason.MESSAGE_SEND_ERROR);
+            return;
         }
-        if (hasSucceeded) setResourceListener.onResourceSet(key, value);
+        setResourceListener.onResourceSet(key, value);
     }
 
     /**
@@ -112,15 +111,14 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void removeResource(String key, RemoveResourceListener<String, SMSFailReason> removeResourceListener) {
-        boolean hasSucceeded = false;
         try {
             CommandExecutor.execute(new SMSRemoveResource(key, netDictionary));
-            hasSucceeded = true;
         } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             removeResourceListener.onResourceRemoveFail(key, SMSFailReason.MESSAGE_SEND_ERROR);
+            return;
         }
-        if (hasSucceeded) removeResourceListener.onResourceRemoved(key);
+        removeResourceListener.onResourceRemoved(key);
     }
 
     /**
@@ -132,27 +130,15 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      */
     @Override
     public void invite(SMSPeer peer, InviteListener<SMSPeer, SMSFailReason> inviteListener) {
-        boolean hasSucceeded = false;
         try {
-            CommandExecutor.execute(new SMSInvitePeer(peer));
-            hasSucceeded = true;
+            SMSInvitation invitation = new SMSInvitation(peer);
+            CommandExecutor.execute(new SMSSendInvitation(invitation, this));
         } catch (Exception e) {
             Log.e(LOG_KEY, "There's been an error: " + e);
             inviteListener.onInvitationNotSent(peer, SMSFailReason.MESSAGE_SEND_ERROR);
+            return;
         }
-        if (hasSucceeded) inviteListener.onInvitationSent(peer);
-    }
-
-    /**
-     * Accepts a given join invitation.
-     *
-     * @param invitation The invitation previously received.
-     */
-    public void acceptJoinInvitation(Invitation invitation) {
-        // N.B. this function provides an implementation for automatically joining a network.
-        // while SMSJoinableNetManager uses this function by sending the request to the user
-        // using a listener set by the user.
-        CommandExecutor.execute(new SMSAcceptInvite((SMSPeer) invitation.getInviterPeer()));
+        inviteListener.onInvitationSent(peer);
     }
 
     /**
@@ -162,9 +148,8 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
      * @param list A NetSubscriberList of type <SMSPeer> to provide
      */
     public void setNetSubscriberList(@NonNull NetSubscriberList<SMSPeer> list) {
-        for (SMSPeer sub : netSubscribers.getSubscribers())
-            list.addSubscriber(sub);
-        netSubscribers = list;
+        for (SMSPeer sub : list.getSubscribers())
+            netSubscribers.addSubscriber(sub);
     }
 
     /**
@@ -187,11 +172,11 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
                 context.getApplicationContext());
         SMSMessageHandler.getInstance()
                 .setMessageParseStrategy(new MessageParseStrategy<String, SMSPeer, SMSMessage>() {
-                    private String hiddenCharacter = "¤";
+                    private final String HIDDEN_CHARACTER = "¤";
 
                     @Override
                     public SMSMessage parseMessage(String channelData, SMSPeer channelPeer) {
-                        if (!channelData.startsWith(hiddenCharacter))
+                        if (!channelData.startsWith(HIDDEN_CHARACTER))
                             return null;
                         String messageData = channelData.substring(1);
                         return new SMSMessage(channelPeer, messageData);
@@ -199,7 +184,7 @@ public class SMSNetworkManager implements NetworkManager<String, String, SMSPeer
 
                     @Override
                     public String parseData(SMSMessage message) {
-                        return hiddenCharacter + message.getData();
+                        return HIDDEN_CHARACTER + message.getData();
                     }
                 });
     }

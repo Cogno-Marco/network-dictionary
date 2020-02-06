@@ -6,7 +6,7 @@ import com.eis.communication.Peer;
 import com.eis.communication.network.NetSubscriberList;
 
 /**
- * Command to remove a peer from the subscribers
+ * Command to quit a network, which is, removing myself from the network I'm in
  *
  * @author Edoardo Raimondi
  * @author Marco Cognolato
