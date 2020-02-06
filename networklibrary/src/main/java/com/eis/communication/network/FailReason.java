@@ -27,7 +27,7 @@ public class FailReason {
      */
     public static final FailReason GENERIC_FAIL = new FailReason("GenericFail");
 
-    private final String name;
+    private String name;
 
     /**
      * Private constructor as suggested in the TypeSafe enum pattern.
