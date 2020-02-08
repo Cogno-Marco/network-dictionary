@@ -140,8 +140,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * {@link com.eis.smsnetwork.broadcast.BroadcastReceiver#FIELD_SEPARATOR} was removed.
      */
     public static String removeEscapes(@NonNull String string) {
-        String regex = Matcher.quoteReplacement("\\" + BroadcastReceiver.FIELD_SEPARATOR);
-        return string.replaceAll(regex, BroadcastReceiver.FIELD_SEPARATOR);
+        String toReplaceRegex = Matcher.quoteReplacement("\\" + BroadcastReceiver.FIELD_SEPARATOR);
+        return string.replaceAll(toReplaceRegex, BroadcastReceiver.FIELD_SEPARATOR);
     }
 
     /**
