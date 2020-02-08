@@ -30,8 +30,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      *                                  character.
      */
     public void addResource(String key, String resource) {
-        checkKeyValidity(key);
-        checkKeyValidity(resource);
+        checkValidity(key);
+        checkValidity(resource);
         dict.put(key, resource);
     }
 
@@ -39,11 +39,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * Removes a resource from the dictionary
      *
      * @param key The key which defines the resource
-     * @throws IllegalArgumentException if the argument contains a backslash as its last
-     *                                  character.
      */
     public void removeResource(String key) {
-        checkKeyValidity(key);
         dict.remove(key);
     }
 
@@ -53,11 +50,8 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param key The key which defines the resource to get
      * @return Returns a resource corresponding to the key if present in the dictionary,
      * else returns null
-     * @throws IllegalArgumentException if the argument contains a backslash as its last
-     *                                  character.
      */
     public String getResource(String key) {
-        checkKeyValidity(key);
         return dict.get(key);
     }
 
@@ -165,7 +159,7 @@ public class SMSNetDictionary implements NetDictionary<String, String> {
      * @param string The string to check
      * @throws IllegalArgumentException if the argument contains a backslash as its last character.
      */
-    private static void checkKeyValidity(String string) {
+    private static void checkValidity(String string) {
         if (string == null || string.matches("\\p{all}*\\\\$"))
             throw new IllegalArgumentException("The given string is not valid! Given string was: " + string);
     }
