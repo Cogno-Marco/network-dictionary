@@ -28,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({SMSManager.class, Log.class})
 public class SMSNetworkManagerTest {
 
-    private SMSNetworkManager networkManager;
+    private SMSJoinableNetManager networkManager;
     private SMSNetDictionary localDictionary;
     private SMSNetSubscriberList localSubscribers;
 
@@ -45,10 +45,10 @@ public class SMSNetworkManagerTest {
 
     @Before
     public void setup() {
-        networkManager = new SMSNetworkManager();
+        networkManager = SMSJoinableNetManager.getInstance();
+        networkManager.clear();
         localDictionary = (SMSNetDictionary) networkManager.getNetDictionary();
         localSubscribers = (SMSNetSubscriberList) networkManager.getNetSubscriberList();
-
     }
 
     @Test

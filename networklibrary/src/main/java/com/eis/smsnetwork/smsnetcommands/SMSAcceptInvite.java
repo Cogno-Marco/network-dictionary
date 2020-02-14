@@ -33,7 +33,8 @@ public class SMSAcceptInvite extends com.eis.communication.network.commands.Acce
 
     protected void execute() {
         SMSPeer inviter = invitation.getInviterPeer();
-        CommandExecutor.execute(new SMSQuitNetwork(SMSJoinableNetManager.getInstance().getNetSubscriberList()));
+        SMSJoinableNetManager instance = SMSJoinableNetManager.getInstance();
+        CommandExecutor.execute(new SMSQuitNetwork(instance.getNetSubscriberList(), instance));
         netManager.getNetSubscriberList().addSubscriber(inviter);
         SMSManager.getInstance().sendMessage(new SMSMessage(inviter, RequestType.AcceptInvitation.asString()));
         Log.d("ACCEPTINVITE_COMMAND", "Accepting invite from: " + inviter);

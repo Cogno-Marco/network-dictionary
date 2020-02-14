@@ -6,16 +6,18 @@ import androidx.annotation.NonNull;
 import com.eis.communication.network.NetSubscriberList;
 import com.eis.smslibrary.SMSPeer;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Concrete implementation of a {@link NetSubscriberList} interface
  *
  * @author Marco Cognolato
+ * @author Giovanni Velludo
  */
 public class SMSNetSubscriberList implements NetSubscriberList<SMSPeer> {
 
-    private ArrayList<SMSPeer> subscribers = new ArrayList<>();
+    private Set<SMSPeer> subscribers = new HashSet<>();
 
     /**
      * Adds a subscriber to this network
@@ -29,9 +31,9 @@ public class SMSNetSubscriberList implements NetSubscriberList<SMSPeer> {
     }
 
     /**
-     * @return Returns the list of all the current subscribers to the net
+     * @return Returns the set of all the current subscribers to the net
      */
-    public ArrayList<SMSPeer> getSubscribers() {
+    public Set<SMSPeer> getSubscribers() {
         return subscribers;
     }
 
